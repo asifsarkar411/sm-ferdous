@@ -40,3 +40,11 @@ model Testimonial {
   quote     String
   avatarUrl String?
 }
+
+model Contact {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  buttonText  String
+  buttonLink  String
+}
