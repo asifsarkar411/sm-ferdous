@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --color-bg-primary: #F7F7F9;
+  --color-bg-secondary: #FFFFFF;
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #5C5C5C;
+  --color-accent: #1A1A1A;
+  --color-hero-bg: #878278; /* A beige/grey tone matching the image */
+  --color-white: #FFFFFF;
+  
+  --font-primary: 'Outfit', sans-serif;
+  
+  --border-radius-sm: 8px;
+  --border-radius-md: 16px;
+  --border-radius-lg: 24px;
+  --border-radius-pill: 9999px;
+  
+  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: var(--font-primary);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Utilities */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section {
+  padding: 5rem 0;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: var(--border-radius-pill);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  gap: 8px;
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+.btn-primary:hover {
+  background-color: #333;
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--color-white);
+}
+
+.btn-outline:hover {
+  border-color: var(--color-white);
+}
