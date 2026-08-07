@@ -35,11 +35,18 @@ export default async function Projects() {
               <span style={{ color: 'var(--color-primary)', fontSize: '0.875rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>{project.category}</span>
               <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>{project.title}</h3>
               <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', marginBottom: '2rem', flex: 1 }}>{project.description}</p>
-              {project.liveUrl && (
-                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ textAlign: 'center' }}>
-                  View Project Instance
-                </a>
-              )}
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                {project.detailsUrl && (
+                  <a href={project.detailsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ textAlign: 'center', flex: 1, padding: '0.75rem 1rem' }}>
+                    Project Details
+                  </a>
+                )}
+                {project.liveUrl && (
+                  <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ textAlign: 'center', flex: 1, padding: '0.75rem 1rem' }}>
+                    View Project
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         ))}

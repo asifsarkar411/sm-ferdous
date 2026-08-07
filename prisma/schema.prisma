@@ -66,6 +66,7 @@ model Project {
   description String
   imageUrl    String?
   liveUrl     String?
+  detailsUrl  String?
 }
 
 model Contact {

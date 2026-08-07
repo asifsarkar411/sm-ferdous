@@ -12,6 +12,7 @@ export default async function ManageProjects() {
     const category = formData.get('category');
     const description = formData.get('description');
     const liveUrl = formData.get('liveUrl');
+    const detailsUrl = formData.get('detailsUrl');
     
     // Cloudinary upload for the project image
     const file = formData.get('image');
@@ -28,7 +29,7 @@ export default async function ManageProjects() {
     }
 
     await prisma.project.create({
-      data: { title, category, description, liveUrl, imageUrl },
+      data: { title, category, description, liveUrl, detailsUrl, imageUrl },
     });
 
     revalidatePath('/');
@@ -54,6 +55,7 @@ export default async function ManageProjects() {
           <input name="category" placeholder="Category (e.g., Web Development)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
           <textarea name="description" placeholder="Description" required rows={3} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }} />
           <input name="liveUrl" placeholder="Live URL (optional)" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
+          <input name="detailsUrl" placeholder="Project Details URL (optional)" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
           <input name="image" type="file" accept="image/*" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
           <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>Add Project</button>
         </form>
