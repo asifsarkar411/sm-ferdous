@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaWhatsapp, FaFacebook, FaFacebookMessenger, FaLinkedin, FaGithub, FaPlus } from 'react-icons/fa';
+import { FaWhatsapp, FaFacebook, FaFacebookMessenger, FaGithub, FaPhoneAlt, FaPlus } from 'react-icons/fa';
 
 export default function FloatingSocials() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,11 +10,11 @@ export default function FloatingSocials() {
   const toggleOpen = () => setIsOpen(!isOpen);
 
   const socials = [
-    { name: 'WhatsApp', icon: <FaWhatsapp size={24} />, color: '#25D366', url: 'https://wa.me/yourphonenumber' },
-    { name: 'Facebook', icon: <FaFacebook size={24} />, color: '#1877F2', url: 'https://facebook.com/yourprofile' },
-    { name: 'Messenger', icon: <FaFacebookMessenger size={24} />, color: '#00B2FF', url: 'https://m.me/yourprofile' },
-    { name: 'LinkedIn', icon: <FaLinkedin size={24} />, color: '#0A66C2', url: 'https://linkedin.com/in/yourprofile' },
-    { name: 'GitHub', icon: <FaGithub size={24} />, color: '#333333', url: 'https://github.com/yourprofile' },
+    { name: 'WhatsApp', icon: <FaWhatsapp size={24} />, color: '#25D366', url: 'https://wa.me/8801743648510' },
+    { name: 'Facebook', icon: <FaFacebook size={24} />, color: '#1877F2', url: 'https://www.facebook.com/sarkarasif59/' },
+    { name: 'Messenger', icon: <FaFacebookMessenger size={24} />, color: '#00B2FF', url: 'https://m.me/sarkarasif59' },
+    { name: 'GitHub', icon: <FaGithub size={24} />, color: '#333333', url: 'https://github.com/asifsarkar411' },
+    { name: 'Phone', icon: <FaPhoneAlt size={24} />, color: '#00c6d2', url: 'tel:01628628300' },
   ];
 
   return (
