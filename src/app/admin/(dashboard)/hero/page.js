@@ -1,8 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import fs from 'fs/promises';
-import path from 'path';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 export default async function ManageHero() {
   const heroData = await prisma.hero.findFirst();
@@ -20,30 +19,19 @@ export default async function ManageHero() {
 
     const logoFile = formData.get('logoImage');
     let logoImageUrl = currentHero?.logoImage || null;
-    
-    const publicDir = path.join(process.cwd(), 'public', 'uploads');
-    
-    // Ensure uploads directory exists
-    try { await fs.mkdir(publicDir, { recursive: true }); } catch (e) {}
 
     if (file && file.size > 0) {
       try {
         const buffer = Buffer.from(await file.arrayBuffer());
-        const originalName = file.name || 'image.jpg';
-        const filename = `${Date.now()}-${originalName.replace(/\\s/g, '_')}`;
-        await fs.writeFile(path.join(publicDir, filename), buffer);
-        imageUrl = `/uploads/${filename}`;
-      } catch (e) { console.error('Error saving file:', e); }
+        imageUrl = await uploadToCloudinary(buffer, 'portfolio/hero');
+      } catch (e) { console.error('Error uploading file to Cloudinary:', e); }
     }
 
     if (logoFile && logoFile.size > 0) {
       try {
         const buffer = Buffer.from(await logoFile.arrayBuffer());
-        const originalName = logoFile.name || 'logo.png';
-        const filename = `logo-${Date.now()}-${originalName.replace(/\\s/g, '_')}`;
-        await fs.writeFile(path.join(publicDir, filename), buffer);
-        logoImageUrl = `/uploads/${filename}`;
-      } catch (e) { console.error('Error saving logo file:', e); }
+        logoImageUrl = await uploadToCloudinary(buffer, 'portfolio/logo');
+      } catch (e) { console.error('Error uploading logo file to Cloudinary:', e); }
     }
 
     if (currentHero) {

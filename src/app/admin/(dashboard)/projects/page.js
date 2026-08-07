@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
-import fs from 'fs/promises';
-import path from 'path';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 const prisma = new PrismaClient();
 
@@ -15,21 +14,16 @@ export default async function ManageProjects() {
     const description = formData.get('description');
     const liveUrl = formData.get('liveUrl');
     
-    // Simple local file upload for the project image
+    // Cloudinary upload for the project image
     const file = formData.get('image');
     let imageUrl = '';
     
     if (file && file.size > 0) {
-      const publicDir = path.join(process.cwd(), 'public', 'uploads');
       try {
         const buffer = Buffer.from(await file.arrayBuffer());
-        const originalName = file.name || 'project.jpg';
-        const filename = `${Date.now()}-${originalName.replace(/\\s/g, '_')}`;
-        await fs.mkdir(publicDir, { recursive: true });
-        await fs.writeFile(path.join(publicDir, filename), buffer);
-        imageUrl = `/uploads/${filename}`;
+        imageUrl = await uploadToCloudinary(buffer, 'portfolio/projects');
       } catch (e) {
-        console.error('Error saving file:', e);
+        console.error('Error uploading file to Cloudinary:', e);
       }
     }
 

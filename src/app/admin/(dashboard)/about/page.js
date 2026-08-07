@@ -1,8 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import fs from 'fs/promises';
-import path from 'path';
+import { uploadToCloudinary } from '@/lib/cloudinary';
 
 export default async function ManageAbout() {
   const aboutData = await prisma.about.findFirst();
@@ -20,16 +19,11 @@ export default async function ManageAbout() {
     let imageUrl = currentAbout?.imageUrl || null;
     
     if (file && file.size > 0) {
-      const publicDir = path.join(process.cwd(), 'public', 'uploads');
       try {
         const buffer = Buffer.from(await file.arrayBuffer());
-        const originalName = file.name || 'image.jpg';
-        const filename = `${Date.now()}-${originalName.replace(/\\s/g, '_')}`;
-        await fs.mkdir(publicDir, { recursive: true });
-        await fs.writeFile(path.join(publicDir, filename), buffer);
-        imageUrl = `/uploads/${filename}`;
+        imageUrl = await uploadToCloudinary(buffer, 'portfolio/about');
       } catch (e) {
-        console.error('Error saving file:', e);
+        console.error('Error uploading file to Cloudinary:', e);
       }
     }
 
