@@ -9,13 +9,15 @@ export default async function ManageAbout() {
 
   async function updateAbout(formData) {
     'use server';
+    const currentAbout = await prisma.about.findFirst();
+
     const description = formData.get('description');
     const yearsCoding = formData.get('yearsCoding');
     const projectsBuilt = formData.get('projectsBuilt');
     const frameworks = formData.get('frameworks');
     
     const file = formData.get('image');
-    let imageUrl = aboutData?.imageUrl || null;
+    let imageUrl = currentAbout?.imageUrl || null;
     
     if (file && file.size > 0) {
       const buffer = Buffer.from(await file.arrayBuffer());
@@ -31,9 +33,9 @@ export default async function ManageAbout() {
       }
     }
 
-    if (aboutData) {
+    if (currentAbout) {
       await prisma.about.update({
-        where: { id: aboutData.id },
+        where: { id: currentAbout.id },
         data: { description, yearsCoding, projectsBuilt, frameworks, imageUrl },
       });
     } else {

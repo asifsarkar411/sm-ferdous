@@ -9,15 +9,17 @@ export default async function ManageHero() {
 
   async function updateHero(formData) {
     'use server';
+    const currentHero = await prisma.hero.findFirst();
+    
     const title = formData.get('title');
     const subtitle = formData.get('subtitle');
     const logoName = formData.get('logoName');
     
     const file = formData.get('image');
-    let imageUrl = heroData?.imageUrl || null;
+    let imageUrl = currentHero?.imageUrl || null;
 
     const logoFile = formData.get('logoImage');
-    let logoImageUrl = heroData?.logoImage || null;
+    let logoImageUrl = currentHero?.logoImage || null;
     
     const publicDir = path.join(process.cwd(), 'public', 'uploads');
     
@@ -26,7 +28,7 @@ export default async function ManageHero() {
 
     if (file && file.size > 0) {
       const buffer = Buffer.from(await file.arrayBuffer());
-      const filename = `${Date.now()}-${file.name.replace(/\s/g, '_')}`;
+      const filename = `${Date.now()}-${file.name.replace(/\\s/g, '_')}`;
       try {
         await fs.writeFile(path.join(publicDir, filename), buffer);
         imageUrl = `/uploads/${filename}`;
@@ -35,16 +37,16 @@ export default async function ManageHero() {
 
     if (logoFile && logoFile.size > 0) {
       const buffer = Buffer.from(await logoFile.arrayBuffer());
-      const filename = `logo-${Date.now()}-${logoFile.name.replace(/\s/g, '_')}`;
+      const filename = `logo-${Date.now()}-${logoFile.name.replace(/\\s/g, '_')}`;
       try {
         await fs.writeFile(path.join(publicDir, filename), buffer);
         logoImageUrl = `/uploads/${filename}`;
       } catch (e) { console.error('Error saving logo file:', e); }
     }
 
-    if (heroData) {
+    if (currentHero) {
       await prisma.hero.update({
-        where: { id: heroData.id },
+        where: { id: currentHero.id },
         data: { title, subtitle, imageUrl, logoName, logoImage: logoImageUrl },
       });
     } else {
