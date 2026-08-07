@@ -12,8 +12,6 @@ export default async function AdminDashboard() {
   const messageCount = await prisma.message.count();
   const cvCount = await prisma.cV.count();
   const skillCount = await prisma.skill.count();
-  const serviceCount = await prisma.service.count();
-  const testimonialCount = await prisma.testimonial.count();
   const hobbyCount = await prisma.hobby.count();
 
   const cards = [
@@ -23,8 +21,6 @@ export default async function AdminDashboard() {
     { title: 'Skills', desc: 'Manage your technical skills.', link: '/admin/skills', count: skillCount },
     { title: 'Journey', desc: 'Update your experience timeline.', link: '/admin/journey', count: 'Timeline' },
     { title: 'Education', desc: 'Update your education history.', link: '/admin/education', count: 'History' },
-    { title: 'Services', desc: 'Manage your provided services.', link: '/admin/services', count: serviceCount },
-    { title: 'Testimonials', desc: 'Manage client reviews.', link: '/admin/testimonials', count: testimonialCount },
     { title: 'Hobbies', desc: 'Manage your hobbies and interests.', link: '/admin/hobbies', count: hobbyCount },
     { title: 'Messages', desc: 'View contact form submissions.', link: '/admin/messages', count: messageCount },
     { title: 'CVs', desc: 'Manage downloadable CVs.', link: '/admin/cvs', count: cvCount },
