@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 const prisma = new PrismaClient();
 
 export default async function EditEducation({ params }) {
-  const { id } = params;
+  const { id } = await params;
   const edu = await prisma.education.findUnique({ where: { id } });
 
   if (!edu) {

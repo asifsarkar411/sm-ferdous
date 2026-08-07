@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 const prisma = new PrismaClient();
 
 export default async function EditService({ params }) {
-  const { id } = params;
+  const { id } = await params;
   const service = await prisma.service.findUnique({ where: { id } });
 
   if (!service) {

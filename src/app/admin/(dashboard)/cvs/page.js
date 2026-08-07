@@ -3,47 +3,47 @@ import { revalidatePath } from 'next/cache';
 
 const prisma = new PrismaClient();
 
-export default async function ManageCVs() {
-  const cvs = await prisma.cV.findMany({ orderBy: { createdAt: 'desc' } });
+export async function createCV(formData) {
+  'use server';
+  const title = formData.get('title');
+  const file = formData.get('file');
 
-  async function createCV(formData) {
-    'use server';
-    const title = formData.get('title');
-    const file = formData.get('file');
+  if (file && file.size > 0) {
+    try {
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const mimeType = file.type || 'application/pdf';
+      const fileUrl = `data:${mimeType};base64,${buffer.toString('base64')}`;
 
-    if (file && file.size > 0) {
-      try {
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const mimeType = file.type || 'application/pdf';
-        const fileUrl = `data:${mimeType};base64,${buffer.toString('base64')}`;
-
-        await prisma.cV.create({
-          data: { title, fileUrl },
-        });
-        revalidatePath('/');
-        revalidatePath('/admin/cvs');
-      } catch (error) {
-        console.error('Error uploading CV:', error);
-      }
+      await prisma.cV.create({
+        data: { title, fileUrl },
+      });
+      revalidatePath('/');
+      revalidatePath('/admin/cvs');
+    } catch (error) {
+      console.error('Error uploading CV:', error);
     }
   }
+}
 
-  async function deleteCV(formData) {
-    'use server';
-    const id = formData.get('id');
-    await prisma.cV.delete({ where: { id } });
-    revalidatePath('/');
-    revalidatePath('/admin/cvs');
-  }
+export async function deleteCV(formData) {
+  'use server';
+  const id = formData.get('id');
+  await prisma.cV.delete({ where: { id } });
+  revalidatePath('/');
+  revalidatePath('/admin/cvs');
+}
 
-  async function toggleHideCV(formData) {
-    'use server';
-    const id = formData.get('id');
-    const isHidden = formData.get('isHidden') === 'true';
-    await prisma.cV.update({ where: { id }, data: { isHidden: !isHidden } });
-    revalidatePath('/');
-    revalidatePath('/admin/cvs');
-  }
+export async function toggleHideCV(formData) {
+  'use server';
+  const id = formData.get('id');
+  const isHidden = formData.get('isHidden') === 'true';
+  await prisma.cV.update({ where: { id }, data: { isHidden: !isHidden } });
+  revalidatePath('/');
+  revalidatePath('/admin/cvs');
+}
+
+export default async function ManageCVs() {
+  const cvs = await prisma.cV.findMany({ orderBy: { createdAt: 'desc' } });
 
   return (
     <div>

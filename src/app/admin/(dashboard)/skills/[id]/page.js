@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 const prisma = new PrismaClient();
 
 export default async function EditSkill({ params }) {
-  const { id } = params;
+  const { id } = await params;
   const skill = await prisma.skill.findUnique({ where: { id } });
 
   if (!skill) {

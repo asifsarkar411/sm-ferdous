@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 const prisma = new PrismaClient();
 
 export default async function EditJourney({ params }) {
-  const { id } = params;
+  const { id } = await params;
   const journey = await prisma.journey.findUnique({ where: { id } });
 
   if (!journey) {

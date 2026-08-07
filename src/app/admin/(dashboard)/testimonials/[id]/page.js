@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 const prisma = new PrismaClient();
 
 export default async function EditTestimonial({ params }) {
-  const { id } = params;
+  const { id } = await params;
   const testimonial = await prisma.testimonial.findUnique({ where: { id } });
 
   if (!testimonial) {
