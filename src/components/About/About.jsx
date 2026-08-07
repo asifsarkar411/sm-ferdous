@@ -34,7 +34,7 @@ export default async function About() {
             </div>
             <div style={{ backgroundColor: 'var(--color-surface-hover)', padding: '1.5rem 1rem', borderRadius: '12px', textAlign: 'center', flex: 1, border: '1px solid var(--color-border)' }}>
               <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary)', marginBottom: '0.5rem' }}>{aboutData?.frameworks || '3+'}</div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>Frameworks</div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>Language and framework</div>
             </div>
           </div>
         </div>

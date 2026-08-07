@@ -76,12 +76,8 @@ export default async function ManageAbout() {
             />
           </div>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Frameworks</label>
-            <input 
-              name="frameworks" 
-              defaultValue={aboutData?.frameworks || ''} 
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
-            />
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--color-text)' }}>Language and framework Count</label>
+            <input name="frameworks" defaultValue={aboutData?.frameworks || ''} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
           </div>
         </div>
         

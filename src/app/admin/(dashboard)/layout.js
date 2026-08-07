@@ -22,6 +22,7 @@ export default async function AdminLayout({ children }) {
           <Link href="/admin" style={{ color: 'var(--color-text)' }}>Dashboard</Link>
           <Link href="/admin/hero" style={{ color: 'var(--color-text)' }}>Manage Hero</Link>
           <Link href="/admin/about" style={{ color: 'var(--color-text)' }}>Manage About</Link>
+          <Link href="/admin/education" style={{ color: 'var(--color-text)' }}>Manage Education</Link>
           <Link href="/admin/journey" style={{ color: 'var(--color-text)' }}>Manage Journey</Link>
           <Link href="/admin/skills" style={{ color: 'var(--color-text)' }}>Manage Skills</Link>
           <Link href="/admin/projects" style={{ color: 'var(--color-text)' }}>Manage Projects</Link>
