@@ -46,17 +46,7 @@ export default async function ManageContact() {
         </div>
         
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Description</label>
-          <textarea 
-            name="description" 
-            defaultValue={contactData?.description || ''} 
-            rows={2}
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }}
-          />
-        </div>
-
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Motto</label>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Email</label>
           <input 
             name="motto" 
             defaultValue={contactData?.motto || ''} 
@@ -88,6 +78,16 @@ export default async function ManageContact() {
             name="phoneNumber" 
             defaultValue={contactData?.phoneNumber || ''} 
             style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+          />
+        </div>
+
+        <div>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Description</label>
+          <textarea 
+            name="description" 
+            defaultValue={contactData?.description || ''} 
+            rows={2}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }}
           />
         </div>
         

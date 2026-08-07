@@ -19,7 +19,7 @@ export default async function Contact() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '2rem' }}>
             {contactData?.motto && (
               <div>
-                <strong>Motto:</strong> <span style={{ color: 'var(--color-text-secondary)' }}>{contactData.motto}</span>
+                <strong>Email:</strong> <span style={{ color: 'var(--color-text-secondary)' }}>{contactData.motto}</span>
               </div>
             )}
             {contactData?.address && (
