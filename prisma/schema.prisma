@@ -89,3 +89,11 @@ model Message {
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
 }
+
+model CV {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  fileUrl   String
+  isHidden  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

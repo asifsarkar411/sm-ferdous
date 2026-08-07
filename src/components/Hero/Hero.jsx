@@ -1,8 +1,10 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
+import DownloadCVButton from './DownloadCVButton';
 
 export default async function Hero() {
   const heroData = await prisma.hero.findFirst();
+  const cvs = await prisma.cV.findMany();
 
   if (!heroData) return null;
 
@@ -18,12 +20,10 @@ export default async function Hero() {
             {heroData.description || 'Developing seamless frontend interfaces and robust automation pipelines.'}
           </p>
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '2rem' }}>
-            <a href={heroData.cvUrl || '#'} download className="btn btn-outline" style={{ padding: '0.75rem 1.5rem' }}>
-              Download CV &darr;
-            </a>
-            <Link href="#contact" className="btn btn-primary" style={{ padding: '0.75rem 1.5rem' }}>
+            <DownloadCVButton cvs={cvs} fallbackUrl={heroData.cvUrl} />
+            <a href="#contact" className="btn btn-primary" style={{ padding: '0.75rem 1.5rem' }}>
               Get In Touch &rarr;
-            </Link>
+            </a>
           </div>
         </div>
         <div className="animate-float" style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
