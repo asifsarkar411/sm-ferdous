@@ -27,6 +27,7 @@ export default async function AdminLayout({ children }) {
           <Link href="/admin/projects" style={{ color: 'var(--color-text)' }}>Manage Projects</Link>
           <Link href="/admin/messages" style={{ color: 'var(--color-text)' }}>Inbox (Messages)</Link>
           <Link href="/admin/contact" style={{ color: 'var(--color-text)' }}>Manage Contact</Link>
+          <Link href="/admin/settings" style={{ color: 'var(--color-text)' }}>⚙️ Settings</Link>
           <div style={{ marginTop: 'auto' }}>
             <Link href="/" style={{ color: 'var(--color-text-secondary)', display: 'inline-block', marginTop: '2rem' }}>&larr; Back to Site</Link>
           </div>
