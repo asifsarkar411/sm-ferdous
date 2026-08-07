@@ -4,6 +4,7 @@ import About from '@/components/About/About';
 import Journey from '@/components/Journey/Journey';
 import Skills from '@/components/Skills/Skills';
 import Projects from '@/components/Projects/Projects';
+import Hobby from '@/components/Hobby/Hobby';
 import Contact from '@/components/Contact/Contact';
 import FadeIn from '@/components/FadeIn';
 import FloatingSocials from '@/components/FloatingSocials/FloatingSocials';
@@ -17,6 +18,7 @@ export default function Home() {
       <FadeIn delay={0.2}><Journey /></FadeIn>
       <FadeIn delay={0.2}><Skills /></FadeIn>
       <FadeIn delay={0.2}><Projects /></FadeIn>
+      <FadeIn delay={0.2}><Hobby /></FadeIn>
       <FadeIn delay={0.2}><Contact /></FadeIn>
       <FloatingSocials />
     </main>

@@ -97,3 +97,10 @@ model CV {
   isHidden  Boolean  @default(false)
   createdAt DateTime @default(now())
 }
+
+model Hobby {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  imageUrl    String?
+}
