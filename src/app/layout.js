@@ -1,4 +1,5 @@
-import './globals.css'
+import './globals.css';
+import ThemeProvider from '@/components/ThemeProvider';
 
 export const metadata = {
   title: 'Portfolio | Unlock the Career You Deserve',
@@ -7,9 +8,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )

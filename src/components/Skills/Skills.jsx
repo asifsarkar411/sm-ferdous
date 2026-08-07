@@ -30,10 +30,10 @@ export default async function Skills() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
               {items.map(skill => (
                 <div key={skill.id} style={{ 
-                  backgroundColor: 'rgba(255,255,255,0.05)', 
+                  backgroundColor: 'var(--color-surface)', 
                   padding: '1.5rem', 
                   borderRadius: '12px',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  border: '1px solid var(--color-border)',
                   textAlign: 'center'
                 }}>
                   <p style={{ fontWeight: '500', fontSize: '1.1rem' }}>{skill.name}</p>

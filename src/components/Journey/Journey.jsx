@@ -16,12 +16,12 @@ export default async function Journey() {
 
       <div style={{ position: 'relative', maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
         {/* Vertical line */}
-        <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', width: '2px', height: '100%', backgroundColor: 'rgba(255,255,255,0.1)', zIndex: 0 }}></div>
+        <div className="hide-on-mobile" style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', width: '2px', height: '100%', backgroundColor: 'var(--color-border)', zIndex: 0 }}></div>
 
         {journeys.map((journey, index) => {
           const isLeft = index % 2 === 0;
           return (
-            <div key={journey.id} style={{ 
+            <div key={journey.id} className="timeline-item flex-responsive" style={{ 
               display: 'flex', 
               justifyContent: isLeft ? 'flex-start' : 'flex-end',
               position: 'relative',
@@ -30,7 +30,7 @@ export default async function Journey() {
             }}>
               
               {/* Dot */}
-              <div style={{ 
+              <div className="hide-on-mobile" style={{ 
                 position: 'absolute', 
                 left: '50%', 
                 transform: 'translate(-50%, 20px)', 
@@ -42,20 +42,20 @@ export default async function Journey() {
               }}></div>
 
               {/* Content Card */}
-              <div style={{ 
+              <div className="timeline-card" style={{ 
                 width: '45%', 
-                backgroundColor: 'rgba(255,255,255,0.05)', 
+                backgroundColor: 'var(--color-surface)', 
                 padding: '2rem', 
                 borderRadius: '12px',
-                border: '1px solid rgba(255,255,255,0.1)'
+                border: '1px solid var(--color-border)'
               }}>
                 <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>{journey.title}</h3>
                 <p style={{ color: 'var(--color-primary)', marginBottom: '1rem' }}>{journey.subtitle}</p>
-                <div style={{ display: 'flex', gap: '1rem', fontSize: '0.875rem', color: '#aaa', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', gap: '1rem', fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '1rem' }}>
                   <span>📅 {journey.date}</span>
                   <span>📍 {journey.location}</span>
                 </div>
-                <ul style={{ paddingLeft: '1.2rem', color: '#e2e8f0', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <ul style={{ paddingLeft: '1.2rem', color: 'var(--color-text-primary)', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   {journey.points.map((p, i) => <li key={i}>{p}</li>)}
                 </ul>
               </div>

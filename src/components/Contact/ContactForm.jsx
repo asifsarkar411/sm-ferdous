@@ -39,23 +39,23 @@ export default function ContactForm() {
         name="name" 
         placeholder="Your Name" 
         required 
-        style={{ padding: '0.75rem', borderRadius: '8px', border: '1px solid #eaeaea', backgroundColor: 'transparent', color: 'white' }} 
+        style={{ padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface-hover)', color: 'var(--color-text-primary)' }} 
       />
       <input 
         name="email" 
         type="email" 
         placeholder="Your Email" 
         required 
-        style={{ padding: '0.75rem', borderRadius: '8px', border: '1px solid #eaeaea', backgroundColor: 'transparent', color: 'white' }} 
+        style={{ padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface-hover)', color: 'var(--color-text-primary)' }} 
       />
       <textarea 
         name="message" 
         placeholder="Your Message" 
         required 
         rows={4} 
-        style={{ padding: '0.75rem', borderRadius: '8px', border: '1px solid #eaeaea', backgroundColor: 'transparent', color: 'white', resize: 'vertical' }} 
+        style={{ padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface-hover)', color: 'var(--color-text-primary)', resize: 'vertical' }} 
       />
-      <button type="submit" className="btn btn-primary" style={{ backgroundColor: '#fff', color: 'var(--color-hero-bg)' }} disabled={status === 'sending'}>
+      <button type="submit" className="btn btn-primary" disabled={status === 'sending'}>
         {status === 'sending' ? 'Sending...' : 'Send Message'}
       </button>
       {status === 'success' && <p style={{ color: 'lightgreen', fontSize: '0.875rem' }}>Message sent successfully!</p>}

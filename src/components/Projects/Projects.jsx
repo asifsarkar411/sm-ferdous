@@ -17,24 +17,24 @@ export default async function Projects() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
         {projects.map(project => (
           <div key={project.id} style={{ 
-            backgroundColor: 'rgba(255,255,255,0.05)', 
+            backgroundColor: 'var(--color-surface)', 
             borderRadius: '16px',
-            border: '1px solid rgba(255,255,255,0.1)',
+            border: '1px solid var(--color-border)',
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column'
           }}>
-            <div style={{ height: '200px', backgroundColor: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ height: '200px', backgroundColor: 'var(--color-surface-hover)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {project.imageUrl ? (
                 <img src={project.imageUrl} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               ) : (
-                <span style={{ color: '#888' }}>No Image</span>
+                <span style={{ color: 'var(--color-text-secondary)' }}>No Image</span>
               )}
             </div>
             <div style={{ padding: '2rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
               <span style={{ color: 'var(--color-primary)', fontSize: '0.875rem', fontWeight: 'bold', marginBottom: '0.5rem' }}>{project.category}</span>
               <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>{project.title}</h3>
-              <p style={{ color: '#e2e8f0', fontSize: '0.9rem', marginBottom: '2rem', flex: 1 }}>{project.description}</p>
+              <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.9rem', marginBottom: '2rem', flex: 1 }}>{project.description}</p>
               {project.liveUrl && (
                 <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ textAlign: 'center' }}>
                   View Project Instance
