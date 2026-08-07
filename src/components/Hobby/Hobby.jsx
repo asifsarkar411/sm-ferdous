@@ -18,10 +18,7 @@ export default async function Hobby() {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
         {hobbies.map((hobby) => (
-          <div key={hobby.id} className="animate-float" style={{ backgroundColor: 'var(--color-surface)', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)', transition: 'transform 0.3s ease, box-shadow 0.3s ease', cursor: 'pointer' }}
-               onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-10px)'; e.currentTarget.style.boxShadow = '0 20px 40px rgba(0,0,0,0.2)'; }}
-               onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--shadow-sm)'; }}
-          >
+          <div key={hobby.id} className="animate-float hobby-card" style={{ backgroundColor: 'var(--color-surface)', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)', transition: 'transform 0.3s ease, box-shadow 0.3s ease', cursor: 'pointer' }}>
             {hobby.imageUrl ? (
               <img src={hobby.imageUrl} alt={hobby.title} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
             ) : (

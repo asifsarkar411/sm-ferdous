@@ -192,3 +192,5 @@ button {
 .social-icon-wa:hover { color: #25D366 !important; }
 .social-icon-gh:hover { color: var(--color-text-primary) !important; }
 .social-icon-ph:hover { color: var(--color-primary) !important; }
+
+.hobby-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.2) !important; }
