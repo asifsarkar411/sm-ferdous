@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { uploadToImgBB } from '@/lib/imgbb';
 
 export default async function ManageHero() {
   const heroData = await prisma.hero.findFirst();
@@ -23,15 +22,17 @@ export default async function ManageHero() {
     if (file && file.size > 0) {
       try {
         const buffer = Buffer.from(await file.arrayBuffer());
-        imageUrl = await uploadToImgBB(buffer);
-      } catch (e) { console.error('Error uploading file to ImgBB:', e); }
+        const mimeType = file.type || 'image/jpeg';
+        imageUrl = `data:${mimeType};base64,${buffer.toString('base64')}`;
+      } catch (e) { console.error('Error converting file to Base64:', e); }
     }
 
     if (logoFile && logoFile.size > 0) {
       try {
         const buffer = Buffer.from(await logoFile.arrayBuffer());
-        logoImageUrl = await uploadToImgBB(buffer);
-      } catch (e) { console.error('Error uploading logo file to ImgBB:', e); }
+        const mimeType = logoFile.type || 'image/png';
+        logoImageUrl = `data:${mimeType};base64,${buffer.toString('base64')}`;
+      } catch (e) { console.error('Error converting logo to Base64:', e); }
     }
 
     if (currentHero) {

@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
-import { uploadToImgBB } from '@/lib/imgbb';
 
 const prisma = new PrismaClient();
 
@@ -21,9 +20,10 @@ export default async function ManageProjects() {
     if (file && file.size > 0) {
       try {
         const buffer = Buffer.from(await file.arrayBuffer());
-        imageUrl = await uploadToImgBB(buffer);
+        const mimeType = file.type || 'image/jpeg';
+        imageUrl = `data:${mimeType};base64,${buffer.toString('base64')}`;
       } catch (e) {
-        console.error('Error uploading file to ImgBB:', e);
+        console.error('Error converting file to Base64:', e);
       }
     }
 
