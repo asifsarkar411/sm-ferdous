@@ -48,19 +48,19 @@ export default async function Contact() {
       <footer className="flex-responsive" style={{ marginTop: '5rem', padding: '2rem 0', borderTop: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--color-text-secondary)', gap: '2rem' }}>
         <div>All right reserved by SM FERDOUS AHMMED</div>
         <div style={{ display: 'flex', gap: '1.5rem', fontSize: '1.5rem' }}>
-          <a href="https://www.facebook.com/sarkarasif59/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-text-secondary)', transition: 'color 0.2s' }} onMouseOver={e => e.currentTarget.style.color = '#1877F2'} onMouseOut={e => e.currentTarget.style.color = 'var(--color-text-secondary)'} title="Facebook">
+          <a href="https://www.facebook.com/sarkarasif59/" target="_blank" rel="noopener noreferrer" className="social-icon-fb" style={{ color: 'var(--color-text-secondary)', transition: 'color 0.2s' }} title="Facebook">
             <FaFacebook />
           </a>
-          <a href="https://m.me/sarkarasif59" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-text-secondary)', transition: 'color 0.2s' }} onMouseOver={e => e.currentTarget.style.color = '#00B2FF'} onMouseOut={e => e.currentTarget.style.color = 'var(--color-text-secondary)'} title="Messenger">
+          <a href="https://m.me/sarkarasif59" target="_blank" rel="noopener noreferrer" className="social-icon-msg" style={{ color: 'var(--color-text-secondary)', transition: 'color 0.2s' }} title="Messenger">
             <FaFacebookMessenger />
           </a>
-          <a href="https://wa.me/8801743648510" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-text-secondary)', transition: 'color 0.2s' }} onMouseOver={e => e.currentTarget.style.color = '#25D366'} onMouseOut={e => e.currentTarget.style.color = 'var(--color-text-secondary)'} title="WhatsApp">
+          <a href="https://wa.me/8801743648510" target="_blank" rel="noopener noreferrer" className="social-icon-wa" style={{ color: 'var(--color-text-secondary)', transition: 'color 0.2s' }} title="WhatsApp">
             <FaWhatsapp />
           </a>
-          <a href="https://github.com/asifsarkar411" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--color-text-secondary)', transition: 'color 0.2s' }} onMouseOver={e => e.currentTarget.style.color = 'var(--color-text-primary)'} onMouseOut={e => e.currentTarget.style.color = 'var(--color-text-secondary)'} title="GitHub">
+          <a href="https://github.com/asifsarkar411" target="_blank" rel="noopener noreferrer" className="social-icon-gh" style={{ color: 'var(--color-text-secondary)', transition: 'color 0.2s' }} title="GitHub">
             <FaGithub />
           </a>
-          <a href="tel:01628628300" style={{ color: 'var(--color-text-secondary)', transition: 'color 0.2s' }} onMouseOver={e => e.currentTarget.style.color = 'var(--color-primary)'} onMouseOut={e => e.currentTarget.style.color = 'var(--color-text-secondary)'} title="Call Phone">
+          <a href="tel:01628628300" className="social-icon-ph" style={{ color: 'var(--color-text-secondary)', transition: 'color 0.2s' }} title="Call Phone">
             <FaPhoneAlt />
           </a>
         </div>
