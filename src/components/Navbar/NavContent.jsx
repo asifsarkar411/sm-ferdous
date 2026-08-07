@@ -40,7 +40,15 @@ export default function NavContent({ logoName, logoImage }) {
       color: '#fff' // keep nav dark or adapt to theme, let's let theme dictate a bit but navbar is usually distinct.
     }}>
       <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        {logoImage && <img src={logoImage} alt="Logo" style={{ height: '40px', width: 'auto', borderRadius: '4px' }} />}
+        {logoImage && (
+          <motion.img 
+            src={logoImage} 
+            alt="Logo" 
+            whileHover={{ scale: 1.1, rotate: 10 }}
+            whileTap={{ scale: 0.9 }}
+            style={{ height: '40px', width: '40px', objectFit: 'cover', borderRadius: '50%' }} 
+          />
+        )}
         <div style={{ fontWeight: 'bold', fontSize: '1.25rem', color: 'var(--color-primary)' }}>
           {logoName || 'Logo'}
         </div>

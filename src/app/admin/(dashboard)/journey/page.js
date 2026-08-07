@@ -55,10 +55,13 @@ export default async function ManageJourney() {
             <ul style={{ fontSize: '0.875rem', paddingLeft: '1.5rem', marginBottom: '1rem' }}>
               {journey.points.map((p, i) => <li key={i}>{p}</li>)}
             </ul>
-            <form action={deleteJourney}>
-              <input type="hidden" name="id" value={journey.id} />
-              <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem' }}>Delete</button>
-            </form>
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+              <a href={`/admin/journey/${journey.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontSize: '0.875rem' }}>Edit</a>
+              <form action={deleteJourney}>
+                <input type="hidden" name="id" value={journey.id} />
+                <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Delete</button>
+              </form>
+            </div>
           </div>
         ))}
       </div>

@@ -66,10 +66,13 @@ export default async function ManageProjects() {
             <h4 style={{ marginBottom: '0.5rem' }}>{project.title}</h4>
             <p style={{ fontSize: '0.875rem', color: 'var(--color-primary)', marginBottom: '0.5rem' }}>{project.category}</p>
             <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '1rem' }}>{project.description}</p>
-            <form action={deleteProject}>
-              <input type="hidden" name="id" value={project.id} />
-              <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem' }}>Delete</button>
-            </form>
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+              <a href={`/admin/projects/${project.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontSize: '0.875rem' }}>Edit</a>
+              <form action={deleteProject}>
+                <input type="hidden" name="id" value={project.id} />
+                <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Delete</button>
+              </form>
+            </div>
           </div>
         ))}
       </div>

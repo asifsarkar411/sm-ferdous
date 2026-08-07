@@ -45,10 +45,13 @@ export default async function ManageSkills() {
           <div key={skill.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
             <h4 style={{ marginBottom: '0.5rem' }}>{skill.name}</h4>
             <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '1rem' }}>{skill.category}</p>
-            <form action={deleteSkill}>
-              <input type="hidden" name="id" value={skill.id} />
-              <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem' }}>Delete</button>
-            </form>
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+              <a href={`/admin/skills/${skill.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontSize: '0.875rem' }}>Edit</a>
+              <form action={deleteSkill}>
+                <input type="hidden" name="id" value={skill.id} />
+                <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Delete</button>
+              </form>
+            </div>
           </div>
         ))}
       </div>

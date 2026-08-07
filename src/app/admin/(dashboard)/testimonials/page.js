@@ -46,10 +46,13 @@ export default async function ManageTestimonials() {
             <p style={{ fontStyle: 'italic', marginBottom: '1rem', fontSize: '0.875rem' }}>"{t.quote}"</p>
             <h4 style={{ marginBottom: '0.25rem' }}>{t.name}</h4>
             <div style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', marginBottom: '1rem' }}>{t.role}</div>
-            <form action={deleteTestimonial}>
-              <input type="hidden" name="id" value={t.id} />
-              <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem' }}>Delete</button>
-            </form>
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+              <a href={`/admin/testimonials/${t.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontSize: '0.875rem' }}>Edit</a>
+              <form action={deleteTestimonial}>
+                <input type="hidden" name="id" value={t.id} />
+                <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Delete</button>
+              </form>
+            </div>
           </div>
         ))}
       </div>

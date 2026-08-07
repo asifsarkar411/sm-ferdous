@@ -44,10 +44,13 @@ export default async function ManageServices() {
           <div key={service.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
             <h4 style={{ marginBottom: '0.5rem' }}>{service.title}</h4>
             <p style={{ color: 'var(--color-text-secondary)', marginBottom: '1rem', fontSize: '0.875rem' }}>{service.description}</p>
-            <form action={deleteService}>
-              <input type="hidden" name="id" value={service.id} />
-              <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem' }}>Delete</button>
-            </form>
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+              <a href={`/admin/services/${service.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontSize: '0.875rem' }}>Edit</a>
+              <form action={deleteService}>
+                <input type="hidden" name="id" value={service.id} />
+                <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Delete</button>
+              </form>
+            </div>
           </div>
         ))}
       </div>

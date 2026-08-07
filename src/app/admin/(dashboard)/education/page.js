@@ -66,10 +66,13 @@ export default async function ManageEducation() {
               <p style={{ color: 'var(--color-text-secondary)', marginBottom: '0.5rem' }}>{edu.institution}</p>
               {edu.gpa && <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '1rem' }}>{edu.gpa}</p>}
               
-              <form action={deleteEducation}>
-                <input type="hidden" name="id" value={edu.id} />
-                <button type="submit" className="btn btn-outline" style={{ color: 'red', borderColor: 'red', padding: '0.5rem 1rem' }}>Delete</button>
-              </form>
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <a href={`/admin/education/${edu.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontSize: '0.875rem' }}>Edit</a>
+                <form action={deleteEducation}>
+                  <input type="hidden" name="id" value={edu.id} />
+                  <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Delete</button>
+                </form>
+              </div>
             </div>
           ))}
         </div>

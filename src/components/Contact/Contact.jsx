@@ -46,11 +46,7 @@ export default async function Contact() {
 
       </div>
       <footer className="flex-responsive" style={{ marginTop: '5rem', padding: '2rem 0', borderTop: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', color: 'var(--color-text-secondary)' }}>
-        <div>© 2026 Portfolio. All rights reserved.</div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
-          <a href="#">GitHub</a>
-          <a href="#">LinkedIn</a>
-        </div>
+        <div>All right reserved by SM FERDOUS AHMMED</div>
       </footer>
     </section>
   );
