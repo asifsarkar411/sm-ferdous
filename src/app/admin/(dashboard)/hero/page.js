@@ -52,18 +52,18 @@ export default async function ManageHero() {
   }
 
   return (
-    <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px' }}>
+    <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px' }}>
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Manage Hero & Navbar Settings</h2>
       <form action={updateHero} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         
-        <div style={{ padding: '1rem', border: '1px solid #eee', borderRadius: '8px', backgroundColor: '#fafafa' }}>
+        <div style={{ padding: '1rem', border: '1px solid var(--color-border)', borderRadius: '8px', backgroundColor: 'var(--color-bg)' }}>
           <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Navbar Logo Settings</h3>
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Navbar Logo Name</label>
             <input 
               name="logoName" 
               defaultValue={heroData?.logoName || ''} 
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
               placeholder="e.g. SM FERDOUS AHMMED"
             />
           </div>
@@ -78,12 +78,12 @@ export default async function ManageHero() {
               name="logoImage" 
               type="file"
               accept="image/*"
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
             />
           </div>
         </div>
 
-        <div style={{ padding: '1rem', border: '1px solid #eee', borderRadius: '8px' }}>
+        <div style={{ padding: '1rem', border: '1px solid var(--color-border)', borderRadius: '8px' }}>
           <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Hero Section Settings</h3>
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Title</label>
@@ -91,7 +91,7 @@ export default async function ManageHero() {
               name="title" 
               defaultValue={heroData?.title || ''} 
               required 
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
             />
           </div>
           
@@ -102,7 +102,7 @@ export default async function ManageHero() {
               defaultValue={heroData?.subtitle || ''} 
               required 
               rows={4}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc', resize: 'vertical' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }}
             />
           </div>
           
@@ -117,7 +117,7 @@ export default async function ManageHero() {
               name="image" 
               type="file"
               accept="image/*"
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
             />
             <small style={{ color: 'var(--color-text-secondary)', display: 'block', marginTop: '0.5rem' }}>
               Upload a picture from your device.
@@ -127,7 +127,7 @@ export default async function ManageHero() {
         
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
           <button type="submit" className="btn btn-primary">Save Changes</button>
-          <a href="/admin" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: '#ccc' }}>Cancel</a>
+          <a href="/admin" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>Cancel</a>
         </div>
       </form>
     </div>

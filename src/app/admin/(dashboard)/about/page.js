@@ -44,7 +44,7 @@ export default async function ManageAbout() {
   }
 
   return (
-    <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px' }}>
+    <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px' }}>
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Manage About Section</h2>
       <form action={updateAbout} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         <div>
@@ -54,7 +54,7 @@ export default async function ManageAbout() {
             defaultValue={aboutData?.description || ''} 
             required 
             rows={4}
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc', resize: 'vertical' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }}
           />
         </div>
 
@@ -64,7 +64,7 @@ export default async function ManageAbout() {
             <input 
               name="yearsCoding" 
               defaultValue={aboutData?.yearsCoding || ''} 
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
             />
           </div>
           <div style={{ flex: 1 }}>
@@ -72,7 +72,7 @@ export default async function ManageAbout() {
             <input 
               name="projectsBuilt" 
               defaultValue={aboutData?.projectsBuilt || ''} 
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
             />
           </div>
           <div style={{ flex: 1 }}>
@@ -80,7 +80,7 @@ export default async function ManageAbout() {
             <input 
               name="frameworks" 
               defaultValue={aboutData?.frameworks || ''} 
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
             />
           </div>
         </div>
@@ -96,13 +96,13 @@ export default async function ManageAbout() {
             name="image" 
             type="file"
             accept="image/*"
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
           />
         </div>
         
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
           <button type="submit" className="btn btn-primary">Save Changes</button>
-          <a href="/admin" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: '#ccc' }}>Cancel</a>
+          <a href="/admin" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>Cancel</a>
         </div>
       </form>
     </div>

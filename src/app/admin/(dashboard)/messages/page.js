@@ -42,7 +42,7 @@ export default async function ManageMessages() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         {messages.map(msg => (
           <div key={msg.id} style={{ 
-            backgroundColor: 'white', 
+            backgroundColor: 'var(--color-surface)', 
             padding: '1.5rem', 
             borderRadius: '12px', 
             boxShadow: 'var(--shadow-sm)',
@@ -51,14 +51,14 @@ export default async function ManageMessages() {
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
               <div>
                 <h4 style={{ marginBottom: '0.25rem' }}>{msg.name}</h4>
-                <p style={{ fontSize: '0.875rem', color: '#555' }}>{msg.email}</p>
+                <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>{msg.email}</p>
               </div>
               <span style={{ fontSize: '0.75rem', color: '#888' }}>
                 {new Date(msg.createdAt).toLocaleString()}
               </span>
             </div>
             
-            <div style={{ padding: '1rem', backgroundColor: '#f9fafb', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.875rem' }}>
+            <div style={{ padding: '1rem', backgroundColor: 'var(--color-bg)', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.875rem' }}>
               {msg.message}
             </div>
             

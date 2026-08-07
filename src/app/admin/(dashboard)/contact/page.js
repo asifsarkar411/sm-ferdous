@@ -33,7 +33,7 @@ export default async function ManageContact() {
   }
 
   return (
-    <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px' }}>
+    <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px' }}>
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Manage Contact Section</h2>
       <form action={updateContact} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         <div>
@@ -41,7 +41,7 @@ export default async function ManageContact() {
           <input 
             name="title" 
             defaultValue={contactData?.title || ''} 
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
           />
         </div>
         
@@ -51,7 +51,7 @@ export default async function ManageContact() {
             name="description" 
             defaultValue={contactData?.description || ''} 
             rows={2}
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc', resize: 'vertical' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }}
           />
         </div>
 
@@ -60,7 +60,7 @@ export default async function ManageContact() {
           <input 
             name="motto" 
             defaultValue={contactData?.motto || ''} 
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
           />
         </div>
 
@@ -69,7 +69,7 @@ export default async function ManageContact() {
           <input 
             name="address" 
             defaultValue={contactData?.address || ''} 
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
           />
         </div>
 
@@ -78,7 +78,7 @@ export default async function ManageContact() {
           <input 
             name="location" 
             defaultValue={contactData?.location || ''} 
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
           />
         </div>
 
@@ -87,13 +87,13 @@ export default async function ManageContact() {
           <input 
             name="phoneNumber" 
             defaultValue={contactData?.phoneNumber || ''} 
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
           />
         </div>
         
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
           <button type="submit" className="btn btn-primary">Save Changes</button>
-          <a href="/admin" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: '#ccc' }}>Cancel</a>
+          <a href="/admin" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>Cancel</a>
         </div>
       </form>
     </div>

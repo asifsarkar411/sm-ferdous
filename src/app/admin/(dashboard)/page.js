@@ -12,25 +12,25 @@ export default async function AdminDashboard() {
       </p>
       
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
-        <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
           <h3 style={{ marginBottom: '1rem' }}>Hero Section</h3>
           <p style={{ color: 'var(--color-text-secondary)', marginBottom: '1.5rem' }}>Update your main title, subtitle, and profile picture.</p>
           <a href="/admin/hero" className="btn btn-outline" style={{ borderColor: 'var(--color-accent)', color: 'var(--color-accent)' }}>Manage &rarr;</a>
         </div>
         
-        <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
           <h3 style={{ marginBottom: '1rem' }}>About Section</h3>
           <p style={{ color: 'var(--color-text-secondary)', marginBottom: '1.5rem' }}>Update your bio and experience.</p>
           <a href="/admin/about" className="btn btn-outline" style={{ borderColor: 'var(--color-accent)', color: 'var(--color-accent)' }}>Manage &rarr;</a>
         </div>
         
-        <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
           <h3 style={{ marginBottom: '1rem' }}>Services</h3>
           <p style={{ color: 'var(--color-text-secondary)', marginBottom: '1.5rem' }}>Add or edit your coaching services.</p>
           <a href="/admin/services" className="btn btn-outline" style={{ borderColor: 'var(--color-accent)', color: 'var(--color-accent)' }}>Manage &rarr;</a>
         </div>
         
-        <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
           <h3 style={{ marginBottom: '1rem' }}>Testimonials</h3>
           <p style={{ color: 'var(--color-text-secondary)', marginBottom: '1.5rem' }}>Manage your client reviews and success stories.</p>
           <a href="/admin/testimonials" className="btn btn-outline" style={{ borderColor: 'var(--color-accent)', color: 'var(--color-accent)' }}>Manage &rarr;</a>
