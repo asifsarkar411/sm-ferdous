@@ -65,10 +65,6 @@ export default function NavContent({ logoName, logoImage }) {
             {theme === 'dark' ? <FiSun /> : <FiMoon />}
           </button>
         )}
-        
-        <Link href="/admin" className="btn btn-outline" style={{ borderColor: 'currentColor', color: 'currentColor', padding: '0.4rem 1rem' }}>
-          Admin
-        </Link>
       </div>
 
       {/* Mobile Nav Toggle */}
@@ -110,10 +106,6 @@ export default function NavContent({ logoName, logoImage }) {
                   {link.label}
                 </Link>
               ))}
-              
-              <Link href="/admin" onClick={() => setIsOpen(false)} className="btn btn-outline" style={{ marginTop: 'auto', borderColor: 'var(--color-text-primary)', color: 'var(--color-text-primary)' }}>
-                Admin Dashboard
-              </Link>
             </motion.div>
           </>
         )}

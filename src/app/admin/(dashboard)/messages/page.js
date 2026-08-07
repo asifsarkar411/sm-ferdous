@@ -3,30 +3,30 @@ import { revalidatePath } from 'next/cache';
 
 const prisma = new PrismaClient();
 
+export async function toggleReadStatus(formData) {
+  'use server';
+  const id = formData.get('id');
+  const currentStatus = formData.get('isRead') === 'true';
+  
+  await prisma.message.update({
+    where: { id },
+    data: { isRead: !currentStatus }
+  });
+  
+  revalidatePath('/');
+  revalidatePath('/admin/messages');
+}
+
+export async function deleteMessage(formData) {
+  'use server';
+  const id = formData.get('id');
+  await prisma.message.delete({ where: { id } });
+  revalidatePath('/');
+  revalidatePath('/admin/messages');
+}
+
 export default async function ManageMessages() {
   const messages = await prisma.message.findMany({ orderBy: { createdAt: 'desc' } });
-
-  async function toggleReadStatus(formData) {
-    'use server';
-    const id = formData.get('id');
-    const currentStatus = formData.get('isRead') === 'true';
-    
-    await prisma.message.update({
-      where: { id },
-      data: { isRead: !currentStatus }
-    });
-    
-    revalidatePath('/');
-    revalidatePath('/admin/messages');
-  }
-
-  async function deleteMessage(formData) {
-    'use server';
-    const id = formData.get('id');
-    await prisma.message.delete({ where: { id } });
-    revalidatePath('/');
-    revalidatePath('/admin/messages');
-  }
 
   const unreadCount = messages.filter(m => !m.isRead).length;
 
@@ -72,7 +72,7 @@ export default async function ManageMessages() {
               </form>
               <form action={deleteMessage}>
                 <input type="hidden" name="id" value={msg.id} />
-                <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem', padding: '0.5rem 0' }}>Delete</button>
+                <button type="submit" className="btn btn-outline" style={{ fontSize: '0.875rem', padding: '0.5rem 1rem' }}>Delete</button>
               </form>
             </div>
           </div>
