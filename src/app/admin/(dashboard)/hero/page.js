@@ -11,32 +11,45 @@ export default async function ManageHero() {
     'use server';
     const title = formData.get('title');
     const subtitle = formData.get('subtitle');
+    const logoName = formData.get('logoName');
     
     const file = formData.get('image');
     let imageUrl = heroData?.imageUrl || null;
+
+    const logoFile = formData.get('logoImage');
+    let logoImageUrl = heroData?.logoImage || null;
     
+    const publicDir = path.join(process.cwd(), 'public', 'uploads');
+    
+    // Ensure uploads directory exists
+    try { await fs.mkdir(publicDir, { recursive: true }); } catch (e) {}
+
     if (file && file.size > 0) {
       const buffer = Buffer.from(await file.arrayBuffer());
       const filename = `${Date.now()}-${file.name.replace(/\s/g, '_')}`;
-      const publicDir = path.join(process.cwd(), 'public', 'uploads');
-      
       try {
-        await fs.mkdir(publicDir, { recursive: true });
         await fs.writeFile(path.join(publicDir, filename), buffer);
         imageUrl = `/uploads/${filename}`;
-      } catch (e) {
-        console.error('Error saving file:', e);
-      }
+      } catch (e) { console.error('Error saving file:', e); }
+    }
+
+    if (logoFile && logoFile.size > 0) {
+      const buffer = Buffer.from(await logoFile.arrayBuffer());
+      const filename = `logo-${Date.now()}-${logoFile.name.replace(/\s/g, '_')}`;
+      try {
+        await fs.writeFile(path.join(publicDir, filename), buffer);
+        logoImageUrl = `/uploads/${filename}`;
+      } catch (e) { console.error('Error saving logo file:', e); }
     }
 
     if (heroData) {
       await prisma.hero.update({
         where: { id: heroData.id },
-        data: { title, subtitle, imageUrl },
+        data: { title, subtitle, imageUrl, logoName, logoImage: logoImageUrl },
       });
     } else {
       await prisma.hero.create({
-        data: { title, subtitle, imageUrl },
+        data: { title, subtitle, imageUrl, logoName, logoImage: logoImageUrl },
       });
     }
 
@@ -47,45 +60,76 @@ export default async function ManageHero() {
 
   return (
     <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px' }}>
-      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Manage Hero Section</h2>
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Manage Hero & Navbar Settings</h2>
       <form action={updateHero} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Title</label>
-          <input 
-            name="title" 
-            defaultValue={heroData?.title || ''} 
-            required 
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
-          />
-        </div>
         
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Subtitle</label>
-          <textarea 
-            name="subtitle" 
-            defaultValue={heroData?.subtitle || ''} 
-            required 
-            rows={4}
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc', resize: 'vertical' }}
-          />
+        <div style={{ padding: '1rem', border: '1px solid #eee', borderRadius: '8px', backgroundColor: '#fafafa' }}>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Navbar Logo Settings</h3>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Navbar Logo Name</label>
+            <input 
+              name="logoName" 
+              defaultValue={heroData?.logoName || ''} 
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+              placeholder="e.g. SM FERDOUS AHMMED"
+            />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Navbar Logo Image</label>
+            {heroData?.logoImage && (
+              <div style={{ marginBottom: '1rem' }}>
+                <img src={heroData.logoImage} alt="Current Logo" style={{ width: '50px', height: '50px', objectFit: 'contain' }} />
+              </div>
+            )}
+            <input 
+              name="logoImage" 
+              type="file"
+              accept="image/*"
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+            />
+          </div>
         </div>
-        
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Profile Image Upload</label>
-          {heroData?.imageUrl && (
-            <div style={{ marginBottom: '1rem' }}>
-              <img src={heroData.imageUrl} alt="Current Profile" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '50%' }} />
-            </div>
-          )}
-          <input 
-            name="image" 
-            type="file"
-            accept="image/*"
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
-          />
-          <small style={{ color: 'var(--color-text-secondary)', display: 'block', marginTop: '0.5rem' }}>
-            Upload a picture from your device.
-          </small>
+
+        <div style={{ padding: '1rem', border: '1px solid #eee', borderRadius: '8px' }}>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Hero Section Settings</h3>
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Title</label>
+            <input 
+              name="title" 
+              defaultValue={heroData?.title || ''} 
+              required 
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+            />
+          </div>
+          
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Subtitle</label>
+            <textarea 
+              name="subtitle" 
+              defaultValue={heroData?.subtitle || ''} 
+              required 
+              rows={4}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc', resize: 'vertical' }}
+            />
+          </div>
+          
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Profile Image Upload</label>
+            {heroData?.imageUrl && (
+              <div style={{ marginBottom: '1rem' }}>
+                <img src={heroData.imageUrl} alt="Current Profile" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '50%' }} />
+              </div>
+            )}
+            <input 
+              name="image" 
+              type="file"
+              accept="image/*"
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+            />
+            <small style={{ color: 'var(--color-text-secondary)', display: 'block', marginTop: '0.5rem' }}>
+              Upload a picture from your device.
+            </small>
+          </div>
         </div>
         
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>

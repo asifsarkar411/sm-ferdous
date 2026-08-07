@@ -35,7 +35,7 @@ export default async function Hero() {
             </a>
           </div>
         </div>
-        <div className={styles.heroImage} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div className={`${styles.heroImage} animate-float`} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ width: '350px', height: '350px', borderRadius: '50%', overflow: 'hidden', border: '5px solid rgba(255,255,255,0.1)', boxShadow: '0 0 30px rgba(0, 242, 254, 0.3)' }}>
             {heroData.imageUrl ? (
               <img src={heroData.imageUrl} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />

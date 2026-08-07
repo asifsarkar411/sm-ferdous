@@ -20,6 +20,8 @@ model Hero {
   description String?
   cvUrl       String?
   imageUrl    String?
+  logoName    String?
+  logoImage   String?
 }
 
 model About {

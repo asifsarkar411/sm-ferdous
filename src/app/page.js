@@ -10,7 +10,7 @@ import FloatingSocials from '@/components/FloatingSocials/FloatingSocials';
 
 export default function Home() {
   return (
-    <main>
+    <main style={{ paddingTop: '80px' }}>
       <Navbar />
       <FadeIn delay={0.1}><Hero /></FadeIn>
       <FadeIn delay={0.2}><About /></FadeIn>
