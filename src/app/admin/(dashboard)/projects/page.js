@@ -20,11 +20,11 @@ export default async function ManageProjects() {
     let imageUrl = '';
     
     if (file && file.size > 0) {
-      const buffer = Buffer.from(await file.arrayBuffer());
-      const filename = `${Date.now()}-${file.name.replace(/\s/g, '_')}`;
       const publicDir = path.join(process.cwd(), 'public', 'uploads');
-      
       try {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const originalName = file.name || 'project.jpg';
+        const filename = `${Date.now()}-${originalName.replace(/\\s/g, '_')}`;
         await fs.mkdir(publicDir, { recursive: true });
         await fs.writeFile(path.join(publicDir, filename), buffer);
         imageUrl = `/uploads/${filename}`;
@@ -55,7 +55,7 @@ export default async function ManageProjects() {
       
       <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px', marginBottom: '2rem' }}>
         <h3 style={{ marginBottom: '1rem' }}>Add New Project</h3>
-        <form action={createProject} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <form action={createProject} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <input name="title" placeholder="Project Title" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} />
           <input name="category" placeholder="Category (e.g., Web Development)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }} />
           <textarea name="description" placeholder="Description" required rows={3} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc', resize: 'vertical' }} />

@@ -27,18 +27,20 @@ export default async function ManageHero() {
     try { await fs.mkdir(publicDir, { recursive: true }); } catch (e) {}
 
     if (file && file.size > 0) {
-      const buffer = Buffer.from(await file.arrayBuffer());
-      const filename = `${Date.now()}-${file.name.replace(/\\s/g, '_')}`;
       try {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const originalName = file.name || 'image.jpg';
+        const filename = `${Date.now()}-${originalName.replace(/\\s/g, '_')}`;
         await fs.writeFile(path.join(publicDir, filename), buffer);
         imageUrl = `/uploads/${filename}`;
       } catch (e) { console.error('Error saving file:', e); }
     }
 
     if (logoFile && logoFile.size > 0) {
-      const buffer = Buffer.from(await logoFile.arrayBuffer());
-      const filename = `logo-${Date.now()}-${logoFile.name.replace(/\\s/g, '_')}`;
       try {
+        const buffer = Buffer.from(await logoFile.arrayBuffer());
+        const originalName = logoFile.name || 'logo.png';
+        const filename = `logo-${Date.now()}-${originalName.replace(/\\s/g, '_')}`;
         await fs.writeFile(path.join(publicDir, filename), buffer);
         logoImageUrl = `/uploads/${filename}`;
       } catch (e) { console.error('Error saving logo file:', e); }
@@ -63,7 +65,7 @@ export default async function ManageHero() {
   return (
     <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px' }}>
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Manage Hero & Navbar Settings</h2>
-      <form action={updateHero} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <form action={updateHero} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         
         <div style={{ padding: '1rem', border: '1px solid #eee', borderRadius: '8px', backgroundColor: '#fafafa' }}>
           <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Navbar Logo Settings</h3>

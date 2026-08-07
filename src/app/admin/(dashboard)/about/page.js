@@ -20,11 +20,11 @@ export default async function ManageAbout() {
     let imageUrl = currentAbout?.imageUrl || null;
     
     if (file && file.size > 0) {
-      const buffer = Buffer.from(await file.arrayBuffer());
-      const filename = `${Date.now()}-${file.name.replace(/\s/g, '_')}`;
       const publicDir = path.join(process.cwd(), 'public', 'uploads');
-      
       try {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const originalName = file.name || 'image.jpg';
+        const filename = `${Date.now()}-${originalName.replace(/\\s/g, '_')}`;
         await fs.mkdir(publicDir, { recursive: true });
         await fs.writeFile(path.join(publicDir, filename), buffer);
         imageUrl = `/uploads/${filename}`;
@@ -52,7 +52,7 @@ export default async function ManageAbout() {
   return (
     <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px' }}>
       <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Manage About Section</h2>
-      <form action={updateAbout} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <form action={updateAbout} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         <div>
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Description (Bio)</label>
           <textarea 
