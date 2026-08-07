@@ -13,6 +13,15 @@ export default function NavContent({ logoName, logoImage }) {
 
   useEffect(() => setMounted(true), []);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [isOpen]);
+
   const navLinks = [
     { label: 'Home', href: '#home' },
     { label: 'About', href: '#about' },

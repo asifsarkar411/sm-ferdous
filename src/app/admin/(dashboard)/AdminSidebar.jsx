@@ -17,6 +17,15 @@ export default function AdminSidebar() {
     setIsOpen(!isOpen);
   };
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [isOpen]);
+
   return (
     <>
       {/* Mobile Header & Hamburger */}
@@ -59,7 +68,7 @@ export default function AdminSidebar() {
         className={`admin-sidebar ${isOpen ? 'open' : ''}`}
         style={{
           width: '250px',
-          backgroundColor: 'var(--color-surface)',
+          backgroundColor: 'var(--color-bg-secondary)',
           borderRight: '1px solid var(--color-border)',
           padding: '2rem',
           display: 'flex',
