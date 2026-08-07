@@ -11,15 +11,19 @@ export default async function ManageContact() {
     const description = formData.get('description');
     const buttonText = formData.get('buttonText');
     const buttonLink = formData.get('buttonLink');
+    const motto = formData.get('motto');
+    const address = formData.get('address');
+    const location = formData.get('location');
+    const phoneNumber = formData.get('phoneNumber');
 
     if (contactData) {
       await prisma.contact.update({
         where: { id: contactData.id },
-        data: { title, description, buttonText, buttonLink },
+        data: { title, description, buttonText, buttonLink, motto, address, location, phoneNumber },
       });
     } else {
       await prisma.contact.create({
-        data: { title, description, buttonText, buttonLink },
+        data: { title, description, buttonText, buttonLink, motto, address, location, phoneNumber },
       });
     }
 
@@ -37,7 +41,6 @@ export default async function ManageContact() {
           <input 
             name="title" 
             defaultValue={contactData?.title || ''} 
-            required 
             style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
           />
         </div>
@@ -47,30 +50,43 @@ export default async function ManageContact() {
           <textarea 
             name="description" 
             defaultValue={contactData?.description || ''} 
-            required 
-            rows={4}
+            rows={2}
             style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc', resize: 'vertical' }}
           />
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Button Text</label>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Motto</label>
           <input 
-            name="buttonText" 
-            defaultValue={contactData?.buttonText || 'Book Your Free Strategy Call'} 
-            required 
+            name="motto" 
+            defaultValue={contactData?.motto || ''} 
             style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
           />
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Button Link (Email or Calendar URL)</label>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Address</label>
           <input 
-            name="buttonLink" 
-            type="url"
-            defaultValue={contactData?.buttonLink || ''} 
-            placeholder="mailto:hello@example.com"
-            required 
+            name="address" 
+            defaultValue={contactData?.address || ''} 
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+          />
+        </div>
+
+        <div>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Location</label>
+          <input 
+            name="location" 
+            defaultValue={contactData?.location || ''} 
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+          />
+        </div>
+
+        <div>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Phone Number</label>
+          <input 
+            name="phoneNumber" 
+            defaultValue={contactData?.phoneNumber || ''} 
             style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
           />
         </div>

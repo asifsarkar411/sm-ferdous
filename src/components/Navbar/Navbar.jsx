@@ -7,9 +7,12 @@ export default function Navbar() {
         Logo
       </div>
       <div style={{ display: 'flex', gap: '2rem' }}>
+        <Link href="#home">Home</Link>
         <Link href="#about">About</Link>
-        <Link href="#services">Services</Link>
-        <Link href="#testimonials">Testimonials</Link>
+        <Link href="#journey">Journey</Link>
+        <Link href="#skills">Skills</Link>
+        <Link href="#projects">Projects</Link>
+        <Link href="#hobby">Hobby</Link>
         <Link href="#contact">Contact</Link>
       </div>
       <Link href="/admin" className="btn btn-outline" style={{ color: 'var(--color-text-primary)', borderColor: 'var(--color-text-primary)' }}>

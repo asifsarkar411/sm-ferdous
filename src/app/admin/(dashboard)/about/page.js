@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import fs from 'fs/promises';
+import path from 'path';
 
 export default async function ManageAbout() {
   const aboutData = await prisma.about.findFirst();
@@ -8,16 +10,35 @@ export default async function ManageAbout() {
   async function updateAbout(formData) {
     'use server';
     const description = formData.get('description');
-    const imageUrl = formData.get('imageUrl') || null;
+    const yearsCoding = formData.get('yearsCoding');
+    const projectsBuilt = formData.get('projectsBuilt');
+    const frameworks = formData.get('frameworks');
+    
+    const file = formData.get('image');
+    let imageUrl = aboutData?.imageUrl || null;
+    
+    if (file && file.size > 0) {
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const filename = `${Date.now()}-${file.name.replace(/\s/g, '_')}`;
+      const publicDir = path.join(process.cwd(), 'public', 'uploads');
+      
+      try {
+        await fs.mkdir(publicDir, { recursive: true });
+        await fs.writeFile(path.join(publicDir, filename), buffer);
+        imageUrl = `/uploads/${filename}`;
+      } catch (e) {
+        console.error('Error saving file:', e);
+      }
+    }
 
     if (aboutData) {
       await prisma.about.update({
         where: { id: aboutData.id },
-        data: { description, imageUrl },
+        data: { description, yearsCoding, projectsBuilt, frameworks, imageUrl },
       });
     } else {
       await prisma.about.create({
-        data: { description, imageUrl },
+        data: { description, yearsCoding, projectsBuilt, frameworks, imageUrl },
       });
     }
 
@@ -36,19 +57,50 @@ export default async function ManageAbout() {
             name="description" 
             defaultValue={aboutData?.description || ''} 
             required 
-            rows={6}
+            rows={4}
             style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc', resize: 'vertical' }}
           />
         </div>
+
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <div style={{ flex: 1 }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Years Coding</label>
+            <input 
+              name="yearsCoding" 
+              defaultValue={aboutData?.yearsCoding || ''} 
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Projects Built</label>
+            <input 
+              name="projectsBuilt" 
+              defaultValue={aboutData?.projectsBuilt || ''} 
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Frameworks</label>
+            <input 
+              name="frameworks" 
+              defaultValue={aboutData?.frameworks || ''} 
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
+            />
+          </div>
+        </div>
         
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Profile Image URL (Optional)</label>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Profile Image Upload</label>
+          {aboutData?.imageUrl && (
+            <div style={{ marginBottom: '1rem' }}>
+              <img src={aboutData.imageUrl} alt="Current About Profile" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '8px' }} />
+            </div>
+          )}
           <input 
-            name="imageUrl" 
-            type="url"
-            defaultValue={aboutData?.imageUrl || ''} 
+            name="image" 
+            type="file"
+            accept="image/*"
             style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
-            placeholder="https://example.com/image.jpg"
           />
         </div>
         

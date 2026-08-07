@@ -1,6 +1,8 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import fs from 'fs/promises';
+import path from 'path';
 
 export default async function ManageHero() {
   const heroData = await prisma.hero.findFirst();
@@ -9,7 +11,23 @@ export default async function ManageHero() {
     'use server';
     const title = formData.get('title');
     const subtitle = formData.get('subtitle');
-    const imageUrl = formData.get('imageUrl') || null;
+    
+    const file = formData.get('image');
+    let imageUrl = heroData?.imageUrl || null;
+    
+    if (file && file.size > 0) {
+      const buffer = Buffer.from(await file.arrayBuffer());
+      const filename = `${Date.now()}-${file.name.replace(/\s/g, '_')}`;
+      const publicDir = path.join(process.cwd(), 'public', 'uploads');
+      
+      try {
+        await fs.mkdir(publicDir, { recursive: true });
+        await fs.writeFile(path.join(publicDir, filename), buffer);
+        imageUrl = `/uploads/${filename}`;
+      } catch (e) {
+        console.error('Error saving file:', e);
+      }
+    }
 
     if (heroData) {
       await prisma.hero.update({
@@ -53,16 +71,20 @@ export default async function ManageHero() {
         </div>
         
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Image URL (Optional)</label>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Profile Image Upload</label>
+          {heroData?.imageUrl && (
+            <div style={{ marginBottom: '1rem' }}>
+              <img src={heroData.imageUrl} alt="Current Profile" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '50%' }} />
+            </div>
+          )}
           <input 
-            name="imageUrl" 
-            type="url"
-            defaultValue={heroData?.imageUrl || ''} 
+            name="image" 
+            type="file"
+            accept="image/*"
             style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #ccc' }}
-            placeholder="https://example.com/image.jpg"
           />
           <small style={{ color: 'var(--color-text-secondary)', display: 'block', marginTop: '0.5rem' }}>
-            For Vercel deployment, upload your images to an external service like Cloudinary or Imgur and paste the direct link here.
+            Upload a picture from your device.
           </small>
         </div>
         

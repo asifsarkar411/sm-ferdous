@@ -18,8 +18,11 @@ export default async function AdminLayout({ children }) {
           <Link href="/admin">Dashboard</Link>
           <Link href="/admin/hero">Manage Hero</Link>
           <Link href="/admin/about">Manage About</Link>
-          <Link href="/admin/services">Manage Services</Link>
-          <Link href="/admin/testimonials">Manage Testimonials</Link>
+          <Link href="/admin/journey">Manage Journey</Link>
+          <Link href="/admin/skills">Manage Skills</Link>
+          <Link href="/admin/projects">Manage Projects</Link>
+          <Link href="/admin/messages">Inbox (Messages)</Link>
+          <Link href="/admin/contact">Manage Contact</Link>
           <Link href="/" style={{ marginTop: '2rem', color: 'var(--color-text-secondary)' }}>&larr; Back to Site</Link>
         </nav>
       </aside>
