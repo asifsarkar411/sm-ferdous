@@ -11,9 +11,6 @@ export default async function Hobby() {
       <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
         <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', textTransform: 'uppercase' }}>My Hobbies</h2>
         <div style={{ width: '60px', height: '4px', backgroundColor: 'var(--color-primary)', margin: '0 auto' }}></div>
-        <p style={{ color: 'var(--color-text-secondary)', marginTop: '1.5rem', maxWidth: '600px', margin: '1.5rem auto 0' }}>
-          When I'm not coding, you can find me exploring these passions.
-        </p>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
