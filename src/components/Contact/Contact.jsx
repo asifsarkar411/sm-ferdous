@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import ContactForm from './ContactForm';
 
-const prisma = new PrismaClient();
 
 export default async function Contact() {
   const contactData = await prisma.contact.findFirst();

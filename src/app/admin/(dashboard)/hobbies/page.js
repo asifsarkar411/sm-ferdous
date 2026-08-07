@@ -1,8 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
-const prisma = new PrismaClient();
 
 export default async function ManageHobbies() {
   const hobbies = await prisma.hobby.findMany();

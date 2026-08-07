@@ -1,9 +1,8 @@
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 
-const prisma = new PrismaClient();
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);

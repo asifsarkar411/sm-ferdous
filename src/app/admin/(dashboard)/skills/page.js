@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 
-const prisma = new PrismaClient();
 
 export default async function ManageSkills() {
   const skills = await prisma.skill.findMany();
