@@ -52,9 +52,9 @@ export default async function ManageProjects() {
         <form action={createProject} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <input name="title" placeholder="Project Title" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
           <input name="category" placeholder="Category (e.g., Web Development)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
-          <textarea name="description" placeholder="Description" required rows={3} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }} />
+          <textarea name="description" placeholder="Short Description" required rows={3} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }} />
+          <textarea name="detailsUrl" placeholder="Detailed Project Info (optional)" rows={6} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }} />
           <input name="liveUrl" placeholder="Live URL (optional)" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
-          <input name="detailsUrl" placeholder="Project Details URL (optional)" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
           <input name="image" type="file" accept="image/*" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
           <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>Add Project</button>
         </form>

@@ -60,8 +60,8 @@ export default async function EditProject({ params }) {
           <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Live URL</label>
           <input name="liveUrl" defaultValue={project.liveUrl || ''} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
           
-          <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Project Details URL</label>
-          <input name="detailsUrl" defaultValue={project.detailsUrl || ''} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Project Details (Text)</label>
+          <textarea name="detailsUrl" defaultValue={project.detailsUrl || ''} rows={6} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
           
           <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Update Image (Leave empty to keep current)</label>
           <input name="image" type="file" accept="image/*" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
