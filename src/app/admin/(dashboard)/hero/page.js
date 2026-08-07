@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { uploadToCloudinary } from '@/lib/cloudinary';
+import { uploadToImgBB } from '@/lib/imgbb';
 
 export default async function ManageHero() {
   const heroData = await prisma.hero.findFirst();
@@ -23,15 +23,15 @@ export default async function ManageHero() {
     if (file && file.size > 0) {
       try {
         const buffer = Buffer.from(await file.arrayBuffer());
-        imageUrl = await uploadToCloudinary(buffer, 'portfolio/hero');
-      } catch (e) { console.error('Error uploading file to Cloudinary:', e); }
+        imageUrl = await uploadToImgBB(buffer);
+      } catch (e) { console.error('Error uploading file to ImgBB:', e); }
     }
 
     if (logoFile && logoFile.size > 0) {
       try {
         const buffer = Buffer.from(await logoFile.arrayBuffer());
-        logoImageUrl = await uploadToCloudinary(buffer, 'portfolio/logo');
-      } catch (e) { console.error('Error uploading logo file to Cloudinary:', e); }
+        logoImageUrl = await uploadToImgBB(buffer);
+      } catch (e) { console.error('Error uploading logo file to ImgBB:', e); }
     }
 
     if (currentHero) {

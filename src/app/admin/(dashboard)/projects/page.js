@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
-import { uploadToCloudinary } from '@/lib/cloudinary';
+import { uploadToImgBB } from '@/lib/imgbb';
 
 const prisma = new PrismaClient();
 
@@ -21,9 +21,9 @@ export default async function ManageProjects() {
     if (file && file.size > 0) {
       try {
         const buffer = Buffer.from(await file.arrayBuffer());
-        imageUrl = await uploadToCloudinary(buffer, 'portfolio/projects');
+        imageUrl = await uploadToImgBB(buffer);
       } catch (e) {
-        console.error('Error uploading file to Cloudinary:', e);
+        console.error('Error uploading file to ImgBB:', e);
       }
     }
 

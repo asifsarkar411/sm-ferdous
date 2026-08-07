@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { uploadToCloudinary } from '@/lib/cloudinary';
+import { uploadToImgBB } from '@/lib/imgbb';
 
 export default async function ManageAbout() {
   const aboutData = await prisma.about.findFirst();
@@ -21,9 +21,9 @@ export default async function ManageAbout() {
     if (file && file.size > 0) {
       try {
         const buffer = Buffer.from(await file.arrayBuffer());
-        imageUrl = await uploadToCloudinary(buffer, 'portfolio/about');
+        imageUrl = await uploadToImgBB(buffer);
       } catch (e) {
-        console.error('Error uploading file to Cloudinary:', e);
+        console.error('Error uploading file to ImgBB:', e);
       }
     }
 
