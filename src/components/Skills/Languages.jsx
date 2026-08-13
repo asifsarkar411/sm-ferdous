@@ -12,9 +12,11 @@ export default async function Languages() {
         <div style={{ width: '60px', height: '4px', backgroundColor: 'var(--color-primary)', margin: '0 auto' }}></div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '2rem' }}>
         {languages.map((lang) => (
           <div key={lang.id} style={{
+            width: '100%',
+            maxWidth: '300px',
             backgroundColor: 'var(--color-surface)',
             padding: '2rem',
             borderRadius: '12px',
