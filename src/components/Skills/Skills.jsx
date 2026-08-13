@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import Languages from './Languages';
+
 
 
 export default async function Skills() {
@@ -43,7 +43,6 @@ export default async function Skills() {
           </div>
         ))}
       </div>
-      <Languages />
     </section>
   );
 }
