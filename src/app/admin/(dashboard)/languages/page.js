@@ -22,6 +22,7 @@ export default async function ManageLanguages() {
     });
     
     revalidatePath('/admin/languages');
+    revalidatePath('/');
   }
 
   async function deleteLanguage(formData) {
@@ -29,6 +30,7 @@ export default async function ManageLanguages() {
     const id = formData.get('id');
     await prisma.languageProficiency.delete({ where: { id } });
     revalidatePath('/admin/languages');
+    revalidatePath('/');
   }
 
   return (

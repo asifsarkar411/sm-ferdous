@@ -30,6 +30,7 @@ export default async function EditLanguage({ params }) {
     });
     
     revalidatePath('/admin/languages');
+    revalidatePath('/');
     redirect('/admin/languages');
   }
 
