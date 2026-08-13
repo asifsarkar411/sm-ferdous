@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import Languages from './Languages';
 
 
 export default async function Skills() {
@@ -35,13 +36,14 @@ export default async function Skills() {
                   border: '1px solid var(--color-border)',
                   textAlign: 'center'
                 }}>
-                  <p style={{ fontWeight: '500', fontSize: '1.1rem' }}>{skill.name}</p>
+                  <p style={{ fontWeight: '400', fontSize: '1rem', color: 'var(--color-text)' }}>{skill.name}</p>
                 </div>
               ))}
             </div>
           </div>
         ))}
       </div>
+      <Languages />
     </section>
   );
 }

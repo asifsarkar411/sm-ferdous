@@ -3,18 +3,18 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  id       String @id @default(uuid())
   email    String @unique
   password String
 }
 
 model Hero {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(uuid())
   title       String
   subtitle    String
   description String?
@@ -25,7 +25,7 @@ model Hero {
 }
 
 model About {
-  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  id            String  @id @default(uuid())
   description   String
   yearsCoding   String?
   projectsBuilt String?
@@ -34,7 +34,7 @@ model About {
 }
 
 model Education {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(uuid())
   degree      String
   institution String
   year        String
@@ -42,25 +42,25 @@ model Education {
 }
 
 model Journey {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(uuid())
   title       String
   subtitle    String
   date        String
   location    String
-  points      String[]
+  points Json
   category    String?
   order       Int      @default(0)
 }
 
 model Skill {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  id       String  @id @default(uuid())
   name     String
   category String
   icon     String?
 }
 
 model Project {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(uuid())
   title       String
   category    String
   description String
@@ -70,7 +70,7 @@ model Project {
 }
 
 model Contact {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(uuid())
   motto       String?
   address     String?
   location    String?
@@ -82,7 +82,7 @@ model Contact {
 }
 
 model Message {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(uuid())
   name      String
   email     String
   message   String
@@ -91,7 +91,7 @@ model Message {
 }
 
 model CV {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(uuid())
   title     String
   fileUrl   String
   isHidden  Boolean  @default(false)
@@ -99,8 +99,16 @@ model CV {
 }
 
 model Hobby {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(uuid())
   title       String
   description String
   imageUrl    String?
+}
+
+model LanguageProficiency {
+  id       String @id @default(uuid())
+  language String
+  reading  String
+  writing  String
+  speaking String
 }
