@@ -6,17 +6,30 @@ import Link from 'next/link';
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
 
-  // Fetch metrics dynamically
-  const projectCount = await prisma.project.count();
-  const messageCount = await prisma.message.count();
-  const cvCount = await prisma.cV.count();
-  const skillCount = await prisma.skill.count();
-  const hobbyCount = await prisma.hobby.count();
-  const serviceCount = await prisma.service.count();
-  const testimonialCount = await prisma.testimonial.count();
-  const educationCount = await prisma.education.count();
-  const journeyCount = await prisma.journey.count();
-  const languageCount = await prisma.languageProficiency.count();
+  // Fetch all metrics concurrently in parallel
+  const [
+    projectCount,
+    messageCount,
+    cvCount,
+    skillCount,
+    hobbyCount,
+    serviceCount,
+    testimonialCount,
+    educationCount,
+    journeyCount,
+    languageCount,
+  ] = await Promise.all([
+    prisma.project.count(),
+    prisma.message.count(),
+    prisma.cV.count(),
+    prisma.skill.count(),
+    prisma.hobby.count(),
+    prisma.service.count(),
+    prisma.testimonial.count(),
+    prisma.education.count(),
+    prisma.journey.count(),
+    prisma.languageProficiency.count(),
+  ]);
 
   const userEmail = session?.user?.email || session?.email || 'Admin';
 

@@ -1,15 +1,14 @@
 import { prisma } from '@/lib/prisma';
 
+export default async function Journey({ journeys: propJourneys }) {
+  const journeys = propJourneys !== undefined ? propJourneys : await prisma.journey.findMany({ orderBy: { order: 'asc' } });
 
-export default async function Journey() {
-  const journeys = await prisma.journey.findMany({ orderBy: { order: 'asc' } });
-
-  if (journeys.length === 0) return null;
+  if (!journeys || journeys.length === 0) return null;
 
   return (
     <section id="journey" className="section container">
       <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-        <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>MY JOURNEY & EXPERIENCE</h2>
+        <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', textTransform: 'uppercase' }}>MY JOURNEY & EXPERIENCE</h2>
         <div style={{ width: '60px', height: '4px', backgroundColor: 'var(--color-primary)', margin: '0 auto' }}></div>
       </div>
 
@@ -19,6 +18,10 @@ export default async function Journey() {
 
         {journeys.map((journey, index) => {
           const isLeft = index % 2 === 0;
+          const pointsList = Array.isArray(journey.points) 
+            ? journey.points 
+            : (typeof journey.points === 'string' ? [journey.points] : []);
+
           return (
             <div key={journey.id} className="timeline-item flex-responsive" style={{ 
               display: 'flex', 
@@ -55,7 +58,7 @@ export default async function Journey() {
                   <span>📍 {journey.location}</span>
                 </div>
                 <ul style={{ paddingLeft: '1.2rem', color: 'var(--color-text-primary)', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  {(Array.isArray(journey.points) ? journey.points : (typeof journey.points === 'string' ? [journey.points] : [])).map((p, i) => <li key={i}>{p}</li>)}
+                  {pointsList.map((p, i) => <li key={i}>{p}</li>)}
                 </ul>
               </div>
 

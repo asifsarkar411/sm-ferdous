@@ -1,9 +1,9 @@
 import { prisma } from '@/lib/prisma';
 
-export default async function Testimonials() {
-  const testimonials = await prisma.testimonial.findMany();
+export default async function Testimonials({ testimonials: propTestimonials }) {
+  const testimonials = propTestimonials !== undefined ? propTestimonials : await prisma.testimonial.findMany();
 
-  if (testimonials.length === 0) return null;
+  if (!testimonials || testimonials.length === 0) return null;
 
   return (
     <section id="testimonials" className="section container">
@@ -13,8 +13,8 @@ export default async function Testimonials() {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
         {testimonials.map(testimonial => (
-          <div key={testimonial.id} style={{ padding: '2rem', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '16px' }}>
-            <p style={{ fontStyle: 'italic', marginBottom: '1.5rem', color: 'var(--color-text-secondary)' }}>&ldquo;{testimonial.quote}&rdquo;</p>
+          <div key={testimonial.id} style={{ padding: '2rem', backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '16px', transition: 'transform 0.2s ease', willChange: 'transform' }}>
+            <p style={{ fontStyle: 'italic', marginBottom: '1.5rem', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>&ldquo;{testimonial.quote}&rdquo;</p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <div>
                 <strong style={{ color: 'var(--color-primary)' }}>{testimonial.name}</strong>
