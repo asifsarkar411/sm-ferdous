@@ -2,38 +2,48 @@ import { prisma } from '@/lib/prisma';
 import ContactForm from './ContactForm';
 import { FaFacebook, FaFacebookMessenger, FaWhatsapp, FaGithub, FaPhoneAlt } from 'react-icons/fa';
 
+const defaultContact = {
+  title: 'Get In Touch',
+  description: 'Looking forward to hearing from you! Feel free to reach out anytime.',
+  motto: 'asifsarkar411@gmail.com',
+  address: 'Dhaka, Bangladesh',
+  location: 'Bangladesh',
+  phoneNumber: '+8801628628300',
+};
+
 export default async function Contact({ contactData: propContactData }) {
-  const contactData = propContactData !== undefined ? propContactData : await prisma.contact.findFirst();
+  const contactData = propContactData !== undefined ? propContactData : await prisma.contact.findFirst().catch(() => null);
+  const contact = contactData || defaultContact;
 
   return (
     <section id="contact" className="section container">
       <div className="flex-responsive" style={{ backgroundColor: 'var(--color-surface)', color: 'var(--color-text-primary)', padding: '4rem 2rem', borderRadius: '16px', display: 'flex', gap: '4rem', justifyContent: 'space-between', border: '1px solid var(--color-border)' }}>
         
         <div style={{ flex: '1 1 300px' }}>
-          <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{contactData?.title || 'Get In Touch'}</h2>
+          <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{contact.title || defaultContact.title}</h2>
           <p style={{ marginBottom: '2rem', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
-            {contactData?.description || 'Looking forward to hearing from you!'}
+            {contact.description || defaultContact.description}
           </p>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '2rem' }}>
-            {contactData?.motto && (
+            {contact.motto && (
               <div>
-                <strong>Email:</strong> <span style={{ color: 'var(--color-text-secondary)' }}>{contactData.motto}</span>
+                <strong>Email:</strong> <span style={{ color: 'var(--color-text-secondary)', marginLeft: '0.5rem' }}>{contact.motto}</span>
               </div>
             )}
-            {contactData?.address && (
+            {contact.address && (
               <div>
-                <strong>Address:</strong> <span style={{ color: 'var(--color-text-secondary)' }}>{contactData.address}</span>
+                <strong>Address:</strong> <span style={{ color: 'var(--color-text-secondary)', marginLeft: '0.5rem' }}>{contact.address}</span>
               </div>
             )}
-            {contactData?.location && (
+            {contact.location && (
               <div>
-                <strong>Location:</strong> <span style={{ color: 'var(--color-text-secondary)' }}>{contactData.location}</span>
+                <strong>Location:</strong> <span style={{ color: 'var(--color-text-secondary)', marginLeft: '0.5rem' }}>{contact.location}</span>
               </div>
             )}
-            {contactData?.phoneNumber && (
+            {contact.phoneNumber && (
               <div>
-                <strong>Phone:</strong> <span style={{ color: 'var(--color-text-secondary)' }}>{contactData.phoneNumber}</span>
+                <strong>Phone:</strong> <span style={{ color: 'var(--color-text-secondary)', marginLeft: '0.5rem' }}>{contact.phoneNumber}</span>
               </div>
             )}
           </div>

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { safeQuery } from '@/lib/db';
 import Navbar from '@/components/Navbar/Navbar';
 import Hero from '@/components/Hero/Hero';
 import About from '@/components/About/About';
@@ -13,54 +13,32 @@ import Contact from '@/components/Contact/Contact';
 import FadeIn from '@/components/FadeIn';
 import FloatingSocials from '@/components/FloatingSocials/FloatingSocials';
 
-// Incremental Static Regeneration (ISR) to cache page & serve instant responses
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  let heroData = null;
-  let cvs = [];
-  let aboutData = null;
-  let educationList = [];
-  let journeys = [];
-  let skills = [];
-  let languages = [];
-  let projects = [];
-  let services = [];
-  let testimonials = [];
-  let hobbies = [];
-  let contactData = null;
+  // Batch 1: Primary upper section
+  const [heroData, cvs, aboutData, educationList] = await Promise.all([
+    safeQuery(p => p.hero.findFirst(), null),
+    safeQuery(p => p.cV.findMany(), []),
+    safeQuery(p => p.about.findFirst(), null),
+    safeQuery(p => p.education.findMany({ orderBy: { year: 'desc' } }), []),
+  ]);
 
-  try {
-    [
-      heroData,
-      cvs,
-      aboutData,
-      educationList,
-      journeys,
-      skills,
-      languages,
-      projects,
-      services,
-      testimonials,
-      hobbies,
-      contactData,
-    ] = await Promise.all([
-      prisma.hero.findFirst().catch(() => null),
-      prisma.cV.findMany().catch(() => []),
-      prisma.about.findFirst().catch(() => null),
-      prisma.education.findMany({ orderBy: { year: 'desc' } }).catch(() => []),
-      prisma.journey.findMany({ orderBy: { order: 'asc' } }).catch(() => []),
-      prisma.skill.findMany().catch(() => []),
-      prisma.languageProficiency.findMany().catch(() => []),
-      prisma.project.findMany().catch(() => []),
-      prisma.service.findMany().catch(() => []),
-      prisma.testimonial.findMany().catch(() => []),
-      prisma.hobby.findMany().catch(() => []),
-      prisma.contact.findFirst().catch(() => null),
-    ]);
-  } catch (error) {
-    console.error('Error loading portfolio data:', error);
-  }
+  // Batch 2: Experience & Skills
+  const [journeys, skills, languages] = await Promise.all([
+    safeQuery(p => p.journey.findMany({ orderBy: { order: 'asc' } }), []),
+    safeQuery(p => p.skill.findMany(), []),
+    safeQuery(p => p.languageProficiency.findMany(), []),
+  ]);
+
+  // Batch 3: Projects, Services, Hobbies & Contact
+  const [projects, services, testimonials, hobbies, contactData] = await Promise.all([
+    safeQuery(p => p.project.findMany(), []),
+    safeQuery(p => p.service.findMany(), []),
+    safeQuery(p => p.testimonial.findMany(), []),
+    safeQuery(p => p.hobby.findMany(), []),
+    safeQuery(p => p.contact.findFirst(), null),
+  ]);
 
   return (
     <main style={{ paddingTop: '80px' }}>

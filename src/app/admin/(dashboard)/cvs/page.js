@@ -62,7 +62,7 @@ export default async function ManageCVs() {
           <div key={cv.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', opacity: cv.isHidden ? 0.6 : 1 }}>
             <h4 style={{ marginBottom: '0.5rem' }}>{cv.title} {cv.isHidden && '(Hidden)'}</h4>
             <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-              <a href={cv.fileUrl} download={`${cv.title.replace(/\s+/g, '_')}`} className="btn btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>Download</a>
+              <a href={cv.fileUrl} download={`${(cv.title || 'CV').replace(/\s+/g, '_')}`} className="btn btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>Download</a>
               <form action={toggleHideCV}>
                 <input type="hidden" name="id" value={cv.id} />
                 <input type="hidden" name="isHidden" value={cv.isHidden.toString()} />

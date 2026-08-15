@@ -8,14 +8,16 @@ const emptySubscribe = () => () => {};
 
 export default function ThemeToggle() {
   const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
 
   if (!mounted) return <div style={{ width: '24px', height: '24px' }} />;
+
+  const currentTheme = resolvedTheme || theme || 'dark';
 
   return (
     <button
       type="button"
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+      onClick={() => setTheme(currentTheme === 'dark' ? 'light' : 'dark')}
       style={{
         background: 'none',
         border: 'none',
@@ -31,7 +33,7 @@ export default function ThemeToggle() {
       }}
       aria-label="Toggle Theme"
     >
-      {theme === 'dark' ? <FiSun /> : <FiMoon />}
+      {currentTheme === 'dark' ? <FiSun /> : <FiMoon />}
     </button>
   );
 }

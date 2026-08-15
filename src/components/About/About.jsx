@@ -1,10 +1,18 @@
 import { prisma } from '@/lib/prisma';
 
-export default async function About({ aboutData: propAboutData, educationList: propEduList }) {
-  const aboutData = propAboutData !== undefined ? propAboutData : await prisma.about.findFirst();
-  const educationList = propEduList !== undefined ? propEduList : await prisma.education.findMany({ orderBy: { year: 'desc' } });
+const defaultAbout = {
+  description: 'I am an adaptive developer focused on combining responsive UI layouts with modern server capabilities.',
+  yearsCoding: '1+',
+  projectsBuilt: '10+',
+  frameworks: '3+',
+};
 
-  if (!aboutData && (!educationList || educationList.length === 0)) return null;
+export default async function About({ aboutData: propAboutData, educationList: propEduList }) {
+  const aboutData = propAboutData !== undefined ? propAboutData : await prisma.about.findFirst().catch(() => null);
+  const educationList = propEduList !== undefined ? propEduList : await prisma.education.findMany({ orderBy: { year: 'desc' } }).catch(() => []);
+
+  const about = aboutData || defaultAbout;
+  const list = educationList || [];
 
   return (
     <section id="about" className="section container">
@@ -20,20 +28,20 @@ export default async function About({ aboutData: propAboutData, educationList: p
             <span>👤</span> Who Am I?
           </h3>
           <p style={{ color: 'var(--color-text-secondary)', marginBottom: '2rem', fontSize: '1rem', lineHeight: 1.6 }}>
-            {aboutData?.description || 'I am an adaptive developer focused on combining responsive UI layouts with modern server capabilities.'}
+            {about.description || defaultAbout.description}
           </p>
           
           <div className="flex-responsive" style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between' }}>
             <div style={{ backgroundColor: 'var(--color-surface-hover)', padding: '1.5rem 1rem', borderRadius: '12px', textAlign: 'center', flex: 1, border: '1px solid var(--color-border)' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary)', marginBottom: '0.5rem' }}>{aboutData?.yearsCoding || '1+'}</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary)', marginBottom: '0.5rem' }}>{about.yearsCoding || '1+'}</div>
               <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>Years Coding</div>
             </div>
             <div style={{ backgroundColor: 'var(--color-surface-hover)', padding: '1.5rem 1rem', borderRadius: '12px', textAlign: 'center', flex: 1, border: '1px solid var(--color-border)' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary)', marginBottom: '0.5rem' }}>{aboutData?.projectsBuilt || '10+'}</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary)', marginBottom: '0.5rem' }}>{about.projectsBuilt || '10+'}</div>
               <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>Projects Built</div>
             </div>
             <div style={{ backgroundColor: 'var(--color-surface-hover)', padding: '1.5rem 1rem', borderRadius: '12px', textAlign: 'center', flex: 1, border: '1px solid var(--color-border)' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary)', marginBottom: '0.5rem' }}>{aboutData?.frameworks || '3+'}</div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--color-primary)', marginBottom: '0.5rem' }}>{about.frameworks || '3+'}</div>
               <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>Language & Frameworks</div>
             </div>
           </div>
@@ -41,7 +49,7 @@ export default async function About({ aboutData: propAboutData, educationList: p
 
         {/* Right Side: Education List */}
         <div style={{ flex: '1 1 450px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {educationList && educationList.length > 0 ? educationList.map((edu) => (
+          {list.length > 0 ? list.map((edu) => (
             <div key={edu.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '16px', border: '1px solid var(--color-border)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
                 <h4 style={{ fontSize: '1.1rem', fontWeight: '600' }}>{edu.degree}</h4>
@@ -53,7 +61,7 @@ export default async function About({ aboutData: propAboutData, educationList: p
               {edu.gpa && <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.85rem' }}>GPA: {edu.gpa}</p>}
             </div>
           )) : (
-            <div style={{ color: 'var(--color-text-secondary)', textAlign: 'center', padding: '2rem' }}>No education data found.</div>
+            <div style={{ color: 'var(--color-text-secondary)', textAlign: 'center', padding: '2rem' }}>No education history added yet.</div>
           )}
         </div>
       </div>

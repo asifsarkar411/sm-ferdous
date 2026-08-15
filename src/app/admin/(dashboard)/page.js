@@ -1,34 +1,29 @@
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
+import { safeQuery } from '@/lib/db';
 import Link from 'next/link';
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
 
-  // Fetch all metrics concurrently in parallel
-  const [
-    projectCount,
-    messageCount,
-    cvCount,
-    skillCount,
-    hobbyCount,
-    serviceCount,
-    testimonialCount,
-    educationCount,
-    journeyCount,
-    languageCount,
-  ] = await Promise.all([
-    prisma.project.count(),
-    prisma.message.count(),
-    prisma.cV.count(),
-    prisma.skill.count(),
-    prisma.hobby.count(),
-    prisma.service.count(),
-    prisma.testimonial.count(),
-    prisma.education.count(),
-    prisma.journey.count(),
-    prisma.languageProficiency.count(),
+  // Fetch metrics in batches with automatic retry
+  const [projectCount, messageCount, cvCount, skillCount] = await Promise.all([
+    safeQuery(p => p.project.count(), 0),
+    safeQuery(p => p.message.count(), 0),
+    safeQuery(p => p.cV.count(), 0),
+    safeQuery(p => p.skill.count(), 0),
+  ]);
+
+  const [hobbyCount, serviceCount, testimonialCount, educationCount] = await Promise.all([
+    safeQuery(p => p.hobby.count(), 0),
+    safeQuery(p => p.service.count(), 0),
+    safeQuery(p => p.testimonial.count(), 0),
+    safeQuery(p => p.education.count(), 0),
+  ]);
+
+  const [journeyCount, languageCount] = await Promise.all([
+    safeQuery(p => p.journey.count(), 0),
+    safeQuery(p => p.languageProficiency.count(), 0),
   ]);
 
   const userEmail = session?.user?.email || session?.email || 'Admin';
