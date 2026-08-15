@@ -7,9 +7,10 @@ export default async function Hobby({ hobbies: propHobbies }) {
 
   return (
     <section id="hobby" className="section container">
-      <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-        <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem', textTransform: 'uppercase' }}>My Hobbies</h2>
-        <div style={{ width: '60px', height: '4px', backgroundColor: 'var(--color-primary)', margin: '0 auto' }}></div>
+      <div className="section-header">
+        <h2 className="section-title">My Hobbies & Interests</h2>
+        <div className="section-divider"></div>
+        <p className="section-subtitle">Activities and creative passions I pursue beyond code.</p>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
@@ -23,7 +24,7 @@ export default async function Hobby({ hobbies: propHobbies }) {
               className="hobby-card" 
               style={{ 
                 backgroundColor: 'var(--color-surface)', 
-                borderRadius: '16px', 
+                borderRadius: '18px', 
                 overflow: 'hidden', 
                 border: '1px solid var(--color-border)', 
                 boxShadow: 'var(--shadow-sm)',
@@ -32,22 +33,23 @@ export default async function Hobby({ hobbies: propHobbies }) {
               }}
             >
               {hasImage && (
-                <div style={{ height: '200px', overflow: 'hidden', backgroundColor: 'var(--color-surface-hover)' }}>
+                <div style={{ height: '190px', overflow: 'hidden', backgroundColor: 'var(--color-bg)' }}>
                   <img 
                     src={hobby.imageUrl} 
                     alt={hobby.title || 'Hobby'} 
                     loading="lazy"
                     decoding="async"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }} 
+                    className="hobby-img"
                   />
                 </div>
               )}
               <div style={{ padding: '1.75rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: hasDescription ? '0.75rem' : '0', color: 'var(--color-primary)', fontWeight: '600' }}>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: hasDescription ? '0.6rem' : '0', color: 'var(--color-primary)' }}>
                   {hobby.title}
                 </h3>
                 {hasDescription && (
-                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: '1.6' }}>
+                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.92rem', lineHeight: 1.6 }}>
                     {hobby.description}
                   </p>
                 )}
@@ -56,6 +58,11 @@ export default async function Hobby({ hobbies: propHobbies }) {
           );
         })}
       </div>
+      <style dangerouslySetInnerHTML={{__html: `
+        .hobby-card:hover .hobby-img {
+          transform: scale(1.06);
+        }
+      `}} />
     </section>
   );
 }
