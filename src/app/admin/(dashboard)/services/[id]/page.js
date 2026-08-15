@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-
+import Link from 'next/link';
 
 export default async function EditService({ params }) {
   const { id } = await params;
@@ -40,7 +40,7 @@ export default async function EditService({ params }) {
           
           <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
             <button type="submit" className="btn btn-primary">Save Changes</button>
-            <a href="/admin/services" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>Cancel</a>
+            <Link href="/admin/services" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>Cancel</Link>
           </div>
         </form>
       </div>

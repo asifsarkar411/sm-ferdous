@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-
+import Link from 'next/link';
 
 export default async function ManageProjects() {
   const projects = await prisma.project.findMany();
@@ -13,7 +13,7 @@ export default async function ManageProjects() {
     const liveUrl = formData.get('liveUrl');
     const detailsUrl = formData.get('detailsUrl');
     
-    // Cloudinary upload for the project image
+    // Convert project image to Base64
     const file = formData.get('image');
     let imageUrl = '';
     
@@ -50,12 +50,12 @@ export default async function ManageProjects() {
       <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px', marginBottom: '2rem' }}>
         <h3 style={{ marginBottom: '1rem' }}>Add New Project</h3>
         <form action={createProject} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <input name="title" placeholder="Project Title" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
-          <input name="category" placeholder="Category (e.g., Web Development)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
-          <textarea name="description" placeholder="Short Description" required rows={3} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }} />
-          <textarea name="detailsUrl" placeholder="Detailed Project Info (optional)" rows={6} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }} />
-          <input name="liveUrl" placeholder="Live URL (optional)" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
-          <input name="image" type="file" accept="image/*" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
+          <input name="title" placeholder="Project Title" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          <input name="category" placeholder="Category (e.g., Web Development)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          <textarea name="description" placeholder="Short Description" required rows={3} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
+          <textarea name="detailsUrl" placeholder="Detailed Project Info (optional)" rows={6} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
+          <input name="liveUrl" placeholder="Live URL (optional)" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          <input name="image" type="file" accept="image/*" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
           <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>Add Project</button>
         </form>
       </div>
@@ -68,7 +68,7 @@ export default async function ManageProjects() {
             <p style={{ fontSize: '0.875rem', color: 'var(--color-primary)', marginBottom: '0.5rem' }}>{project.category}</p>
             <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '1rem' }}>{project.description}</p>
             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <a href={`/admin/projects/${project.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontSize: '0.875rem' }}>Edit</a>
+              <Link href={`/admin/projects/${project.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontSize: '0.875rem' }}>Edit</Link>
               <form action={deleteProject}>
                 <input type="hidden" name="id" value={project.id} />
                 <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Delete</button>

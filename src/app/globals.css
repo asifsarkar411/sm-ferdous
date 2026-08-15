@@ -8,6 +8,9 @@
   --color-text-secondary: #94a3b8;
   --color-primary: #00f2fe;
   --color-primary-dark: #00c6d2;
+  --color-accent: #00f2fe;
+  --color-bg: var(--color-bg-primary);
+  --color-text: var(--color-text-primary);
   --color-surface: rgba(255, 255, 255, 0.05);
   --color-surface-hover: rgba(255, 255, 255, 0.1);
   --color-border: rgba(255, 255, 255, 0.1);
@@ -28,6 +31,9 @@
   --color-text-secondary: #475569;
   --color-primary: #0284c7;
   --color-primary-dark: #0369a1;
+  --color-accent: #0284c7;
+  --color-bg: var(--color-bg-primary);
+  --color-text: var(--color-text-primary);
   --color-surface: #ffffff;
   --color-surface-hover: #f1f5f9;
   --color-border: #e2e8f0;
@@ -161,8 +167,8 @@ button {
 }
 
 /* Animated Colorful Buttons */
-.admin-container button, 
-.admin-container .btn {
+.admin-container .btn-primary,
+.admin-container button[type="submit"]:not(.btn-outline) {
   background: linear-gradient(45deg, #ff007f, #7928ca, #00f2fe, #ff007f);
   background-size: 300% 300%;
   animation: adminGradientShift 3s ease infinite;
@@ -175,8 +181,8 @@ button {
   padding: 0.75rem 1.5rem;
 }
 
-.admin-container button:hover, 
-.admin-container .btn:hover {
+.admin-container .btn-primary:hover,
+.admin-container button[type="submit"]:not(.btn-outline):hover {
   transform: scale(1.05);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3) !important;
 }

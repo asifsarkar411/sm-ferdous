@@ -3,7 +3,6 @@ import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 
-
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
 
@@ -13,15 +12,25 @@ export default async function AdminDashboard() {
   const cvCount = await prisma.cV.count();
   const skillCount = await prisma.skill.count();
   const hobbyCount = await prisma.hobby.count();
+  const serviceCount = await prisma.service.count();
+  const testimonialCount = await prisma.testimonial.count();
+  const educationCount = await prisma.education.count();
+  const journeyCount = await prisma.journey.count();
+  const languageCount = await prisma.languageProficiency.count();
+
+  const userEmail = session?.user?.email || session?.email || 'Admin';
 
   const cards = [
     { title: 'Hero Section', desc: 'Main title, subtitle, and profile picture.', link: '/admin/hero', count: '1' },
     { title: 'About Section', desc: 'Your bio and general information.', link: '/admin/about', count: '1' },
     { title: 'Projects', desc: 'Manage your portfolio items.', link: '/admin/projects', count: projectCount },
     { title: 'Skills', desc: 'Manage your technical skills.', link: '/admin/skills', count: skillCount },
-    { title: 'Journey', desc: 'Update your experience timeline.', link: '/admin/journey', count: 'Timeline' },
-    { title: 'Education', desc: 'Update your education history.', link: '/admin/education', count: 'History' },
+    { title: 'Journey', desc: 'Update your experience timeline.', link: '/admin/journey', count: journeyCount },
+    { title: 'Education', desc: 'Update your education history.', link: '/admin/education', count: educationCount },
+    { title: 'Languages', desc: 'Manage language proficiencies.', link: '/admin/languages', count: languageCount },
     { title: 'Hobbies', desc: 'Manage your hobbies and interests.', link: '/admin/hobbies', count: hobbyCount },
+    { title: 'Services', desc: 'Manage services offered.', link: '/admin/services', count: serviceCount },
+    { title: 'Testimonials', desc: 'Manage client recommendations.', link: '/admin/testimonials', count: testimonialCount },
     { title: 'Messages', desc: 'View contact form submissions.', link: '/admin/messages', count: messageCount },
     { title: 'CVs', desc: 'Manage downloadable CVs.', link: '/admin/cvs', count: cvCount },
     { title: 'Contact Info', desc: 'Update your contact details.', link: '/admin/contact', count: 'Info' },
@@ -31,7 +40,7 @@ export default async function AdminDashboard() {
     <div>
       <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Welcome to the Admin Dashboard</h1>
       <p style={{ color: 'var(--color-text-secondary)', marginBottom: '2rem' }}>
-        Logged in as: <strong>{session?.email}</strong>
+        Logged in as: <strong>{userEmail}</strong>
       </p>
       
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '2rem' }}>

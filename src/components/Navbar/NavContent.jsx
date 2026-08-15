@@ -1,17 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiSun, FiMoon, FiMenu, FiX } from 'react-icons/fi';
 
+const emptySubscribe = () => () => {};
+
 export default function NavContent({ logoName, logoImage }) {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
   useEffect(() => {
     if (isOpen) {
@@ -46,7 +46,7 @@ export default function NavContent({ logoName, logoImage }) {
       backdropFilter: 'blur(10px)',
       zIndex: 1000,
       borderBottom: '1px solid var(--color-border)',
-      color: '#fff' // keep nav dark or adapt to theme, let's let theme dictate a bit but navbar is usually distinct.
+      color: '#fff'
     }}>
       <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
         {logoImage && (
@@ -70,7 +70,7 @@ export default function NavContent({ logoName, logoImage }) {
         ))}
         
         {mounted && (
-          <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} style={{ fontSize: '1.2rem', color: 'inherit', marginLeft: '1rem' }}>
+          <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label="Toggle Theme" style={{ fontSize: '1.2rem', color: 'inherit', marginLeft: '1rem' }}>
             {theme === 'dark' ? <FiSun /> : <FiMoon />}
           </button>
         )}
@@ -79,11 +79,11 @@ export default function NavContent({ logoName, logoImage }) {
       {/* Mobile Nav Toggle */}
       <div style={{ display: 'none' }} className="mobile-only-toggle">
         {mounted && (
-          <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} style={{ fontSize: '1.5rem', color: 'inherit', marginRight: '1rem' }}>
+          <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} aria-label="Toggle Theme" style={{ fontSize: '1.5rem', color: 'inherit', marginRight: '1rem' }}>
             {theme === 'dark' ? <FiSun /> : <FiMoon />}
           </button>
         )}
-        <button onClick={() => setIsOpen(true)} style={{ fontSize: '1.5rem', color: 'inherit' }}>
+        <button type="button" onClick={() => setIsOpen(true)} aria-label="Open Navigation Menu" style={{ fontSize: '1.5rem', color: 'inherit' }}>
           <FiMenu />
         </button>
       </div>
@@ -106,7 +106,7 @@ export default function NavContent({ logoName, logoImage }) {
               transition={{ type: 'spring', damping: 20 }}
               style={{ position: 'fixed', top: 0, right: 0, width: '250px', height: '100vh', backgroundColor: 'var(--color-bg-secondary)', zIndex: 10000, padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
             >
-              <button onClick={() => setIsOpen(false)} style={{ alignSelf: 'flex-end', fontSize: '1.5rem', color: 'var(--color-text-primary)' }}>
+              <button type="button" onClick={() => setIsOpen(false)} aria-label="Close Navigation Menu" style={{ alignSelf: 'flex-end', fontSize: '1.5rem', color: 'var(--color-text-primary)' }}>
                 <FiX />
               </button>
               

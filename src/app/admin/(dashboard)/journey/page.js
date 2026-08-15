@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-
+import Link from 'next/link';
 
 export default async function ManageJourney() {
   const journeys = await prisma.journey.findMany({ orderBy: { date: 'desc' } });
@@ -37,32 +37,39 @@ export default async function ManageJourney() {
       <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px', marginBottom: '2rem' }}>
         <h3 style={{ marginBottom: '1rem' }}>Add New Journey Milestone</h3>
         <form action={createJourney} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <input name="title" placeholder="Title (e.g., Began Coding Journey)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
-          <input name="subtitle" placeholder="Subtitle" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
-          <input name="date" placeholder="Date (e.g., Jan 2023)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
-          <input name="location" placeholder="Location (e.g., Home Base)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
-          <textarea name="points" placeholder="Points (one per line)" required rows={4} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }} />
+          <input name="title" placeholder="Title (e.g., Began Coding Journey)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          <input name="subtitle" placeholder="Subtitle" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          <input name="date" placeholder="Date (e.g., Jan 2023)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          <input name="location" placeholder="Location (e.g., Home Base)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          <textarea name="points" placeholder="Points (one per line)" required rows={4} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
           <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>Add Milestone</button>
         </form>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem' }}>
-        {journeys.map(journey => (
-          <div key={journey.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
-            <h4 style={{ marginBottom: '0.5rem' }}>{journey.title}</h4>
-            <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '0.5rem' }}>{journey.subtitle} | {journey.date}</p>
-            <ul style={{ fontSize: '0.875rem', paddingLeft: '1.5rem', marginBottom: '1rem' }}>
-              {journey.points.map((p, i) => <li key={i}>{p}</li>)}
-            </ul>
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <a href={`/admin/journey/${journey.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontSize: '0.875rem' }}>Edit</a>
-              <form action={deleteJourney}>
-                <input type="hidden" name="id" value={journey.id} />
-                <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Delete</button>
-              </form>
+        {journeys.map(journey => {
+          const pointsList = Array.isArray(journey.points) 
+            ? journey.points 
+            : typeof journey.points === 'string' 
+              ? [journey.points] 
+              : [];
+          return (
+            <div key={journey.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
+              <h4 style={{ marginBottom: '0.5rem' }}>{journey.title}</h4>
+              <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '0.5rem' }}>{journey.subtitle} | {journey.date}</p>
+              <ul style={{ fontSize: '0.875rem', paddingLeft: '1.5rem', marginBottom: '1rem' }}>
+                {pointsList.map((p, i) => <li key={i}>{p}</li>)}
+              </ul>
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <Link href={`/admin/journey/${journey.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontSize: '0.875rem' }}>Edit</Link>
+                <form action={deleteJourney}>
+                  <input type="hidden" name="id" value={journey.id} />
+                  <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Delete</button>
+                </form>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

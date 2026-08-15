@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import Link from 'next/link';
 
 
 export default async function ManageEducation() {
@@ -66,7 +67,7 @@ export default async function ManageEducation() {
               {edu.gpa && <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '1rem' }}>{edu.gpa}</p>}
               
               <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                <a href={`/admin/education/${edu.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontSize: '0.875rem' }}>Edit</a>
+                <Link href={`/admin/education/${edu.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontSize: '0.875rem' }}>Edit</Link>
                 <form action={deleteEducation}>
                   <input type="hidden" name="id" value={edu.id} />
                   <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Delete</button>

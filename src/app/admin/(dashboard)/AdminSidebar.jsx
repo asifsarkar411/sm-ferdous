@@ -8,13 +8,12 @@ export default function AdminSidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
-  // Close sidebar on route change on mobile
-  useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
-
   const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+    setIsOpen(prev => !prev);
+  };
+
+  const closeSidebar = () => {
+    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -25,6 +24,24 @@ export default function AdminSidebar() {
     }
     return () => { document.body.style.overflow = 'unset'; };
   }, [isOpen]);
+
+  const navLinks = [
+    { href: '/admin', label: 'Dashboard' },
+    { href: '/admin/hero', label: 'Manage Hero' },
+    { href: '/admin/about', label: 'Manage About' },
+    { href: '/admin/education', label: 'Manage Education' },
+    { href: '/admin/journey', label: 'Manage Journey' },
+    { href: '/admin/skills', label: 'Manage Skills' },
+    { href: '/admin/languages', label: 'Manage Languages' },
+    { href: '/admin/hobbies', label: 'Manage Hobbies' },
+    { href: '/admin/projects', label: 'Manage Projects' },
+    { href: '/admin/services', label: 'Manage Services' },
+    { href: '/admin/testimonials', label: 'Manage Testimonials' },
+    { href: '/admin/messages', label: 'Inbox (Messages)' },
+    { href: '/admin/contact', label: 'Manage Contact' },
+    { href: '/admin/cvs', label: 'Manage CVs' },
+    { href: '/admin/settings', label: '⚙️ Settings' },
+  ];
 
   return (
     <>
@@ -40,7 +57,7 @@ export default function AdminSidebar() {
         <h2 style={{ fontSize: '1.25rem', color: 'var(--color-primary)', margin: 0 }}>Admin Panel</h2>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <ThemeToggle />
-          <button onClick={toggleSidebar} style={{ fontSize: '1.5rem', background: 'transparent', border: 'none', color: 'var(--color-text)', cursor: 'pointer' }}>
+          <button type="button" onClick={toggleSidebar} aria-label="Toggle Navigation" style={{ fontSize: '1.5rem', background: 'transparent', border: 'none', color: 'var(--color-text)', cursor: 'pointer' }}>
             ☰
           </button>
         </div>
@@ -49,7 +66,7 @@ export default function AdminSidebar() {
       {/* Overlay for mobile */}
       {isOpen && (
         <div 
-          onClick={() => setIsOpen(false)}
+          onClick={closeSidebar}
           className="admin-sidebar-overlay"
           style={{
             position: 'fixed',
@@ -87,28 +104,34 @@ export default function AdminSidebar() {
           <div className="desktop-theme-toggle">
             <ThemeToggle />
           </div>
-          <button className="mobile-close-btn" onClick={() => setIsOpen(false)} style={{ fontSize: '1.5rem', background: 'transparent', border: 'none', color: 'var(--color-text)', cursor: 'pointer' }}>
+          <button type="button" className="mobile-close-btn" onClick={closeSidebar} aria-label="Close Navigation" style={{ fontSize: '1.5rem', background: 'transparent', border: 'none', color: 'var(--color-text)', cursor: 'pointer' }}>
             ✕
           </button>
         </div>
         
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1 }}>
-          <Link href="/admin" style={{ color: 'var(--color-text)', padding: '0.5rem', borderRadius: '8px', backgroundColor: pathname === '/admin' ? 'var(--color-surface-hover)' : 'transparent' }}>Dashboard</Link>
-          <Link href="/admin/hero" style={{ color: 'var(--color-text)', padding: '0.5rem', borderRadius: '8px', backgroundColor: pathname === '/admin/hero' ? 'var(--color-surface-hover)' : 'transparent' }}>Manage Hero</Link>
-          <Link href="/admin/about" style={{ color: 'var(--color-text)', padding: '0.5rem', borderRadius: '8px', backgroundColor: pathname === '/admin/about' ? 'var(--color-surface-hover)' : 'transparent' }}>Manage About</Link>
-          <Link href="/admin/education" style={{ color: 'var(--color-text)', padding: '0.5rem', borderRadius: '8px', backgroundColor: pathname === '/admin/education' ? 'var(--color-surface-hover)' : 'transparent' }}>Manage Education</Link>
-          <Link href="/admin/journey" style={{ color: 'var(--color-text)', padding: '0.5rem', borderRadius: '8px', backgroundColor: pathname === '/admin/journey' ? 'var(--color-surface-hover)' : 'transparent' }}>Manage Journey</Link>
-          <Link href="/admin/skills" style={{ color: 'var(--color-text)', padding: '0.5rem', borderRadius: '8px', backgroundColor: pathname === '/admin/skills' ? 'var(--color-surface-hover)' : 'transparent' }}>Manage Skills</Link>
-          <Link href="/admin/languages" style={{ color: 'var(--color-text)', padding: '0.5rem', borderRadius: '8px', backgroundColor: pathname === '/admin/languages' ? 'var(--color-surface-hover)' : 'transparent' }}>Manage Languages</Link>
-          <Link href="/admin/hobbies" style={{ color: 'var(--color-text)', padding: '0.5rem', borderRadius: '8px', backgroundColor: pathname === '/admin/hobbies' ? 'var(--color-surface-hover)' : 'transparent' }}>Manage Hobbies</Link>
-          <Link href="/admin/projects" style={{ color: 'var(--color-text)', padding: '0.5rem', borderRadius: '8px', backgroundColor: pathname === '/admin/projects' ? 'var(--color-surface-hover)' : 'transparent' }}>Manage Projects</Link>
-          <Link href="/admin/messages" style={{ color: 'var(--color-text)', padding: '0.5rem', borderRadius: '8px', backgroundColor: pathname === '/admin/messages' ? 'var(--color-surface-hover)' : 'transparent' }}>Inbox (Messages)</Link>
-          <Link href="/admin/contact" style={{ color: 'var(--color-text)', padding: '0.5rem', borderRadius: '8px', backgroundColor: pathname === '/admin/contact' ? 'var(--color-surface-hover)' : 'transparent' }}>Manage Contact</Link>
-          <Link href="/admin/cvs" style={{ color: 'var(--color-text)', padding: '0.5rem', borderRadius: '8px', backgroundColor: pathname === '/admin/cvs' ? 'var(--color-surface-hover)' : 'transparent' }}>Manage CVs</Link>
-          <Link href="/admin/settings" style={{ color: 'var(--color-text)', padding: '0.5rem', borderRadius: '8px', backgroundColor: pathname === '/admin/settings' ? 'var(--color-surface-hover)' : 'transparent' }}>⚙️ Settings</Link>
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
+          {navLinks.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={closeSidebar}
+              style={{
+                color: 'var(--color-text)',
+                padding: '0.5rem 0.75rem',
+                borderRadius: '8px',
+                backgroundColor: pathname === item.href ? 'var(--color-surface-hover)' : 'transparent',
+                fontWeight: pathname === item.href ? '600' : 'normal',
+                textDecoration: 'none'
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
           
-          <div style={{ marginTop: 'auto' }}>
-            <Link href="/" style={{ color: 'var(--color-text-secondary)', display: 'inline-block', marginTop: '2rem', padding: '0.5rem' }}>&larr; Back to Site</Link>
+          <div style={{ marginTop: 'auto', paddingTop: '1.5rem' }}>
+            <Link href="/" style={{ color: 'var(--color-text-secondary)', display: 'inline-block', padding: '0.5rem', textDecoration: 'none' }}>
+              &larr; Back to Site
+            </Link>
           </div>
         </nav>
       </aside>

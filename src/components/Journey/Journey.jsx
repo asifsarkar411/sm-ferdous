@@ -55,7 +55,7 @@ export default async function Journey() {
                   <span>📍 {journey.location}</span>
                 </div>
                 <ul style={{ paddingLeft: '1.2rem', color: 'var(--color-text-primary)', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  {journey.points.map((p, i) => <li key={i}>{p}</li>)}
+                  {(Array.isArray(journey.points) ? journey.points : (typeof journey.points === 'string' ? [journey.points] : [])).map((p, i) => <li key={i}>{p}</li>)}
                 </ul>
               </div>
 

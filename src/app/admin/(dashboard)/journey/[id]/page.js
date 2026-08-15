@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-
+import Link from 'next/link';
 
 export default async function EditJourney({ params }) {
   const { id } = await params;
@@ -10,6 +10,12 @@ export default async function EditJourney({ params }) {
   if (!journey) {
     redirect('/admin/journey');
   }
+
+  const formattedPoints = Array.isArray(journey.points)
+    ? journey.points.join('\n')
+    : typeof journey.points === 'string'
+      ? journey.points
+      : '';
 
   async function updateJourney(formData) {
     'use server';
@@ -49,11 +55,11 @@ export default async function EditJourney({ params }) {
           <input name="location" defaultValue={journey.location} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
           
           <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Points (one per line)</label>
-          <textarea name="points" defaultValue={journey.points.join('\n')} required rows={4} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
+          <textarea name="points" defaultValue={formattedPoints} required rows={4} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
           
           <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
             <button type="submit" className="btn btn-primary">Save Changes</button>
-            <a href="/admin/journey" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>Cancel</a>
+            <Link href="/admin/journey" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>Cancel</Link>
           </div>
         </form>
       </div>
