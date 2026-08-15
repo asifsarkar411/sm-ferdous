@@ -1,5 +1,5 @@
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { prisma } from '@/lib/prisma';
+import { safeQuery } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 
 export const authOptions = {
@@ -7,40 +7,48 @@ export const authOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: { label: "Email", type: "email", placeholder: "admin@example.com" },
-        password: { label: "Password", type: "password" }
+        email: { label: 'Email', type: 'email', placeholder: 'admin@example.com' },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
-        });
+        try {
+          const user = await safeQuery(
+            (p) => p.user.findUnique({ where: { email: credentials.email } }),
+            null
+          );
 
-        if (!user) {
+          if (!user) {
+            return null;
+          }
+
+          const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+
+          if (!isPasswordValid) {
+            return null;
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+          };
+        } catch (error) {
+          console.error('NextAuth authorize error:', error);
           return null;
         }
-
-        const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
-
-        if (!isPasswordValid) {
-          return null;
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-        };
-      }
-    })
+      },
+    }),
   ],
   session: {
     strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   pages: {
     signIn: '/admin/login',
+    error: '/admin/login',
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || 'fallback-portfolio-super-secret-jwt-key-2026',
 };
