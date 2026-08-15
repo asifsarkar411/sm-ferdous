@@ -2,27 +2,34 @@ import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
 
 export default async function ManageHobbies() {
-  const hobbies = await prisma.hobby.findMany();
+  const hobbies = await prisma.hobby.findMany({ orderBy: { title: 'asc' } }).catch(() => []);
 
   async function addHobby(formData) {
     'use server';
     const title = formData.get('title');
-    const description = formData.get('description');
+    const description = formData.get('description') || null;
     
-    // Convert image to base64
+    // Convert image to base64 if provided
     const file = formData.get('image');
     let imageUrl = null;
     if (file && file.size > 0) {
-      const buffer = Buffer.from(await file.arrayBuffer());
-      const mimeType = file.type || 'image/png';
-      imageUrl = `data:${mimeType};base64,${buffer.toString('base64')}`;
+      try {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const mimeType = file.type || 'image/png';
+        imageUrl = `data:${mimeType};base64,${buffer.toString('base64')}`;
+      } catch (e) {
+        console.error('Error processing image:', e);
+      }
     }
 
-    await prisma.hobby.create({
-      data: { title, description, imageUrl },
-    });
+    if (title && title.trim().length > 0) {
+      await prisma.hobby.create({
+        data: { title: title.trim(), description: description ? description.trim() : null, imageUrl },
+      });
+    }
 
     revalidatePath('/');
     revalidatePath('/admin/hobbies');
@@ -35,25 +42,37 @@ export default async function ManageHobbies() {
       <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px', marginBottom: '2rem' }}>
         <h3 style={{ marginBottom: '1rem' }}>Add New Hobby</h3>
         <form action={addHobby} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <input name="title" placeholder="Hobby Title (e.g., Photography)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
-          <textarea name="description" placeholder="Description" required rows={3} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
-          <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Upload Image (optional)</label>
-          <input name="image" type="file" accept="image/*" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500' }}>Hobby Title *</label>
+            <input name="title" placeholder="e.g. Photography, Robotics, Chess" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Description (optional)</label>
+            <textarea name="description" placeholder="Brief description of your hobby or interest..." rows={3} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Upload Image (optional)</label>
+            <input name="image" type="file" accept="image/*" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          </div>
           <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>Add Hobby</button>
         </form>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
         {hobbies.map(hobby => (
-          <div key={hobby.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
+          <div key={hobby.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column' }}>
             {hobby.imageUrl && (
-              <img src={hobby.imageUrl} alt={hobby.title} style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px', marginBottom: '1rem' }} />
+              <img src={hobby.imageUrl} alt={hobby.title} style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: '8px', marginBottom: '1rem' }} />
             )}
-            <h4 style={{ marginBottom: '0.5rem' }}>{hobby.title}</h4>
-            <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', marginBottom: '1rem' }}>{hobby.description}</p>
-            <Link href={`/admin/hobbies/${hobby.id}`} className="btn btn-outline" style={{ fontSize: '0.875rem', padding: '0.5rem 1rem' }}>
-              Edit / Delete
-            </Link>
+            <h4 style={{ marginBottom: hobby.description ? '0.5rem' : '1rem', color: 'var(--color-primary)' }}>{hobby.title}</h4>
+            {hobby.description && (
+              <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', marginBottom: '1rem', flex: 1 }}>{hobby.description}</p>
+            )}
+            <div style={{ marginTop: 'auto' }}>
+              <Link href={`/admin/hobbies/${hobby.id}`} className="btn btn-outline" style={{ fontSize: '0.875rem', padding: '0.5rem 1rem' }}>
+                Edit / Delete
+              </Link>
+            </div>
           </div>
         ))}
       </div>

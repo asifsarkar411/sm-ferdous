@@ -1,13 +1,15 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+import Link from 'next/link';
+
+export const dynamic = 'force-dynamic';
 
 export default async function ManageHero() {
-  const heroData = await prisma.hero.findFirst();
+  const heroData = await prisma.hero.findFirst().catch(() => null);
 
   async function updateHero(formData) {
     'use server';
-    const currentHero = await prisma.hero.findFirst();
+    const currentHero = await prisma.hero.findFirst().catch(() => null);
     
     const title = formData.get('title');
     const subtitle = formData.get('subtitle');
@@ -48,7 +50,6 @@ export default async function ManageHero() {
 
     revalidatePath('/');
     revalidatePath('/admin/hero');
-    redirect('/admin');
   }
 
   return (
@@ -63,7 +64,7 @@ export default async function ManageHero() {
             <input 
               name="logoName" 
               defaultValue={heroData?.logoName || ''} 
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
               placeholder="e.g. SM FERDOUS AHMMED"
             />
           </div>
@@ -78,7 +79,7 @@ export default async function ManageHero() {
               name="logoImage" 
               type="file"
               accept="image/*"
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
             />
           </div>
         </div>
@@ -91,7 +92,7 @@ export default async function ManageHero() {
               name="title" 
               defaultValue={heroData?.title || ''} 
               required 
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
             />
           </div>
           
@@ -102,7 +103,7 @@ export default async function ManageHero() {
               defaultValue={heroData?.subtitle || ''} 
               required 
               rows={4}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }}
             />
           </div>
           
@@ -117,7 +118,7 @@ export default async function ManageHero() {
               name="image" 
               type="file"
               accept="image/*"
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
             />
             <small style={{ color: 'var(--color-text-secondary)', display: 'block', marginTop: '0.5rem' }}>
               Upload a picture from your device.
@@ -127,7 +128,7 @@ export default async function ManageHero() {
         
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
           <button type="submit" className="btn btn-primary">Save Changes</button>
-          <a href="/admin" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>Cancel</a>
+          <Link href="/admin" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>Dashboard</Link>
         </div>
       </form>
     </div>

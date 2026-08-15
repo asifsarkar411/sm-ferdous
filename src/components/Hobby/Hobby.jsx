@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 
 export default async function Hobby({ hobbies: propHobbies }) {
-  const hobbies = propHobbies !== undefined ? propHobbies : await prisma.hobby.findMany();
+  const hobbies = propHobbies !== undefined ? propHobbies : await prisma.hobby.findMany().catch(() => []);
 
   if (!hobbies || hobbies.length === 0) return null;
 
@@ -13,27 +13,48 @@ export default async function Hobby({ hobbies: propHobbies }) {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
-        {hobbies.map((hobby) => (
-          <div key={hobby.id} className="hobby-card" style={{ backgroundColor: 'var(--color-surface)', borderRadius: '16px', overflow: 'hidden', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)' }}>
-            {hobby.imageUrl && (
-              <div style={{ height: '200px', overflow: 'hidden', backgroundColor: 'var(--color-surface-hover)' }}>
-                <img 
-                  src={hobby.imageUrl} 
-                  alt={hobby.title} 
-                  loading="lazy"
-                  decoding="async"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                />
+        {hobbies.map((hobby) => {
+          const hasImage = Boolean(hobby.imageUrl && hobby.imageUrl.trim().length > 0);
+          const hasDescription = Boolean(hobby.description && hobby.description.trim().length > 0);
+
+          return (
+            <div 
+              key={hobby.id} 
+              className="hobby-card" 
+              style={{ 
+                backgroundColor: 'var(--color-surface)', 
+                borderRadius: '16px', 
+                overflow: 'hidden', 
+                border: '1px solid var(--color-border)', 
+                boxShadow: 'var(--shadow-sm)',
+                display: 'flex',
+                flexDirection: 'column'
+              }}
+            >
+              {hasImage && (
+                <div style={{ height: '200px', overflow: 'hidden', backgroundColor: 'var(--color-surface-hover)' }}>
+                  <img 
+                    src={hobby.imageUrl} 
+                    alt={hobby.title || 'Hobby'} 
+                    loading="lazy"
+                    decoding="async"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  />
+                </div>
+              )}
+              <div style={{ padding: '1.75rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <h3 style={{ fontSize: '1.25rem', marginBottom: hasDescription ? '0.75rem' : '0', color: 'var(--color-primary)', fontWeight: '600' }}>
+                  {hobby.title}
+                </h3>
+                {hasDescription && (
+                  <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: '1.6' }}>
+                    {hobby.description}
+                  </p>
+                )}
               </div>
-            )}
-            <div style={{ padding: '2rem' }}>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '0.75rem', color: 'var(--color-primary)' }}>{hobby.title}</h3>
-              <p style={{ color: 'var(--color-text-secondary)', fontSize: '0.95rem', lineHeight: '1.6' }}>
-                {hobby.description}
-              </p>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

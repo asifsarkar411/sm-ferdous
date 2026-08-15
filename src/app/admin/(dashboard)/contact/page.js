@@ -1,9 +1,11 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+import Link from 'next/link';
+
+export const dynamic = 'force-dynamic';
 
 export default async function ManageContact() {
-  const contactData = await prisma.contact.findFirst();
+  const contactData = await prisma.contact.findFirst().catch(() => null);
 
   async function updateContact(formData) {
     'use server';
@@ -29,7 +31,6 @@ export default async function ManageContact() {
 
     revalidatePath('/');
     revalidatePath('/admin/contact');
-    redirect('/admin');
   }
 
   return (
@@ -41,7 +42,7 @@ export default async function ManageContact() {
           <input 
             name="title" 
             defaultValue={contactData?.title || ''} 
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
           />
         </div>
         
@@ -50,7 +51,7 @@ export default async function ManageContact() {
           <input 
             name="motto" 
             defaultValue={contactData?.motto || ''} 
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
           />
         </div>
 
@@ -59,7 +60,7 @@ export default async function ManageContact() {
           <input 
             name="address" 
             defaultValue={contactData?.address || ''} 
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
           />
         </div>
 
@@ -68,7 +69,7 @@ export default async function ManageContact() {
           <input 
             name="location" 
             defaultValue={contactData?.location || ''} 
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
           />
         </div>
 
@@ -77,7 +78,7 @@ export default async function ManageContact() {
           <input 
             name="phoneNumber" 
             defaultValue={contactData?.phoneNumber || ''} 
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
           />
         </div>
 
@@ -87,13 +88,13 @@ export default async function ManageContact() {
             name="description" 
             defaultValue={contactData?.description || ''} 
             rows={2}
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }}
           />
         </div>
         
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
           <button type="submit" className="btn btn-primary">Save Changes</button>
-          <a href="/admin" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>Cancel</a>
+          <Link href="/admin" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>Dashboard</Link>
         </div>
       </form>
     </div>

@@ -3,6 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
 
 export default async function EditHobby({ params }) {
   const { id } = await params;
@@ -15,21 +16,27 @@ export default async function EditHobby({ params }) {
   async function updateHobby(formData) {
     'use server';
     const title = formData.get('title');
-    const description = formData.get('description');
+    const description = formData.get('description') || null;
     
     const file = formData.get('image');
     let imageUrl = hobby.imageUrl;
     
     if (file && file.size > 0) {
-      const buffer = Buffer.from(await file.arrayBuffer());
-      const mimeType = file.type || 'image/png';
-      imageUrl = `data:${mimeType};base64,${buffer.toString('base64')}`;
+      try {
+        const buffer = Buffer.from(await file.arrayBuffer());
+        const mimeType = file.type || 'image/png';
+        imageUrl = `data:${mimeType};base64,${buffer.toString('base64')}`;
+      } catch (e) {
+        console.error('Error processing image:', e);
+      }
     }
 
-    await prisma.hobby.update({
-      where: { id },
-      data: { title, description, imageUrl },
-    });
+    if (title && title.trim().length > 0) {
+      await prisma.hobby.update({
+        where: { id },
+        data: { title: title.trim(), description: description ? description.trim() : null, imageUrl },
+      });
+    }
 
     revalidatePath('/');
     revalidatePath('/admin/hobbies');
@@ -52,13 +59,18 @@ export default async function EditHobby({ params }) {
       <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
         <div style={{ flex: '1 1 400px', backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
           <form action={updateHobby} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Title</label>
+            <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Title *</label>
             <input name="title" defaultValue={hobby.title} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
             
-            <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Description</label>
-            <textarea name="description" defaultValue={hobby.description} required rows={3} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
+            <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Description (optional)</label>
+            <textarea name="description" defaultValue={hobby.description || ''} rows={3} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
             
-            <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Update Image (Leave empty to keep current)</label>
+            <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Update Image (optional - leave empty to keep current)</label>
+            {hobby.imageUrl && (
+              <div style={{ marginBottom: '0.5rem' }}>
+                <img src={hobby.imageUrl} alt={hobby.title} style={{ width: '100px', height: '80px', objectFit: 'cover', borderRadius: '6px' }} />
+              </div>
+            )}
             <input name="image" type="file" accept="image/*" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
             
             <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>Save Changes</button>

@@ -1,13 +1,15 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
+import Link from 'next/link';
+
+export const dynamic = 'force-dynamic';
 
 export default async function ManageAbout() {
-  const aboutData = await prisma.about.findFirst();
+  const aboutData = await prisma.about.findFirst().catch(() => null);
 
   async function updateAbout(formData) {
     'use server';
-    const currentAbout = await prisma.about.findFirst();
+    const currentAbout = await prisma.about.findFirst().catch(() => null);
 
     const description = formData.get('description');
     const yearsCoding = formData.get('yearsCoding');
@@ -40,7 +42,6 @@ export default async function ManageAbout() {
 
     revalidatePath('/');
     revalidatePath('/admin/about');
-    redirect('/admin');
   }
 
   return (
@@ -54,7 +55,7 @@ export default async function ManageAbout() {
             defaultValue={aboutData?.description || ''} 
             required 
             rows={4}
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', resize: 'vertical' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }}
           />
         </div>
 
@@ -64,7 +65,7 @@ export default async function ManageAbout() {
             <input 
               name="yearsCoding" 
               defaultValue={aboutData?.yearsCoding || ''} 
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
             />
           </div>
           <div style={{ flex: 1 }}>
@@ -72,11 +73,11 @@ export default async function ManageAbout() {
             <input 
               name="projectsBuilt" 
               defaultValue={aboutData?.projectsBuilt || ''} 
-              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
             />
           </div>
           <div style={{ flex: 1 }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--color-text)' }}>Language and framework Count</label>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--color-text)' }}>Language & Frameworks</label>
             <input name="frameworks" defaultValue={aboutData?.frameworks || ''} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
           </div>
         </div>
@@ -92,13 +93,13 @@ export default async function ManageAbout() {
             name="image" 
             type="file"
             accept="image/*"
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }}
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
           />
         </div>
         
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
           <button type="submit" className="btn btn-primary">Save Changes</button>
-          <a href="/admin" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>Cancel</a>
+          <Link href="/admin" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>Dashboard</Link>
         </div>
       </form>
     </div>
