@@ -25,84 +25,70 @@ export default async function Skills({ skills: propSkills }) {
         </p>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+      {/* Small Category Cards Grid - matches Language Cards structure */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+        gap: '1.5rem', 
+        maxWidth: '1100px', 
+        margin: '0 auto' 
+      }}>
         {Object.entries(categories).map(([category, items]) => (
           <div 
             key={category} 
+            className="skill-category-card"
             style={{ 
               backgroundColor: 'var(--color-surface)', 
               padding: '1.75rem', 
               borderRadius: '16px', 
               border: '1px solid var(--color-border)',
-              backdropFilter: 'blur(8px)'
+              boxShadow: 'var(--shadow-sm)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              gap: '1.25rem'
             }}
           >
             {/* Category Header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.25rem', borderBottom: '1px solid var(--color-border)', paddingBottom: '0.6rem' }}>
-              <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--color-primary)', boxShadow: '0 0 8px var(--color-primary)' }}></span>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: '600', color: 'var(--color-text-primary)', letterSpacing: '0.01em' }}>
-                {category}
-              </h3>
-              <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: 'var(--color-text-secondary)', backgroundColor: 'var(--color-surface-hover)', padding: '0.15rem 0.5rem', borderRadius: '10px' }}>
-                {items.length} {items.length === 1 ? 'skill' : 'skills'}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--color-border)', paddingBottom: '0.75rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <span className="cat-pulse-dot" style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--color-primary)', boxShadow: '0 0 8px var(--color-primary)' }}></span>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: '600', color: 'var(--color-primary)', margin: 0 }}>
+                  {category}
+                </h3>
+              </div>
+              <span style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', backgroundColor: 'var(--color-bg)', border: '1px solid var(--color-border)', padding: '0.15rem 0.55rem', borderRadius: '8px', fontWeight: '500' }}>
+                {items.length}
               </span>
             </div>
 
-            {/* Small Side-by-Side Animated Skill Cards */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem' }}>
+            {/* Small Side-by-Side Animated Skill Badges */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
               {items.map((skill, index) => (
                 <div 
                   key={skill.id} 
-                  className="small-skill-card"
+                  className="small-skill-pill"
                   style={{ 
                     animationDelay: `${index * 0.05}s`,
                     backgroundColor: 'var(--color-bg)', 
-                    padding: '0.75rem 1.15rem', 
-                    borderRadius: '12px',
+                    padding: '0.5rem 0.85rem', 
+                    borderRadius: '10px',
                     border: '1px solid var(--color-border)',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '0.75rem',
+                    gap: '0.5rem',
                     cursor: 'default',
-                    position: 'relative',
-                    overflow: 'hidden'
+                    transition: 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)'
                   }}
                 >
-                  {/* Glowing Indicator Dot */}
-                  <span className="skill-dot" style={{
-                    width: '6px',
-                    height: '6px',
-                    borderRadius: '50%',
-                    backgroundColor: 'var(--color-primary)',
-                    flexShrink: 0,
-                    transition: 'transform 0.2s ease, box-shadow 0.2s ease'
-                  }}></span>
-
-                  {/* Skill Name Highlighted */}
                   <span style={{ 
-                    fontSize: '0.95rem', 
+                    fontSize: '0.9rem', 
                     fontWeight: '600', 
                     color: 'var(--color-text-primary)',
                     letterSpacing: '-0.01em',
                     whiteSpace: 'nowrap'
                   }}>
                     {skill.name}
-                  </span>
-
-                  {/* Subtle Skill Type Tag */}
-                  <span style={{ 
-                    fontSize: '0.7rem', 
-                    fontWeight: '500', 
-                    color: 'var(--color-text-secondary)', 
-                    backgroundColor: 'var(--color-surface)',
-                    border: '1px solid var(--color-border)',
-                    padding: '0.15rem 0.45rem',
-                    borderRadius: '6px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.04em',
-                    whiteSpace: 'nowrap'
-                  }}>
-                    {category}
                   </span>
                 </div>
               ))}
@@ -112,19 +98,25 @@ export default async function Skills({ skills: propSkills }) {
       </div>
 
       <style dangerouslySetInnerHTML={{__html: `
-        .small-skill-card {
-          transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease, box-shadow 0.25s ease, background-color 0.2s ease;
+        .skill-category-card {
+          transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
           will-change: transform;
         }
-        .small-skill-card:hover {
-          transform: translateY(-4px) scale(1.04);
-          border-color: var(--color-primary) !important;
-          background-color: var(--color-surface-hover) !important;
-          box-shadow: 0 8px 18px rgba(0, 242, 254, 0.18) !important;
+        .skill-category-card:hover {
+          transform: translateY(-4px);
+          border-color: var(--color-primary);
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
         }
-        .small-skill-card:hover .skill-dot {
-          transform: scale(1.5);
-          box-shadow: 0 0 10px var(--color-primary);
+        .small-skill-pill:hover {
+          transform: translateY(-2px) scale(1.05);
+          border-color: var(--color-primary);
+          background-color: var(--color-surface-hover);
+          color: var(--color-primary);
+        }
+        @media (max-width: 640px) {
+          .skill-category-card {
+            padding: 1.25rem !important;
+          }
         }
       `}} />
     </section>
