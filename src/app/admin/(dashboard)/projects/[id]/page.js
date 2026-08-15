@@ -1,11 +1,14 @@
 import { prisma } from '@/lib/prisma';
+import { safeQuery } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default async function EditProject({ params }) {
   const { id } = await params;
-  const project = await prisma.project.findUnique({ where: { id } });
+  const project = await safeQuery(p => p.project.findUnique({ where: { id } }), null);
 
   if (!project) {
     redirect('/admin/projects');
@@ -32,11 +35,28 @@ export default async function EditProject({ params }) {
       }
     }
 
-    await prisma.project.update({
-      where: { id },
-      data: { title, category, description, liveUrl, detailsUrl, imageUrl },
-    });
+    if (title && title.trim().length > 0) {
+      await prisma.project.update({
+        where: { id },
+        data: { 
+          title: title.trim(), 
+          category: category ? category.trim() : 'Development', 
+          description: description ? description.trim() : '', 
+          liveUrl: liveUrl ? liveUrl.trim() : null, 
+          detailsUrl: detailsUrl ? detailsUrl.trim() : null, 
+          imageUrl 
+        },
+      });
+    }
 
+    revalidatePath('/');
+    revalidatePath('/admin/projects');
+    redirect('/admin/projects');
+  }
+
+  async function deleteProject() {
+    'use server';
+    await prisma.project.delete({ where: { id } });
     revalidatePath('/');
     revalidatePath('/admin/projects');
     redirect('/admin/projects');
@@ -44,33 +64,60 @@ export default async function EditProject({ params }) {
 
   return (
     <div>
-      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Edit Project</h2>
+      <Link href="/admin/projects" style={{ color: 'var(--color-primary)', display: 'inline-block', marginBottom: '1rem', fontSize: '0.9rem' }}>&larr; Back to Projects</Link>
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', fontWeight: '700' }}>Edit Project</h2>
       
-      <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px', marginBottom: '2rem' }}>
-        <form action={updateProject} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Project Title</label>
-          <input name="title" defaultValue={project.title} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
-          
-          <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Category</label>
-          <input name="category" defaultValue={project.category} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
-          
-          <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Description</label>
-          <textarea name="description" defaultValue={project.description} required rows={3} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
-          
-          <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Live URL</label>
-          <input name="liveUrl" defaultValue={project.liveUrl || ''} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
-          
-          <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Project Details (Text)</label>
-          <textarea name="detailsUrl" defaultValue={project.detailsUrl || ''} rows={6} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
-          
-          <label style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)' }}>Update Image (Leave empty to keep current)</label>
-          <input name="image" type="file" accept="image/*" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
-          
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-            <button type="submit" className="btn btn-primary">Save Changes</button>
-            <Link href="/admin/projects" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>Cancel</Link>
-          </div>
-        </form>
+      <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+        <div style={{ flex: '1 1 500px', backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '14px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)' }}>
+          <form action={updateProject} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', color: 'var(--color-text-secondary)', fontWeight: '500' }}>Project Title *</label>
+              <input name="title" defaultValue={project.title} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', color: 'var(--color-text-secondary)', fontWeight: '500' }}>Category *</label>
+              <input name="category" defaultValue={project.category} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', color: 'var(--color-text-secondary)', fontWeight: '500' }}>Short Description *</label>
+              <textarea name="description" defaultValue={project.description} required rows={3} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', color: 'var(--color-text-secondary)', fontWeight: '500' }}>Detailed Overview (optional)</label>
+              <textarea name="detailsUrl" defaultValue={project.detailsUrl || ''} rows={5} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', color: 'var(--color-text-secondary)', fontWeight: '500' }}>Live URL (optional)</label>
+              <input name="liveUrl" defaultValue={project.liveUrl || ''} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', color: 'var(--color-text-secondary)', fontWeight: '500' }}>Update Image (optional - leave empty to keep current)</label>
+              {project.imageUrl && (
+                <div style={{ marginBottom: '0.5rem' }}>
+                  <img src={project.imageUrl} alt={project.title} style={{ width: '120px', height: '80px', objectFit: 'cover', borderRadius: '6px' }} />
+                </div>
+              )}
+              <input name="image" type="file" accept="image/*" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+            </div>
+
+            <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>Save Changes</button>
+          </form>
+        </div>
+
+        <div style={{ flex: '1 1 300px', backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '14px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)', alignSelf: 'flex-start' }}>
+          <h3 style={{ color: '#ef4444', marginBottom: '1rem' }}>Danger Zone</h3>
+          <p style={{ color: 'var(--color-text-secondary)', marginBottom: '1.25rem', fontSize: '0.875rem' }}>
+            Deleting this project is permanent.
+          </p>
+          <form action={deleteProject}>
+            <button type="submit" className="btn btn-outline" style={{ color: '#ef4444', borderColor: '#ef4444', width: '100%' }}>Delete Project</button>
+          </form>
+        </div>
       </div>
     </div>
   );

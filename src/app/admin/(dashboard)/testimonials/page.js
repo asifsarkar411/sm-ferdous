@@ -1,9 +1,12 @@
 import { prisma } from '@/lib/prisma';
+import { safeQuery } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ManageTestimonials() {
-  const testimonials = await prisma.testimonial.findMany();
+  const testimonials = await safeQuery(p => p.testimonial.findMany({ orderBy: { name: 'asc' } }), []);
 
   async function createTestimonial(formData) {
     'use server';
@@ -11,9 +14,11 @@ export default async function ManageTestimonials() {
     const role = formData.get('role');
     const quote = formData.get('quote');
 
-    await prisma.testimonial.create({
-      data: { name, role, quote },
-    });
+    if (name && quote) {
+      await prisma.testimonial.create({
+        data: { name: name.trim(), role: role ? role.trim() : 'Client', quote: quote.trim() },
+      });
+    }
 
     revalidatePath('/');
     revalidatePath('/admin/testimonials');
@@ -22,36 +27,51 @@ export default async function ManageTestimonials() {
   async function deleteTestimonial(formData) {
     'use server';
     const id = formData.get('id');
-    await prisma.testimonial.delete({ where: { id } });
-    revalidatePath('/');
-    revalidatePath('/admin/testimonials');
+    if (id) {
+      await prisma.testimonial.delete({ where: { id } });
+      revalidatePath('/');
+      revalidatePath('/admin/testimonials');
+    }
   }
 
   return (
     <div>
-      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Manage Testimonials</h2>
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', fontWeight: '700' }}>Manage Testimonials</h2>
       
-      <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px', marginBottom: '2rem' }}>
-        <h3 style={{ marginBottom: '1rem' }}>Add New Testimonial</h3>
-        <form action={createTestimonial} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <input name="name" placeholder="Client Name" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
-          <input name="role" placeholder="Client Role (e.g. UX Designer)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
-          <textarea name="quote" placeholder="Testimonial Quote" required rows={3} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
+      <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '14px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)', maxWidth: '600px', marginBottom: '2.5rem' }}>
+        <h3 style={{ marginBottom: '1.25rem', fontSize: '1.15rem' }}>Add New Testimonial</h3>
+        <form action={createTestimonial} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Client Name *</label>
+            <input name="name" placeholder="e.g. Sarah Jenkins" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Role / Title</label>
+            <input name="role" placeholder="e.g. Senior Product Manager" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Quote *</label>
+            <textarea name="quote" placeholder="Client feedback or recommendation..." required rows={3} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }} />
+          </div>
           <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>Add Testimonial</button>
         </form>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
         {testimonials.map(t => (
-          <div key={t.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
-            <p style={{ fontStyle: 'italic', marginBottom: '1rem', fontSize: '0.875rem' }}>&ldquo;{t.quote}&rdquo;</p>
-            <h4 style={{ marginBottom: '0.25rem' }}>{t.name}</h4>
-            <div style={{ color: 'var(--color-text-secondary)', fontSize: '0.875rem', marginBottom: '1rem' }}>{t.role}</div>
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <Link href={`/admin/testimonials/${t.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontSize: '0.875rem' }}>Edit</Link>
+          <div key={t.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '14px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div>
+              <p style={{ fontStyle: 'italic', marginBottom: '1rem', color: 'var(--color-text-secondary)', fontSize: '0.92rem', lineHeight: 1.5 }}>
+                &ldquo;{t.quote}&rdquo;
+              </p>
+              <h4 style={{ fontSize: '1rem', fontWeight: '600', color: 'var(--color-primary)' }}>{t.name}</h4>
+              <p style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>{t.role}</p>
+            </div>
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', borderTop: '1px solid var(--color-border)', paddingTop: '0.75rem', marginTop: '1rem' }}>
+              <Link href={`/admin/testimonials/${t.id}`} style={{ color: 'var(--color-primary)', fontSize: '0.85rem', fontWeight: '500' }}>Edit</Link>
               <form action={deleteTestimonial}>
                 <input type="hidden" name="id" value={t.id} />
-                <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Delete</button>
+                <button type="submit" style={{ color: '#ef4444', fontSize: '0.85rem', fontWeight: '500', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Delete</button>
               </form>
             </div>
           </div>

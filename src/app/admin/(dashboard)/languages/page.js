@@ -1,66 +1,91 @@
 import { prisma } from '@/lib/prisma';
+import { safeQuery } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ManageLanguages() {
-  const languages = await prisma.languageProficiency.findMany();
+  const languages = await safeQuery(p => p.languageProficiency.findMany({ orderBy: { language: 'asc' } }), []);
 
   async function createLanguage(formData) {
-    "use server";
+    'use server';
     const language = formData.get('language');
     const reading = formData.get('reading');
     const writing = formData.get('writing');
     const speaking = formData.get('speaking');
-    
-    await prisma.languageProficiency.create({
-      data: {
-        language,
-        reading,
-        writing,
-        speaking,
-      }
-    });
+
+    if (language) {
+      await prisma.languageProficiency.create({
+        data: {
+          language: language.trim(),
+          reading: reading ? reading.trim() : 'Good',
+          writing: writing ? writing.trim() : 'Good',
+          speaking: speaking ? speaking.trim() : 'Good',
+        },
+      });
+    }
     
     revalidatePath('/admin/languages');
     revalidatePath('/');
   }
 
   async function deleteLanguage(formData) {
-    "use server";
+    'use server';
     const id = formData.get('id');
-    await prisma.languageProficiency.delete({ where: { id } });
+    if (id) {
+      await prisma.languageProficiency.delete({
+        where: { id },
+      });
+    }
+    
     revalidatePath('/admin/languages');
     revalidatePath('/');
   }
 
   return (
     <div>
-      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Manage Language Proficiencies</h2>
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', fontWeight: '700' }}>Manage Language Proficiencies</h2>
       
-      <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', marginBottom: '2rem' }}>
-        <h3 style={{ marginBottom: '1rem' }}>Add New Language</h3>
-        <form action={createLanguage} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <input name="language" placeholder="Language (e.g., English)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
-          <input name="reading" placeholder="Reading Level (e.g., Fluent)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
-          <input name="writing" placeholder="Writing Level (e.g., Good)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
-          <input name="speaking" placeholder="Speaking Level (e.g., Basic)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)' }} />
+      <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '14px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)', maxWidth: '600px', marginBottom: '2.5rem' }}>
+        <h3 style={{ fontSize: '1.15rem', marginBottom: '1.25rem' }}>Add New Language</h3>
+        <form action={createLanguage} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Language *</label>
+            <input name="language" placeholder="e.g., English, Bengali, German" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Reading Proficiency</label>
+            <input name="reading" placeholder="e.g. Native, Fluent, Professional" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Writing Proficiency</label>
+            <input name="writing" placeholder="e.g. Native, Fluent, Professional" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Speaking Proficiency</label>
+            <input name="speaking" placeholder="e.g. Native, Fluent, Conversational" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          </div>
           
           <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>Add Language</button>
         </form>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
-        {languages.map(lang => (
-          <div key={lang.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
-            <h4 style={{ marginBottom: '0.5rem' }}>{lang.language}</h4>
-            <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '0.25rem' }}>Reading: {lang.reading}</p>
-            <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '0.25rem' }}>Writing: {lang.writing}</p>
-            <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '1rem' }}>Speaking: {lang.speaking}</p>
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <Link href={`/admin/languages/${lang.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontSize: '0.875rem' }}>Edit</Link>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
+        {languages.map((lang) => (
+          <div key={lang.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '14px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)' }}>
+            <h4 style={{ fontSize: '1.15rem', fontWeight: '600', color: 'var(--color-primary)', marginBottom: '0.75rem' }}>{lang.language}</h4>
+            <div style={{ fontSize: '0.88rem', display: 'flex', flexDirection: 'column', gap: '0.35rem', color: 'var(--color-text-secondary)' }}>
+              <div>Reading: <strong style={{ color: 'var(--color-text-primary)' }}>{lang.reading}</strong></div>
+              <div>Writing: <strong style={{ color: 'var(--color-text-primary)' }}>{lang.writing}</strong></div>
+              <div>Speaking: <strong style={{ color: 'var(--color-text-primary)' }}>{lang.speaking}</strong></div>
+            </div>
+            
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', borderTop: '1px solid var(--color-border)', paddingTop: '0.75rem', marginTop: '1rem' }}>
+              <Link href={`/admin/languages/${lang.id}`} style={{ color: 'var(--color-primary)', fontSize: '0.85rem', fontWeight: '500' }}>Edit</Link>
               <form action={deleteLanguage}>
                 <input type="hidden" name="id" value={lang.id} />
-                <button type="submit" style={{ color: 'var(--color-accent)', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.875rem' }}>Delete</button>
+                <button type="submit" style={{ color: '#ef4444', fontSize: '0.85rem', fontWeight: '500', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Delete</button>
               </form>
             </div>
           </div>

@@ -1,10 +1,12 @@
 import { prisma } from '@/lib/prisma';
+import { safeQuery } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
 
 export default async function ManageEducation() {
-  const educations = await prisma.education.findMany({ orderBy: { year: 'desc' } });
+  const educations = await safeQuery(p => p.education.findMany({ orderBy: { year: 'desc' } }), []);
 
   async function createEducation(formData) {
     'use server';
@@ -13,14 +15,16 @@ export default async function ManageEducation() {
     const year = formData.get('year');
     const gpa = formData.get('gpa');
 
-    await prisma.education.create({
-      data: {
-        degree,
-        institution,
-        year,
-        gpa,
-      },
-    });
+    if (degree && institution) {
+      await prisma.education.create({
+        data: {
+          degree: degree.trim(),
+          institution: institution.trim(),
+          year: year ? year.trim() : '',
+          gpa: gpa ? gpa.trim() : null,
+        },
+      });
+    }
     
     revalidatePath('/admin/education');
     revalidatePath('/');
@@ -29,10 +33,11 @@ export default async function ManageEducation() {
   async function deleteEducation(formData) {
     'use server';
     const id = formData.get('id');
-    
-    await prisma.education.delete({
-      where: { id },
-    });
+    if (id) {
+      await prisma.education.delete({
+        where: { id },
+      });
+    }
     
     revalidatePath('/admin/education');
     revalidatePath('/');
@@ -40,37 +45,49 @@ export default async function ManageEducation() {
 
   return (
     <div>
-      <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem', color: 'var(--color-primary)' }}>Manage Education</h2>
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', fontWeight: '700' }}>Manage Education</h2>
       
-      <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px', marginBottom: '2rem' }}>
-        <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Add New Education</h3>
-        <form action={createEducation} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <input name="degree" placeholder="Degree (e.g., BSc. Engg in CSE)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
-          <input name="institution" placeholder="Institution Name" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
-          <input name="year" placeholder="Year / Date (e.g., 2022 - 2026)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
-          <input name="gpa" placeholder="Details (e.g., Group : Science GPA : 5.00)" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+      <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '14px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)', maxWidth: '600px', marginBottom: '2.5rem' }}>
+        <h3 style={{ fontSize: '1.15rem', marginBottom: '1.25rem' }}>Add New Education</h3>
+        <form action={createEducation} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Degree *</label>
+            <input name="degree" placeholder="e.g. BSc. in Computer Science & Engineering" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Institution Name *</label>
+            <input name="institution" placeholder="e.g. Dhaka University" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Year / Duration *</label>
+            <input name="year" placeholder="e.g. 2022 - 2026" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Grade / GPA (optional)</label>
+            <input name="gpa" placeholder="e.g. CGPA: 3.85 / 4.00" style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+          </div>
           
           <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>Add Education</button>
         </form>
       </div>
 
       <div>
-        <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Existing Education</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', fontWeight: '600' }}>Existing Education</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
           {educations.map((edu) => (
-            <div key={edu.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                <h4 style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{edu.degree}</h4>
-                <span style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-primary)', padding: '0.2rem 0.5rem', borderRadius: '4px', fontSize: '0.8rem' }}>{edu.year}</span>
+            <div key={edu.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '14px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <h4 style={{ fontSize: '1.05rem', fontWeight: '600', color: 'var(--color-text-primary)' }}>{edu.degree}</h4>
+                <span style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-primary)', padding: '0.2rem 0.5rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: '600', border: '1px solid var(--color-border)' }}>{edu.year}</span>
               </div>
-              <p style={{ color: 'var(--color-text-secondary)', marginBottom: '0.5rem' }}>{edu.institution}</p>
-              {edu.gpa && <p style={{ fontSize: '0.875rem', color: 'var(--color-text-secondary)', marginBottom: '1rem' }}>{edu.gpa}</p>}
+              <p style={{ color: 'var(--color-primary)', fontSize: '0.9rem', marginBottom: '0.25rem' }}>{edu.institution}</p>
+              {edu.gpa && <p style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginBottom: '1rem' }}>{edu.gpa}</p>}
               
-              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                <Link href={`/admin/education/${edu.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'underline', fontSize: '0.875rem' }}>Edit</Link>
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', borderTop: '1px solid var(--color-border)', paddingTop: '0.75rem', marginTop: '0.5rem' }}>
+                <Link href={`/admin/education/${edu.id}`} style={{ color: 'var(--color-primary)', fontSize: '0.85rem', fontWeight: '500' }}>Edit</Link>
                 <form action={deleteEducation}>
                   <input type="hidden" name="id" value={edu.id} />
-                  <button type="submit" style={{ color: 'red', textDecoration: 'underline', fontSize: '0.875rem', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Delete</button>
+                  <button type="submit" style={{ color: '#ef4444', fontSize: '0.85rem', fontWeight: '500', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Delete</button>
                 </form>
               </div>
             </div>
