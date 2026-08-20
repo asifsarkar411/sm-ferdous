@@ -18,14 +18,14 @@ export default function FloatingSocials() {
   ];
 
   return (
-    <div style={{
+    <div className="floating-socials-wrapper" style={{
       position: 'fixed',
       bottom: '2rem',
       right: '2rem',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      gap: '1rem',
+      gap: '0.85rem',
       zIndex: 9999
     }}>
       <AnimatePresence>
@@ -35,7 +35,7 @@ export default function FloatingSocials() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.5 }}
             transition={{ duration: 0.2 }}
-            style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '0.5rem' }}
+            style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginBottom: '0.35rem' }}
           >
             {socials.map((social, index) => (
               <motion.a
@@ -49,9 +49,10 @@ export default function FloatingSocials() {
                 transition={{ delay: index * 0.05 }}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
+                className="floating-social-item"
                 style={{
-                  width: '50px',
-                  height: '50px',
+                  width: '46px',
+                  height: '46px',
                   borderRadius: '50%',
                   backgroundColor: social.color,
                   color: 'white',
@@ -72,29 +73,47 @@ export default function FloatingSocials() {
 
       <motion.button
         onClick={toggleOpen}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.92 }}
+        className="floating-main-btn"
         style={{
-          width: '60px',
-          height: '60px',
+          width: '54px',
+          height: '54px',
           borderRadius: '50%',
           backgroundColor: 'var(--color-primary)',
-          color: 'white',
+          color: '#050811',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           border: 'none',
           cursor: 'pointer',
-          boxShadow: '0 4px 15px rgba(0, 242, 254, 0.4)',
+          boxShadow: '0 4px 15px rgba(0, 229, 255, 0.4)',
         }}
       >
         <motion.div
           animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ duration: 0.2 }}
         >
-          <FaPlus size={28} />
+          <FaPlus size={24} />
         </motion.div>
       </motion.button>
+
+      <style dangerouslySetInnerHTML={{__html: `
+        @media (max-width: 640px) {
+          .floating-socials-wrapper {
+            bottom: 1.25rem !important;
+            right: 1.25rem !important;
+          }
+          .floating-main-btn {
+            width: 48px !important;
+            height: 48px !important;
+          }
+          .floating-social-item {
+            width: 42px !important;
+            height: 42px !important;
+          }
+        }
+      `}} />
     </div>
   );
 }

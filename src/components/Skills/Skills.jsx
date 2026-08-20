@@ -28,7 +28,7 @@ export default async function Skills({ skills: propSkills }) {
       {/* Small Category Cards Grid - matches Language Cards structure */}
       <div style={{ 
         display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', 
         gap: '1.5rem', 
         maxWidth: '1100px', 
         margin: '0 auto' 

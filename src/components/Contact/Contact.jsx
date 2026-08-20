@@ -23,55 +23,55 @@ export default async function Contact({ contactData: propContactData }) {
         <p className="section-subtitle">Reach out directly through the form or via my social profiles below.</p>
       </div>
 
-      <div style={{ 
+      <div className="contact-box" style={{ 
         backgroundColor: 'var(--color-surface)', 
         color: 'var(--color-text-primary)', 
         padding: '3rem 2.5rem', 
         borderRadius: '20px', 
         display: 'flex', 
-        gap: '3.5rem', 
+        gap: '3rem', 
         justifyContent: 'space-between', 
         border: '1px solid var(--color-border)',
         boxShadow: 'var(--shadow-sm)'
-      }} className="flex-responsive">
+      }}>
         
         {/* Left Column: Direct Info */}
-        <div style={{ flex: '1 1 340px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div style={{ flex: '1 1 320px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div>
-            <h3 style={{ fontSize: '1.6rem', fontWeight: '700', marginBottom: '1rem', color: 'var(--color-text-primary)' }}>
+            <h3 style={{ fontSize: 'clamp(1.25rem, 3vw, 1.6rem)', fontWeight: '700', marginBottom: '1rem', color: 'var(--color-text-primary)' }}>
               {contact.title || defaultContact.title}
             </h3>
-            <p style={{ marginBottom: '2rem', color: 'var(--color-text-secondary)', lineHeight: 1.7, fontSize: '1rem' }}>
+            <p style={{ marginBottom: '2rem', color: 'var(--color-text-secondary)', lineHeight: 1.7, fontSize: '0.96rem' }}>
               {contact.description || defaultContact.description}
             </p>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               {contact.motto && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', backgroundColor: 'var(--color-bg)', padding: '0.85rem 1rem', borderRadius: '10px', border: '1px solid var(--color-border)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', backgroundColor: 'var(--color-bg)', padding: '0.75rem 1rem', borderRadius: '10px', border: '1px solid var(--color-border)', wordBreak: 'break-all' }}>
                   <span style={{ fontSize: '1.1rem' }}>✉️</span>
                   <div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Email</div>
-                    <a href={`mailto:${contact.motto}`} style={{ color: 'var(--color-primary)', fontWeight: '600', fontSize: '0.95rem' }}>{contact.motto}</a>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Email</div>
+                    <a href={`mailto:${contact.motto}`} style={{ color: 'var(--color-primary)', fontWeight: '600', fontSize: '0.92rem' }}>{contact.motto}</a>
                   </div>
                 </div>
               )}
 
               {contact.phoneNumber && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', backgroundColor: 'var(--color-bg)', padding: '0.85rem 1rem', borderRadius: '10px', border: '1px solid var(--color-border)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', backgroundColor: 'var(--color-bg)', padding: '0.75rem 1rem', borderRadius: '10px', border: '1px solid var(--color-border)' }}>
                   <span style={{ fontSize: '1.1rem' }}>📞</span>
                   <div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Phone</div>
-                    <a href={`tel:${contact.phoneNumber}`} style={{ color: 'var(--color-text-primary)', fontWeight: '600', fontSize: '0.95rem' }}>{contact.phoneNumber}</a>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Phone</div>
+                    <a href={`tel:${contact.phoneNumber}`} style={{ color: 'var(--color-text-primary)', fontWeight: '600', fontSize: '0.92rem' }}>{contact.phoneNumber}</a>
                   </div>
                 </div>
               )}
 
               {(contact.location || contact.address) && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', backgroundColor: 'var(--color-bg)', padding: '0.85rem 1rem', borderRadius: '10px', border: '1px solid var(--color-border)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', backgroundColor: 'var(--color-bg)', padding: '0.75rem 1rem', borderRadius: '10px', border: '1px solid var(--color-border)' }}>
                   <span style={{ fontSize: '1.1rem' }}>📍</span>
                   <div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Location</div>
-                    <span style={{ color: 'var(--color-text-primary)', fontWeight: '500', fontSize: '0.95rem' }}>{contact.location || contact.address}</span>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Location</div>
+                    <span style={{ color: 'var(--color-text-primary)', fontWeight: '500', fontSize: '0.92rem' }}>{contact.location || contact.address}</span>
                   </div>
                 </div>
               )}
@@ -80,25 +80,25 @@ export default async function Contact({ contactData: propContactData }) {
         </div>
 
         {/* Right Column: Contact Form */}
-        <div style={{ flex: '1 1 380px', display: 'flex', justifyContent: 'center' }}>
+        <div style={{ flex: '1 1 340px', display: 'flex', justifyContent: 'center', width: '100%' }}>
           <ContactForm />
         </div>
 
       </div>
 
       {/* Modern Footer */}
-      <footer style={{ 
-        marginTop: '5rem', 
-        padding: '2.5rem 0 1rem 0', 
+      <footer className="footer-container" style={{ 
+        marginTop: '4rem', 
+        padding: '2rem 0 1rem 0', 
         borderTop: '1px solid var(--color-border)', 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
         color: 'var(--color-text-secondary)', 
-        gap: '1.5rem',
+        gap: '1.25rem',
         flexWrap: 'wrap'
-      }} className="flex-responsive">
-        <div style={{ fontSize: '0.9rem' }}>
+      }}>
+        <div style={{ fontSize: '0.88rem' }}>
           &copy; {new Date().getFullYear()} <strong style={{ color: 'var(--color-text-primary)' }}>SM FERDOUS AHMMED</strong>. All rights reserved.
         </div>
         
@@ -125,6 +125,25 @@ export default async function Contact({ contactData: propContactData }) {
         .footer-social-icon:hover {
           color: var(--color-primary) !important;
           transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+          .contact-box {
+            flex-direction: column !important;
+            padding: 1.75rem 1.25rem !important;
+            gap: 2.25rem !important;
+          }
+          .footer-container {
+            flex-direction: column !important;
+            text-align: center !important;
+            gap: 1.25rem !important;
+            justify-content: center !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .contact-box {
+            padding: 1.35rem 1rem !important;
+            border-radius: 14px !important;
+          }
         }
       `}} />
     </section>

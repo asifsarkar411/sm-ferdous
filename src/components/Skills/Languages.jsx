@@ -14,7 +14,7 @@ export default async function Languages({ languages: propLanguages }) {
         <div style={{ width: '50px', height: '3px', backgroundColor: 'var(--color-primary)', margin: '0 auto', borderRadius: '2px' }}></div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', maxWidth: '1000px', margin: '0 auto' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1.5rem', maxWidth: '1000px', margin: '0 auto' }}>
         {languages.map((lang) => (
           <div 
             key={lang.id} 

@@ -24,26 +24,26 @@ export default async function Hero({ heroData: propHeroData, cvs: propCvs }) {
   }));
 
   return (
-    <section id="home" style={{ 
+    <section id="home" className="hero-section" style={{ 
       background: 'var(--color-hero-bg)', 
-      minHeight: '88vh', 
+      minHeight: '85vh', 
       display: 'flex', 
       alignItems: 'center', 
-      padding: '5rem 0 3.5rem 0',
+      padding: '4.5rem 0 3rem 0',
       position: 'relative', 
       overflow: 'hidden' 
     }}>
-      <div className="container flex-responsive" style={{ 
+      <div className="container hero-container" style={{ 
         position: 'relative', 
         zIndex: 2, 
         display: 'flex', 
-        gap: '4rem', 
+        gap: '3.5rem', 
         alignItems: 'center', 
         justifyContent: 'space-between',
         width: '100%'
       }}>
         {/* Text Content */}
-        <div style={{ flex: 1, maxWidth: '620px' }}>
+        <div className="hero-text-content" style={{ flex: 1, maxWidth: '620px' }}>
           {/* Live Status Pill */}
           <div className="status-badge">
             <span className="status-dot"></span>
@@ -51,11 +51,11 @@ export default async function Hero({ heroData: propHeroData, cvs: propCvs }) {
           </div>
 
           <h1 style={{ 
-            fontSize: 'clamp(2.5rem, 5.5vw, 4.2rem)', 
+            fontSize: 'clamp(2.1rem, 5.5vw, 4.2rem)', 
             fontWeight: 800, 
-            lineHeight: 1.08, 
+            lineHeight: 1.1, 
             letterSpacing: '-0.03em', 
-            marginBottom: '1.25rem' 
+            marginBottom: '1.15rem' 
           }}>
             <span className="text-gradient">
               {hero.title || defaultHero.title}
@@ -64,8 +64,8 @@ export default async function Hero({ heroData: propHeroData, cvs: propCvs }) {
 
           <h2 style={{ 
             color: 'var(--color-primary)', 
-            fontSize: 'clamp(1.2rem, 2.5vw, 1.45rem)', 
-            marginBottom: '1.25rem', 
+            fontSize: 'clamp(1.1rem, 2.5vw, 1.45rem)', 
+            marginBottom: '1.15rem', 
             fontWeight: '600',
             letterSpacing: '-0.01em'
           }}>
@@ -74,8 +74,8 @@ export default async function Hero({ heroData: propHeroData, cvs: propCvs }) {
 
           <p style={{ 
             color: 'var(--color-text-secondary)', 
-            marginBottom: '2.25rem', 
-            fontSize: '1.08rem', 
+            marginBottom: '2rem', 
+            fontSize: 'clamp(0.95rem, 2vw, 1.08rem)', 
             lineHeight: 1.65,
             maxWidth: '560px' 
           }}>
@@ -83,7 +83,7 @@ export default async function Hero({ heroData: propHeroData, cvs: propCvs }) {
           </p>
 
           {/* Action CTAs */}
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }} className="hero-cta-wrapper">
+          <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'center', flexWrap: 'wrap' }} className="hero-cta-wrapper">
             <DownloadCVButton cvs={serializedCvs} fallbackUrl={hero.cvUrl} />
             <a href="#contact" className="btn btn-primary">
               Get In Touch &rarr;
@@ -92,7 +92,7 @@ export default async function Hero({ heroData: propHeroData, cvs: propCvs }) {
         </div>
 
         {/* Profile Image with Ambient Halo Glow */}
-        <div className="animate-float" style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div className="hero-image-wrapper animate-float" style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ position: 'relative' }}>
             {/* Ambient Radial Halo Glow */}
             <div style={{
@@ -109,7 +109,7 @@ export default async function Hero({ heroData: propHeroData, cvs: propCvs }) {
               pointerEvents: 'none'
             }}></div>
 
-            <div style={{ 
+            <div className="hero-img-box" style={{ 
               width: '320px', 
               height: '320px', 
               maxWidth: '80vw', 
@@ -142,8 +142,44 @@ export default async function Hero({ heroData: propHeroData, cvs: propCvs }) {
       </div>
       <style dangerouslySetInnerHTML={{__html: `
         @media (max-width: 768px) {
+          .hero-section {
+            padding: 3.5rem 0 2.5rem 0 !important;
+            min-height: auto !important;
+          }
+          .hero-container {
+            flex-direction: column-reverse !important;
+            gap: 2.5rem !important;
+            text-align: center !important;
+          }
+          .hero-text-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
           .hero-cta-wrapper {
-            justify-content: center;
+            justify-content: center !important;
+          }
+          .hero-img-box {
+            width: 250px !important;
+            height: 250px !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .hero-section {
+            padding: 2.5rem 0 2rem 0 !important;
+          }
+          .hero-img-box {
+            width: 200px !important;
+            height: 200px !important;
+          }
+          .hero-cta-wrapper {
+            width: 100%;
+            flex-direction: column;
+            gap: 0.75rem;
+          }
+          .hero-cta-wrapper > * {
+            width: 100%;
+            text-align: center;
           }
         }
       `}} />

@@ -35,7 +35,7 @@ export default function NavContent({ logoName, logoImage }) {
   ];
 
   return (
-    <header style={{
+    <header className="site-header" style={{
       position: 'fixed',
       top: '1rem',
       left: 0,
@@ -46,7 +46,7 @@ export default function NavContent({ logoName, logoImage }) {
       padding: '0 1rem',
       pointerEvents: 'none'
     }}>
-      <nav style={{ 
+      <nav className="site-navbar" style={{ 
         pointerEvents: 'auto',
         maxWidth: '1100px',
         width: '100%',
@@ -63,21 +63,21 @@ export default function NavContent({ logoName, logoImage }) {
         color: 'var(--color-text-primary)'
       }}>
         {/* Brand Logo */}
-        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.6rem', minWidth: 0 }}>
           {logoImage ? (
             <motion.img 
               src={logoImage} 
               alt="Logo" 
               whileHover={{ scale: 1.08 }}
               whileTap={{ scale: 0.95 }}
-              style={{ height: '34px', width: '34px', objectFit: 'cover', borderRadius: '50%', border: '1px solid var(--color-border)' }} 
+              style={{ height: '32px', width: '32px', minWidth: '32px', objectFit: 'cover', borderRadius: '50%', border: '1px solid var(--color-border)' }} 
             />
           ) : (
-            <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--color-primary)', color: '#050811', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.85rem' }}>
+            <div style={{ width: '30px', height: '30px', minWidth: '30px', borderRadius: '50%', backgroundColor: 'var(--color-primary)', color: '#050811', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.8rem' }}>
               {(logoName || 'SF').slice(0, 2).toUpperCase()}
             </div>
           )}
-          <span style={{ fontWeight: '700', fontSize: '1.05rem', color: 'var(--color-text-primary)', letterSpacing: '-0.01em' }}>
+          <span style={{ fontWeight: '700', fontSize: 'clamp(0.85rem, 3.5vw, 1.05rem)', color: 'var(--color-text-primary)', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {logoName || 'SM FERDOUS AHMMED'}
           </span>
         </Link>
@@ -134,12 +134,12 @@ export default function NavContent({ logoName, logoImage }) {
               type="button" 
               onClick={() => setTheme(currentTheme === 'dark' ? 'light' : 'dark')} 
               aria-label="Toggle Theme" 
-              style={{ fontSize: '1.2rem', color: 'var(--color-text-primary)', marginRight: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.4rem', borderRadius: '50%', backgroundColor: 'var(--color-surface)' }}
+              style={{ fontSize: '1.15rem', color: 'var(--color-text-primary)', marginRight: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.35rem', borderRadius: '50%', backgroundColor: 'var(--color-surface)' }}
             >
               {currentTheme === 'dark' ? <FiSun /> : <FiMoon />}
             </button>
           )}
-          <button type="button" onClick={() => setIsOpen(true)} aria-label="Open Navigation Menu" style={{ fontSize: '1.4rem', color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center' }}>
+          <button type="button" onClick={() => setIsOpen(true)} aria-label="Open Navigation Menu" style={{ fontSize: '1.35rem', color: 'var(--color-text-primary)', display: 'flex', alignItems: 'center' }}>
             <FiMenu />
           </button>
         </div>
@@ -160,7 +160,7 @@ export default function NavContent({ logoName, logoImage }) {
                 animate={{ x: 0 }} 
                 exit={{ x: '100%' }} 
                 transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                style={{ position: 'fixed', top: 0, right: 0, width: '270px', height: '100vh', backgroundColor: 'var(--color-bg-secondary)', zIndex: 10000, padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', borderLeft: '1px solid var(--color-border)', boxShadow: 'var(--card-glow)' }}
+                style={{ position: 'fixed', top: 0, right: 0, width: 'min(280px, 80vw)', height: '100vh', backgroundColor: 'var(--color-bg-secondary)', zIndex: 10000, padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', borderLeft: '1px solid var(--color-border)', boxShadow: 'var(--card-glow)' }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid var(--color-border)', paddingBottom: '0.75rem' }}>
                   <span style={{ fontWeight: '700', fontSize: '1rem', color: 'var(--color-text-primary)' }}>Menu</span>
@@ -193,6 +193,13 @@ export default function NavContent({ logoName, logoImage }) {
             color: var(--color-primary);
           }
           @media (max-width: 768px) {
+            .site-header {
+              top: 0.6rem !important;
+              padding: 0 0.75rem !important;
+            }
+            .site-navbar {
+              padding: 0.55rem 1rem !important;
+            }
             .hide-on-mobile { display: none !important; }
             .mobile-only-toggle { display: flex !important; align-items: center; }
           }

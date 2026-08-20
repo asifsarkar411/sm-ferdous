@@ -14,7 +14,7 @@ export default async function Projects({ projects: propProjects }) {
         <p className="section-subtitle">Real-world applications, frontend architectures, and IoT engineering solutions.</p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))', gap: '2rem' }}>
         {projects.map(project => (
           <ProjectCard key={project.id} project={project} />
         ))}

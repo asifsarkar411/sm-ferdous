@@ -21,7 +21,7 @@ export default function ProjectCard({ project }) {
       }}
     >
       {/* Project Cover Image */}
-      <div style={{ height: '210px', backgroundColor: 'var(--color-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
+      <div className="project-img-wrapper" style={{ height: '210px', backgroundColor: 'var(--color-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', position: 'relative' }}>
         {project.imageUrl ? (
           <img 
             src={project.imageUrl} 
@@ -57,7 +57,7 @@ export default function ProjectCard({ project }) {
       </div>
 
       {/* Card Body */}
-      <div style={{ padding: '1.75rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div className="project-card-body" style={{ padding: '1.75rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <h3 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '0.75rem', color: 'var(--color-text-primary)', letterSpacing: '-0.01em' }}>
           {project.title}
         </h3>
@@ -90,7 +90,7 @@ export default function ProjectCard({ project }) {
               type="button"
               onClick={() => setIsExpanded(!isExpanded)}
               className="btn btn-outline" 
-              style={{ flex: 1, padding: '0.6rem 1rem', fontSize: '0.88rem' }}
+              style={{ flex: 1, padding: '0.6rem 1rem', fontSize: '0.88rem', minWidth: '120px' }}
             >
               {isExpanded ? 'Hide Details' : 'Overview'}
             </button>
@@ -101,7 +101,7 @@ export default function ProjectCard({ project }) {
               target="_blank" 
               rel="noopener noreferrer" 
               className="btn btn-primary" 
-              style={{ textAlign: 'center', flex: 1, padding: '0.6rem 1rem', fontSize: '0.88rem' }}
+              style={{ textAlign: 'center', flex: 1, padding: '0.6rem 1rem', fontSize: '0.88rem', minWidth: '120px' }}
             >
               Live Demo &rarr;
             </a>
@@ -117,6 +117,14 @@ export default function ProjectCard({ project }) {
         }
         .project-card-container:hover .project-img-zoom {
           transform: scale(1.05);
+        }
+        @media (max-width: 640px) {
+          .project-img-wrapper {
+            height: 180px !important;
+          }
+          .project-card-body {
+            padding: 1.25rem 1.1rem !important;
+          }
         }
       `}} />
     </div>

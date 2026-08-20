@@ -13,7 +13,7 @@ export default async function Hobby({ hobbies: propHobbies }) {
         <p className="section-subtitle">Activities and creative passions I pursue beyond code.</p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1.75rem' }}>
         {hobbies.map((hobby) => {
           const hasImage = Boolean(hobby.imageUrl && hobby.imageUrl.trim().length > 0);
           const hasDescription = Boolean(hobby.description && hobby.description.trim().length > 0);
@@ -33,7 +33,7 @@ export default async function Hobby({ hobbies: propHobbies }) {
               }}
             >
               {hasImage && (
-                <div style={{ height: '190px', overflow: 'hidden', backgroundColor: 'var(--color-bg)' }}>
+                <div className="hobby-img-wrapper" style={{ height: '190px', overflow: 'hidden', backgroundColor: 'var(--color-bg)' }}>
                   <img 
                     src={hobby.imageUrl} 
                     alt={hobby.title || 'Hobby'} 
@@ -44,7 +44,7 @@ export default async function Hobby({ hobbies: propHobbies }) {
                   />
                 </div>
               )}
-              <div style={{ padding: '1.75rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
+              <div className="hobby-card-body" style={{ padding: '1.75rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: hasDescription ? '0.6rem' : '0', color: 'var(--color-primary)' }}>
                   {hobby.title}
                 </h3>
@@ -61,6 +61,14 @@ export default async function Hobby({ hobbies: propHobbies }) {
       <style dangerouslySetInnerHTML={{__html: `
         .hobby-card:hover .hobby-img {
           transform: scale(1.06);
+        }
+        @media (max-width: 640px) {
+          .hobby-img-wrapper {
+            height: 170px !important;
+          }
+          .hobby-card-body {
+            padding: 1.25rem 1.1rem !important;
+          }
         }
       `}} />
     </section>

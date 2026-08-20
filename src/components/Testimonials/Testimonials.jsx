@@ -13,12 +13,13 @@ export default async function Testimonials({ testimonials: propTestimonials }) {
         <p className="section-subtitle">Feedback and recommendations from collaborators and clients.</p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '1.75rem' }}>
         {testimonials.map(testimonial => (
           <div 
             key={testimonial.id} 
+            className="testimonial-card testimonial-card-hover"
             style={{ 
-              padding: '2.25rem', 
+              padding: '2rem', 
               backgroundColor: 'var(--color-surface)', 
               border: '1px solid var(--color-border)', 
               borderRadius: '18px', 
@@ -29,10 +30,9 @@ export default async function Testimonials({ testimonials: propTestimonials }) {
               transition: 'transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease', 
               willChange: 'transform' 
             }}
-            className="testimonial-card-hover"
           >
             <div style={{ fontSize: '1.5rem', color: 'var(--color-primary)', marginBottom: '0.75rem' }}>&ldquo;</div>
-            <p style={{ fontStyle: 'italic', marginBottom: '1.5rem', color: 'var(--color-text-secondary)', lineHeight: 1.65, fontSize: '0.96rem', flex: 1 }}>
+            <p style={{ fontStyle: 'italic', marginBottom: '1.5rem', color: 'var(--color-text-secondary)', lineHeight: 1.65, fontSize: '0.94rem', flex: 1 }}>
               {testimonial.quote}
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', borderTop: '1px solid var(--color-border)', paddingTop: '1rem' }}>
@@ -53,6 +53,11 @@ export default async function Testimonials({ testimonials: propTestimonials }) {
           transform: translateY(-4px);
           border-color: var(--color-primary);
           box-shadow: var(--card-glow);
+        }
+        @media (max-width: 640px) {
+          .testimonial-card {
+            padding: 1.35rem 1.15rem !important;
+          }
         }
       `}} />
     </section>
