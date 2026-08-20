@@ -9,14 +9,101 @@ const outfit = Outfit({
   weight: ['300', '400', '500', '600', '700'],
 });
 
+const siteUrl = process.env.NEXTAUTH_URL || 'https://sm-ferdous.vercel.app';
+
 export const metadata = {
-  title: 'SM FERDOUS AHMMED | Portfolio',
-  description: 'Professional portfolio, full stack development, and IoT solutions.',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'SM FERDOUS AHMMED | Full Stack Developer & IoT Engineer',
+    template: '%s | SM FERDOUS AHMMED',
+  },
+  description: 'Full Stack Web Developer and IoT Solutions Engineer specializing in React, Next.js, Node.js, PostgreSQL, and embedded microcontroller automation.',
+  keywords: [
+    'SM FERDOUS AHMMED',
+    'SM Ferdous',
+    'Full Stack Developer',
+    'IoT Engineer',
+    'Web Developer Bangladesh',
+    'Next.js Developer',
+    'React Developer',
+    'Node.js',
+    'PostgreSQL',
+    'Embedded C/C++',
+    'Software Engineer Portfolio',
+  ],
+  authors: [{ name: 'SM FERDOUS AHMMED', url: siteUrl }],
+  creator: 'SM FERDOUS AHMMED',
+  publisher: 'SM FERDOUS AHMMED',
+  applicationName: 'SM FERDOUS AHMMED Portfolio',
+  category: 'technology',
+  alternates: {
+    canonical: siteUrl,
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: siteUrl,
+    title: 'SM FERDOUS AHMMED | Full Stack Developer & IoT Engineer',
+    description: 'Full Stack Web Developer and IoT Solutions Engineer specializing in React, Next.js, Node.js, PostgreSQL, and embedded microcontroller automation.',
+    siteName: 'SM FERDOUS AHMMED Portfolio',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SM FERDOUS AHMMED | Full Stack Developer & IoT Engineer',
+    description: 'Full Stack Web Developer and IoT Solutions Engineer specializing in React, Next.js, Node.js, PostgreSQL, and embedded microcontroller automation.',
+    creator: '@asifsarkar411',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'SM FERDOUS AHMMED',
+  url: siteUrl,
+  jobTitle: 'Full Stack Developer & IoT Engineer',
+  description: 'Full Stack Web Developer and IoT Solutions Engineer specializing in React, Next.js, Node.js, PostgreSQL, and embedded microcontroller automation.',
+  sameAs: [
+    'https://github.com/asifsarkar411',
+    'https://www.facebook.com/sarkarasif59/',
+  ],
+  knowsAbout: [
+    'JavaScript',
+    'TypeScript',
+    'React',
+    'Next.js',
+    'Node.js',
+    'PostgreSQL',
+    'Prisma',
+    'Embedded C',
+    'IoT Prototyping',
+    'Full Stack Web Development',
+  ],
+  alumniOf: {
+    '@type': 'EducationalOrganization',
+    name: 'Bangladesh University of Business and Technology (BUBT)',
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={outfit.variable} suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className={outfit.className}>
         <ThemeProvider>
           {children}
