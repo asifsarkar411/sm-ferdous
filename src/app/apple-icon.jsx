@@ -6,6 +6,7 @@ export const size = {
   height: 180,
 };
 export const contentType = 'image/png';
+export const dynamic = 'force-dynamic';
 
 export default async function AppleIcon() {
   const heroData = await safeQuery(p => p.hero.findFirst(), null);
