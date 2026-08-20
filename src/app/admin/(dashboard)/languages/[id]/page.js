@@ -22,15 +22,19 @@ export default async function EditLanguage({ params }) {
     const speaking = formData.get('speaking');
 
     if (language) {
-      await prisma.languageProficiency.update({
-        where: { id },
-        data: {
-          language: language.trim(),
-          reading: reading ? reading.trim() : 'Good',
-          writing: writing ? writing.trim() : 'Good',
-          speaking: speaking ? speaking.trim() : 'Good',
-        },
-      });
+      try {
+        await safeMutation(p => p.languageProficiency.update({
+          where: { id },
+          data: {
+            language: language.toString().trim(),
+            reading: reading ? reading.toString().trim() : 'Good',
+            writing: writing ? writing.toString().trim() : 'Good',
+            speaking: speaking ? speaking.toString().trim() : 'Good',
+          },
+        }));
+      } catch (err) {
+        console.error('Error updating language:', err);
+      }
     }
 
     revalidatePath('/admin/languages');
@@ -40,9 +44,13 @@ export default async function EditLanguage({ params }) {
 
   async function deleteLanguage() {
     'use server';
-    await prisma.languageProficiency.delete({
-      where: { id },
-    });
+    try {
+      await safeMutation(p => p.languageProficiency.delete({
+        where: { id },
+      }));
+    } catch (err) {
+      console.error('Error deleting language:', err);
+    }
     revalidatePath('/admin/languages');
     revalidatePath('/');
     redirect('/admin/languages');

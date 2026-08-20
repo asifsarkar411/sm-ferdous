@@ -1,5 +1,4 @@
-import { prisma } from '@/lib/prisma';
-import { safeQuery } from '@/lib/db';
+import { safeQuery, safeMutation } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import bcrypt from 'bcryptjs';
 
@@ -13,20 +12,24 @@ export default async function SettingsPage() {
     const email = formData.get('email');
     const newPassword = formData.get('newPassword');
 
-    const currentUser = await prisma.user.findFirst().catch(() => null);
+    const currentUser = await safeQuery(p => p.user.findFirst(), null);
     if (!currentUser) return;
 
-    const updateData = { email: email.trim().toLowerCase() };
+    const updateData = { email: email.toString().trim().toLowerCase() };
 
-    if (newPassword && newPassword.trim() !== '') {
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
+    if (newPassword && newPassword.toString().trim() !== '') {
+      const hashedPassword = await bcrypt.hash(newPassword.toString(), 10);
       updateData.password = hashedPassword;
     }
 
-    await prisma.user.update({
-      where: { id: currentUser.id },
-      data: updateData,
-    });
+    try {
+      await safeMutation(p => p.user.update({
+        where: { id: currentUser.id },
+        data: updateData,
+      }));
+    } catch (err) {
+      console.error('Error updating credentials:', err);
+    }
 
     revalidatePath('/admin/settings');
   }

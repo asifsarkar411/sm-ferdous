@@ -19,7 +19,7 @@ export default async function ManageProjects() {
     const file = formData.get('image');
     let imageUrl = '';
     
-    if (file && file.size > 0) {
+    if (file && typeof file.arrayBuffer === 'function' && file.size > 0) {
       try {
         const buffer = Buffer.from(await file.arrayBuffer());
         const mimeType = file.type || 'image/jpeg';
@@ -29,17 +29,21 @@ export default async function ManageProjects() {
       }
     }
 
-    if (title && title.trim().length > 0) {
-      await prisma.project.create({
-        data: { 
-          title: title.trim(), 
-          category: category ? category.trim() : 'Development', 
-          description: description ? description.trim() : '', 
-          liveUrl: liveUrl ? liveUrl.trim() : null, 
-          detailsUrl: detailsUrl ? detailsUrl.trim() : null, 
-          imageUrl 
-        },
-      });
+    if (title && title.toString().trim().length > 0) {
+      try {
+        await safeMutation(p => p.project.create({
+          data: { 
+            title: title.toString().trim(), 
+            category: category ? category.toString().trim() : 'Development', 
+            description: description ? description.toString().trim() : '', 
+            liveUrl: liveUrl ? liveUrl.toString().trim() : null, 
+            detailsUrl: detailsUrl ? detailsUrl.toString().trim() : null, 
+            imageUrl 
+          },
+        }));
+      } catch (err) {
+        console.error('Error creating project:', err);
+      }
     }
 
     revalidatePath('/');
@@ -50,7 +54,11 @@ export default async function ManageProjects() {
     'use server';
     const id = formData.get('id');
     if (id) {
-      await prisma.project.delete({ where: { id } });
+      try {
+        await safeMutation(p => p.project.delete({ where: { id: id.toString() } }));
+      } catch (err) {
+        console.error('Error deleting project:', err);
+      }
       revalidatePath('/');
       revalidatePath('/admin/projects');
     }

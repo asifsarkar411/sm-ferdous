@@ -1,15 +1,15 @@
-import { prisma } from '@/lib/prisma';
+import { safeQuery, safeMutation } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ManageAbout() {
-  const aboutData = await prisma.about.findFirst().catch(() => null);
+  const aboutData = await safeQuery(p => p.about.findFirst(), null);
 
   async function updateAbout(formData) {
     'use server';
-    const currentAbout = await prisma.about.findFirst().catch(() => null);
+    const currentAbout = await safeQuery(p => p.about.findFirst(), null);
 
     const description = formData.get('description');
     const yearsCoding = formData.get('yearsCoding');
@@ -19,7 +19,7 @@ export default async function ManageAbout() {
     const file = formData.get('image');
     let imageUrl = currentAbout?.imageUrl || null;
     
-    if (file && file.size > 0) {
+    if (file && typeof file.arrayBuffer === 'function' && file.size > 0) {
       try {
         const buffer = Buffer.from(await file.arrayBuffer());
         const mimeType = file.type || 'image/jpeg';
@@ -29,15 +29,27 @@ export default async function ManageAbout() {
       }
     }
 
-    if (currentAbout) {
-      await prisma.about.update({
-        where: { id: currentAbout.id },
-        data: { description, yearsCoding, projectsBuilt, frameworks, imageUrl },
-      });
-    } else {
-      await prisma.about.create({
-        data: { description, yearsCoding, projectsBuilt, frameworks, imageUrl },
-      });
+    const payload = {
+      description: description ? description.toString().trim() : '',
+      yearsCoding: yearsCoding ? yearsCoding.toString().trim() : null,
+      projectsBuilt: projectsBuilt ? projectsBuilt.toString().trim() : null,
+      frameworks: frameworks ? frameworks.toString().trim() : null,
+      imageUrl,
+    };
+
+    try {
+      if (currentAbout) {
+        await safeMutation(p => p.about.update({
+          where: { id: currentAbout.id },
+          data: payload,
+        }));
+      } else {
+        await safeMutation(p => p.about.create({
+          data: payload,
+        }));
+      }
+    } catch (err) {
+      console.error('Error updating about:', err);
     }
 
     revalidatePath('/');

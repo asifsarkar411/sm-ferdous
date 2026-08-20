@@ -16,14 +16,18 @@ export default async function ManageLanguages() {
     const speaking = formData.get('speaking');
 
     if (language) {
-      await prisma.languageProficiency.create({
-        data: {
-          language: language.trim(),
-          reading: reading ? reading.trim() : 'Good',
-          writing: writing ? writing.trim() : 'Good',
-          speaking: speaking ? speaking.trim() : 'Good',
-        },
-      });
+      try {
+        await safeMutation(p => p.languageProficiency.create({
+          data: {
+            language: language.toString().trim(),
+            reading: reading ? reading.toString().trim() : 'Good',
+            writing: writing ? writing.toString().trim() : 'Good',
+            speaking: speaking ? speaking.toString().trim() : 'Good',
+          },
+        }));
+      } catch (err) {
+        console.error('Error creating language:', err);
+      }
     }
     
     revalidatePath('/admin/languages');
@@ -34,9 +38,13 @@ export default async function ManageLanguages() {
     'use server';
     const id = formData.get('id');
     if (id) {
-      await prisma.languageProficiency.delete({
-        where: { id },
-      });
+      try {
+        await safeMutation(p => p.languageProficiency.delete({
+          where: { id: id.toString() },
+        }));
+      } catch (err) {
+        console.error('Error deleting language:', err);
+      }
     }
     
     revalidatePath('/admin/languages');

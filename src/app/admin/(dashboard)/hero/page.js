@@ -1,18 +1,19 @@
-import { prisma } from '@/lib/prisma';
+import { safeQuery, safeMutation } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ManageHero() {
-  const heroData = await prisma.hero.findFirst().catch(() => null);
+  const heroData = await safeQuery(p => p.hero.findFirst(), null);
 
   async function updateHero(formData) {
     'use server';
-    const currentHero = await prisma.hero.findFirst().catch(() => null);
+    const currentHero = await safeQuery(p => p.hero.findFirst(), null);
     
     const title = formData.get('title');
     const subtitle = formData.get('subtitle');
+    const description = formData.get('description');
     const logoName = formData.get('logoName');
     
     const file = formData.get('image');
@@ -21,7 +22,7 @@ export default async function ManageHero() {
     const logoFile = formData.get('logoImage');
     let logoImageUrl = currentHero?.logoImage || null;
 
-    if (file && file.size > 0) {
+    if (file && typeof file.arrayBuffer === 'function' && file.size > 0) {
       try {
         const buffer = Buffer.from(await file.arrayBuffer());
         const mimeType = file.type || 'image/jpeg';
@@ -29,7 +30,7 @@ export default async function ManageHero() {
       } catch (e) { console.error('Error converting file to Base64:', e); }
     }
 
-    if (logoFile && logoFile.size > 0) {
+    if (logoFile && typeof logoFile.arrayBuffer === 'function' && logoFile.size > 0) {
       try {
         const buffer = Buffer.from(await logoFile.arrayBuffer());
         const mimeType = logoFile.type || 'image/png';
@@ -37,15 +38,28 @@ export default async function ManageHero() {
       } catch (e) { console.error('Error converting logo to Base64:', e); }
     }
 
-    if (currentHero) {
-      await prisma.hero.update({
-        where: { id: currentHero.id },
-        data: { title, subtitle, imageUrl, logoName, logoImage: logoImageUrl },
-      });
-    } else {
-      await prisma.hero.create({
-        data: { title, subtitle, imageUrl, logoName, logoImage: logoImageUrl },
-      });
+    const heroPayload = {
+      title: title ? title.toString().trim() : '',
+      subtitle: subtitle ? subtitle.toString().trim() : '',
+      description: description ? description.toString().trim() : null,
+      imageUrl,
+      logoName: logoName ? logoName.toString().trim() : null,
+      logoImage: logoImageUrl,
+    };
+
+    try {
+      if (currentHero) {
+        await safeMutation(p => p.hero.update({
+          where: { id: currentHero.id },
+          data: heroPayload,
+        }));
+      } else {
+        await safeMutation(p => p.hero.create({
+          data: heroPayload,
+        }));
+      }
+    } catch (err) {
+      console.error('Error updating hero:', err);
     }
 
     revalidatePath('/');
@@ -102,7 +116,18 @@ export default async function ManageHero() {
               name="subtitle" 
               defaultValue={heroData?.subtitle || ''} 
               required 
+              rows={3}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }}
+            />
+          </div>
+
+          <div style={{ marginBottom: '1rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Description (Bio / Summary)</label>
+            <textarea 
+              name="description" 
+              defaultValue={heroData?.description || ''} 
               rows={4}
+              placeholder="Specializing in building high-performance web applications..."
               style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }}
             />
           </div>

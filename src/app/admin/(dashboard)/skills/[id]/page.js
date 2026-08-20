@@ -19,11 +19,15 @@ export default async function EditSkill({ params }) {
     const name = formData.get('name');
     const category = formData.get('category');
     
-    if (name && name.trim().length > 0) {
-      await prisma.skill.update({
-        where: { id },
-        data: { name: name.trim(), category: category ? category.trim() : 'General' },
-      });
+    if (name && name.toString().trim().length > 0) {
+      try {
+        await safeMutation(p => p.skill.update({
+          where: { id },
+          data: { name: name.toString().trim(), category: category ? category.toString().trim() : 'General' },
+        }));
+      } catch (err) {
+        console.error('Error updating skill:', err);
+      }
     }
 
     revalidatePath('/');

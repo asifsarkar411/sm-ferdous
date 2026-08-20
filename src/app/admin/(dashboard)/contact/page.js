@@ -1,14 +1,16 @@
-import { prisma } from '@/lib/prisma';
+import { safeQuery, safeMutation } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ManageContact() {
-  const contactData = await prisma.contact.findFirst().catch(() => null);
+  const contactData = await safeQuery(p => p.contact.findFirst(), null);
 
   async function updateContact(formData) {
     'use server';
+    const currentContact = await safeQuery(p => p.contact.findFirst(), null);
+
     const title = formData.get('title');
     const description = formData.get('description');
     const buttonText = formData.get('buttonText');
@@ -18,15 +20,30 @@ export default async function ManageContact() {
     const location = formData.get('location');
     const phoneNumber = formData.get('phoneNumber');
 
-    if (contactData) {
-      await prisma.contact.update({
-        where: { id: contactData.id },
-        data: { title, description, buttonText, buttonLink, motto, address, location, phoneNumber },
-      });
-    } else {
-      await prisma.contact.create({
-        data: { title, description, buttonText, buttonLink, motto, address, location, phoneNumber },
-      });
+    const payload = {
+      title: title ? title.toString().trim() : null,
+      description: description ? description.toString().trim() : null,
+      buttonText: buttonText ? buttonText.toString().trim() : null,
+      buttonLink: buttonLink ? buttonLink.toString().trim() : null,
+      motto: motto ? motto.toString().trim() : null,
+      address: address ? address.toString().trim() : null,
+      location: location ? location.toString().trim() : null,
+      phoneNumber: phoneNumber ? phoneNumber.toString().trim() : null,
+    };
+
+    try {
+      if (currentContact) {
+        await safeMutation(p => p.contact.update({
+          where: { id: currentContact.id },
+          data: payload,
+        }));
+      } else {
+        await safeMutation(p => p.contact.create({
+          data: payload,
+        }));
+      }
+    } catch (err) {
+      console.error('Error updating contact:', err);
     }
 
     revalidatePath('/');

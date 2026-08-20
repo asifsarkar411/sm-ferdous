@@ -1,5 +1,4 @@
-import { prisma } from '@/lib/prisma';
-import { safeQuery } from '@/lib/db';
+import { safeQuery, safeMutation } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
@@ -9,15 +8,15 @@ export async function createCV(formData) {
   const title = formData.get('title');
   const file = formData.get('file');
 
-  if (file && file.size > 0 && title) {
+  if (file && typeof file.arrayBuffer === 'function' && file.size > 0 && title) {
     try {
       const buffer = Buffer.from(await file.arrayBuffer());
       const mimeType = file.type || 'application/pdf';
       const fileUrl = `data:${mimeType};base64,${buffer.toString('base64')}`;
 
-      await prisma.cV.create({
-        data: { title: title.trim(), fileUrl },
-      });
+      await safeMutation(p => p.cV.create({
+        data: { title: title.toString().trim(), fileUrl },
+      }));
       revalidatePath('/');
       revalidatePath('/admin/cvs');
     } catch (error) {
@@ -30,7 +29,11 @@ export async function deleteCV(formData) {
   'use server';
   const id = formData.get('id');
   if (id) {
-    await prisma.cV.delete({ where: { id } });
+    try {
+      await safeMutation(p => p.cV.delete({ where: { id: id.toString() } }));
+    } catch (error) {
+      console.error('Error deleting CV:', error);
+    }
     revalidatePath('/');
     revalidatePath('/admin/cvs');
   }
@@ -41,7 +44,11 @@ export async function toggleHideCV(formData) {
   const id = formData.get('id');
   const isHidden = formData.get('isHidden') === 'true';
   if (id) {
-    await prisma.cV.update({ where: { id }, data: { isHidden: !isHidden } });
+    try {
+      await safeMutation(p => p.cV.update({ where: { id: id.toString() }, data: { isHidden: !isHidden } }));
+    } catch (error) {
+      console.error('Error toggling CV:', error);
+    }
     revalidatePath('/');
     revalidatePath('/admin/cvs');
   }

@@ -55,3 +55,46 @@ export async function safeMutation(mutationFn, maxRetries = 3) {
     }
   }
 }
+
+/**
+ * Unified portfolio data fetcher that runs sequentially on a single DB connection
+ * Eliminates connection pool congestion and guarantees consistent data loading
+ */
+export async function getAllPortfolioData() {
+  return await safeQuery(async (p) => {
+    const heroData = await p.hero.findFirst().catch(() => null);
+    const cvs = await p.cV.findMany({ where: { isHidden: false }, orderBy: { createdAt: 'desc' } }).catch(() => []);
+    const aboutData = await p.about.findFirst().catch(() => null);
+    const educationList = await p.education.findMany({ orderBy: { year: 'desc' } }).catch(() => []);
+    const journeys = await p.journey.findMany({ orderBy: { order: 'asc' } }).catch(() => []);
+    const skills = await p.skill.findMany({ orderBy: { name: 'asc' } }).catch(() => []);
+    const languages = await p.languageProficiency.findMany({ orderBy: { language: 'asc' } }).catch(() => []);
+    const projects = await p.project.findMany().catch(() => []);
+    const hobbies = await p.hobby.findMany({ orderBy: { title: 'asc' } }).catch(() => []);
+    const contactData = await p.contact.findFirst().catch(() => null);
+
+    return {
+      heroData,
+      cvs,
+      aboutData,
+      educationList,
+      journeys,
+      skills,
+      languages,
+      projects,
+      hobbies,
+      contactData,
+    };
+  }, {
+    heroData: null,
+    cvs: [],
+    aboutData: null,
+    educationList: [],
+    journeys: [],
+    skills: [],
+    languages: [],
+    projects: [],
+    hobbies: [],
+    contactData: null,
+  });
+}

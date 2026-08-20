@@ -13,13 +13,17 @@ export default async function ManageSkills() {
     const name = formData.get('name');
     const category = formData.get('category');
 
-    if (name && name.trim().length > 0) {
-      await prisma.skill.create({
-        data: { 
-          name: name.trim(), 
-          category: category ? category.trim() : 'General' 
-        },
-      });
+    if (name && name.toString().trim().length > 0) {
+      try {
+        await safeMutation(p => p.skill.create({
+          data: { 
+            name: name.toString().trim(), 
+            category: category ? category.toString().trim() : 'General' 
+          },
+        }));
+      } catch (err) {
+        console.error('Error creating skill:', err);
+      }
     }
 
     revalidatePath('/');
@@ -30,7 +34,11 @@ export default async function ManageSkills() {
     'use server';
     const id = formData.get('id');
     if (id) {
-      await prisma.skill.delete({ where: { id } });
+      try {
+        await safeMutation(p => p.skill.delete({ where: { id: id.toString() } }));
+      } catch (err) {
+        console.error('Error deleting skill:', err);
+      }
       revalidatePath('/');
       revalidatePath('/admin/skills');
     }
