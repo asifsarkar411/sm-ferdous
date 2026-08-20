@@ -1,21 +1,21 @@
-import { prisma } from '@/lib/prisma';
+import { safeQuery, safeMutation } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ManageHobbies() {
-  const hobbies = await prisma.hobby.findMany({ orderBy: { title: 'asc' } }).catch(() => []);
+  const hobbies = await safeQuery(p => p.hobby.findMany({ orderBy: { title: 'asc' } }), []);
 
   async function addHobby(formData) {
     'use server';
     const title = formData.get('title');
-    const description = formData.get('description') || null;
+    const description = formData.get('description');
     
     // Convert image to base64 if provided
     const file = formData.get('image');
     let imageUrl = null;
-    if (file && file.size > 0) {
+    if (file && typeof file.arrayBuffer === 'function' && file.size > 0) {
       try {
         const buffer = Buffer.from(await file.arrayBuffer());
         const mimeType = file.type || 'image/png';
@@ -25,10 +25,19 @@ export default async function ManageHobbies() {
       }
     }
 
-    if (title && title.trim().length > 0) {
-      await prisma.hobby.create({
-        data: { title: title.trim(), description: description ? description.trim() : null, imageUrl },
-      });
+    if (title && title.toString().trim().length > 0) {
+      const descVal = description ? description.toString().trim() : '';
+      try {
+        await safeMutation(p => p.hobby.create({
+          data: { 
+            title: title.toString().trim(), 
+            description: descVal, 
+            imageUrl 
+          },
+        }));
+      } catch (err) {
+        console.error('Error creating hobby:', err);
+      }
     }
 
     revalidatePath('/');

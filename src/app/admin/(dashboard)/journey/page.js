@@ -1,5 +1,4 @@
-import { prisma } from '@/lib/prisma';
-import { safeQuery } from '@/lib/db';
+import { safeQuery, safeMutation } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
@@ -20,16 +19,20 @@ export default async function ManageJourney() {
     const points = pointsStr ? pointsStr.split('\n').map(p => p.trim()).filter(Boolean) : [];
 
     if (title && subtitle) {
-      await prisma.journey.create({
-        data: {
-          title: title.trim(),
-          subtitle: subtitle.trim(),
-          date: date ? date.trim() : '',
-          location: location ? location.trim() : '',
-          points,
-          order,
-        },
-      });
+      try {
+        await safeMutation(p => p.journey.create({
+          data: {
+            title: title.toString().trim(),
+            subtitle: subtitle.toString().trim(),
+            date: date ? date.toString().trim() : '',
+            location: location ? location.toString().trim() : '',
+            points,
+            order: isNaN(order) ? 0 : order,
+          },
+        }));
+      } catch (err) {
+        console.error('Error creating journey:', err);
+      }
     }
 
     revalidatePath('/admin/journey');
@@ -40,7 +43,11 @@ export default async function ManageJourney() {
     'use server';
     const id = formData.get('id');
     if (id) {
-      await prisma.journey.delete({ where: { id } });
+      try {
+        await safeMutation(p => p.journey.delete({ where: { id: id.toString() } }));
+      } catch (err) {
+        console.error('Error deleting journey:', err);
+      }
       revalidatePath('/admin/journey');
       revalidatePath('/');
     }

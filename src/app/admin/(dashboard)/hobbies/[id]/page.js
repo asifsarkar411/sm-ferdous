@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { safeQuery, safeMutation } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function EditHobby({ params }) {
   const { id } = await params;
-  const hobby = await prisma.hobby.findUnique({ where: { id } });
+  const hobby = await safeQuery(p => p.hobby.findUnique({ where: { id } }), null);
 
   if (!hobby) {
     redirect('/admin/hobbies');
@@ -16,12 +16,12 @@ export default async function EditHobby({ params }) {
   async function updateHobby(formData) {
     'use server';
     const title = formData.get('title');
-    const description = formData.get('description') || null;
+    const description = formData.get('description');
     
     const file = formData.get('image');
     let imageUrl = hobby.imageUrl;
     
-    if (file && file.size > 0) {
+    if (file && typeof file.arrayBuffer === 'function' && file.size > 0) {
       try {
         const buffer = Buffer.from(await file.arrayBuffer());
         const mimeType = file.type || 'image/png';
@@ -31,11 +31,20 @@ export default async function EditHobby({ params }) {
       }
     }
 
-    if (title && title.trim().length > 0) {
-      await prisma.hobby.update({
-        where: { id },
-        data: { title: title.trim(), description: description ? description.trim() : null, imageUrl },
-      });
+    if (title && title.toString().trim().length > 0) {
+      const descVal = description ? description.toString().trim() : '';
+      try {
+        await safeMutation(p => p.hobby.update({
+          where: { id },
+          data: { 
+            title: title.toString().trim(), 
+            description: descVal, 
+            imageUrl 
+          },
+        }));
+      } catch (err) {
+        console.error('Error updating hobby:', err);
+      }
     }
 
     revalidatePath('/');
@@ -45,7 +54,11 @@ export default async function EditHobby({ params }) {
 
   async function deleteHobby() {
     'use server';
-    await prisma.hobby.delete({ where: { id } });
+    try {
+      await safeMutation(p => p.hobby.delete({ where: { id } }));
+    } catch (err) {
+      console.error('Error deleting hobby:', err);
+    }
     revalidatePath('/');
     revalidatePath('/admin/hobbies');
     redirect('/admin/hobbies');

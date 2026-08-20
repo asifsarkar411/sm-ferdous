@@ -22,15 +22,19 @@ export default async function EditEducation({ params }) {
     const gpa = formData.get('gpa');
 
     if (degree && institution) {
-      await prisma.education.update({
-        where: { id },
-        data: {
-          degree: degree.trim(),
-          institution: institution.trim(),
-          year: year ? year.trim() : '',
-          gpa: gpa ? gpa.trim() : null,
-        },
-      });
+      try {
+        await safeMutation(p => p.education.update({
+          where: { id },
+          data: {
+            degree: degree.toString().trim(),
+            institution: institution.toString().trim(),
+            year: year ? year.toString().trim() : '',
+            gpa: gpa ? gpa.toString().trim() : null,
+          },
+        }));
+      } catch (err) {
+        console.error('Error updating education:', err);
+      }
     }
 
     revalidatePath('/admin/education');
@@ -40,9 +44,13 @@ export default async function EditEducation({ params }) {
 
   async function deleteEducation() {
     'use server';
-    await prisma.education.delete({
-      where: { id },
-    });
+    try {
+      await safeMutation(p => p.education.delete({
+        where: { id },
+      }));
+    } catch (err) {
+      console.error('Error deleting education:', err);
+    }
     revalidatePath('/admin/education');
     revalidatePath('/');
     redirect('/admin/education');

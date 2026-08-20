@@ -35,8 +35,6 @@ export default function AdminSidebar() {
     { href: '/admin/languages', label: 'Manage Languages' },
     { href: '/admin/hobbies', label: 'Manage Hobbies' },
     { href: '/admin/projects', label: 'Manage Projects' },
-    { href: '/admin/services', label: 'Manage Services' },
-    { href: '/admin/testimonials', label: 'Manage Testimonials' },
     { href: '/admin/messages', label: 'Inbox (Messages)' },
     { href: '/admin/contact', label: 'Manage Contact' },
     { href: '/admin/cvs', label: 'Manage CVs' },

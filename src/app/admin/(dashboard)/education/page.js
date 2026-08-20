@@ -16,14 +16,18 @@ export default async function ManageEducation() {
     const gpa = formData.get('gpa');
 
     if (degree && institution) {
-      await prisma.education.create({
-        data: {
-          degree: degree.trim(),
-          institution: institution.trim(),
-          year: year ? year.trim() : '',
-          gpa: gpa ? gpa.trim() : null,
-        },
-      });
+      try {
+        await safeMutation(p => p.education.create({
+          data: {
+            degree: degree.toString().trim(),
+            institution: institution.toString().trim(),
+            year: year ? year.toString().trim() : '',
+            gpa: gpa ? gpa.toString().trim() : null,
+          },
+        }));
+      } catch (err) {
+        console.error('Error creating education:', err);
+      }
     }
     
     revalidatePath('/admin/education');
@@ -34,9 +38,13 @@ export default async function ManageEducation() {
     'use server';
     const id = formData.get('id');
     if (id) {
-      await prisma.education.delete({
-        where: { id },
-      });
+      try {
+        await safeMutation(p => p.education.delete({
+          where: { id: id.toString() },
+        }));
+      } catch (err) {
+        console.error('Error deleting education:', err);
+      }
     }
     
     revalidatePath('/admin/education');

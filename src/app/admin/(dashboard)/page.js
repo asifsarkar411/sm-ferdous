@@ -14,10 +14,8 @@ export default async function AdminDashboard() {
     safeQuery(p => p.skill.count(), 0),
   ]);
 
-  const [hobbyCount, serviceCount, testimonialCount, educationCount] = await Promise.all([
+  const [hobbyCount, educationCount] = await Promise.all([
     safeQuery(p => p.hobby.count(), 0),
-    safeQuery(p => p.service.count(), 0),
-    safeQuery(p => p.testimonial.count(), 0),
     safeQuery(p => p.education.count(), 0),
   ]);
 
@@ -37,8 +35,6 @@ export default async function AdminDashboard() {
     { title: 'Education', desc: 'Update your education history.', link: '/admin/education', count: educationCount },
     { title: 'Languages', desc: 'Manage language proficiencies.', link: '/admin/languages', count: languageCount },
     { title: 'Hobbies', desc: 'Manage your hobbies and interests.', link: '/admin/hobbies', count: hobbyCount },
-    { title: 'Services', desc: 'Manage services offered.', link: '/admin/services', count: serviceCount },
-    { title: 'Testimonials', desc: 'Manage client recommendations.', link: '/admin/testimonials', count: testimonialCount },
     { title: 'Messages', desc: 'View contact form submissions.', link: '/admin/messages', count: messageCount },
     { title: 'CVs', desc: 'Manage downloadable CVs.', link: '/admin/cvs', count: cvCount },
     { title: 'Contact Info', desc: 'Update your contact details.', link: '/admin/contact', count: 'Info' },
