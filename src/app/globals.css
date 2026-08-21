@@ -1,31 +1,31 @@
 :root {
-  /* Dark / Night Mode - Pure solid rich dark surfaces with crisp borders and solid cyan accents */
-  --color-bg-primary: #0a0e17;
-  --color-bg-secondary: #111726;
-  --color-text-primary: #f8fafc;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
-  --color-primary: #00e5ff;
-  --color-primary-dark: #00b4d8;
-  --color-accent: #00e5ff;
+  /* Dark / Night Mode - Pure deep pitch black surfaces with crisp minimalist borders and electric cyan accents */
+  --color-bg-primary: #000000;
+  --color-bg-secondary: #08080a;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
+  --color-primary: #00f2fe;
+  --color-primary-dark: #00c6ff;
+  --color-accent: #00f2fe;
   --color-bg: var(--color-bg-primary);
   --color-text: var(--color-text-primary);
-  --color-surface: #111726;
-  --color-surface-hover: #161f33;
-  --color-surface-card: #111726;
-  --color-badge-bg: #162033;
-  --color-badge-text: #00e5ff;
-  --color-border: #1e293b;
-  --color-border-subtle: #172033;
-  --color-border-hover: #00e5ff;
-  --color-shadow: rgba(0, 0, 0, 0.5);
-  --color-hero-bg: #0a0e17;
-  --nav-bg: #0a0e17;
-  --card-glow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --color-surface: #0a0a0d;
+  --color-surface-hover: #121217;
+  --color-surface-card: #0a0a0d;
+  --color-badge-bg: #121218;
+  --color-badge-text: #00f2fe;
+  --color-border: #181820;
+  --color-border-subtle: #121218;
+  --color-border-hover: #00f2fe;
+  --color-shadow: rgba(0, 0, 0, 0.7);
+  --color-hero-bg: #000000;
+  --nav-bg: #050507;
+  --card-glow: 0 4px 24px rgba(0, 0, 0, 0.6);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.6);
   
-  --font-primary: var(--font-outfit), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-primary: var(--font-google-sans), 'Plus Jakarta Sans', 'Google Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   
   --border-radius-sm: 8px;
   --border-radius-md: 14px;
@@ -34,16 +34,16 @@
 }
 
 [data-theme='light'] {
-  /* Light Mode - Pure solid crisp white surfaces with slate-900 typography and solid blue accents */
-  --color-bg-primary: #f8fafc;
-  --color-bg-secondary: #ffffff;
-  --color-text-primary: #0f172a;
+  /* Light Mode - Pure crisp white surfaces with deep pitch black typography and rich blue accents */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8fafc;
+  --color-text-primary: #09090b;
   --color-text-secondary: #475569;
   --color-text-muted: #94a3b8;
   --color-primary: #0284c7;
   --color-primary-dark: #0369a1;
   --color-accent: #0284c7;
-  --color-bg: #f8fafc;
+  --color-bg: #ffffff;
   --color-text: var(--color-text-primary);
   --color-surface: #ffffff;
   --color-surface-hover: #f1f5f9;
@@ -51,10 +51,10 @@
   --color-badge-bg: #f1f5f9;
   --color-badge-text: #0284c7;
   --color-border: #e2e8f0;
-  --color-border-subtle: #edf2f7;
+  --color-border-subtle: #f8fafc;
   --color-border-hover: #0284c7;
   --color-shadow: rgba(0, 0, 0, 0.05);
-  --color-hero-bg: #f8fafc;
+  --color-hero-bg: #ffffff;
   --nav-bg: #ffffff;
   --card-glow: 0 4px 20px rgba(0, 0, 0, 0.06);
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);

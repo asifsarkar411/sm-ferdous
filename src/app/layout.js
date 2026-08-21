@@ -1,12 +1,12 @@
-import { Outfit } from 'next/font/google';
+import { Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import ThemeProvider from '@/components/ThemeProvider';
 
-const outfit = Outfit({
+const googleSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-outfit',
-  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-google-sans',
+  weight: ['300', '400', '500', '600', '700', '800'],
 });
 
 const siteUrl = process.env.NEXTAUTH_URL || 'https://sm-ferdous.vercel.app';
@@ -97,14 +97,17 @@ const jsonLd = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={outfit.variable} suppressHydrationWarning>
+    <html lang="en" className={googleSans.variable} suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={outfit.className}>
+      <body className={googleSans.className}>
         <ThemeProvider>
           {children}
         </ThemeProvider>
