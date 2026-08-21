@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  // Standalone is only used for custom Docker/VPS hosting, disabled for Vercel
+  ...(process.env.STANDALONE_BUILD === 'true' ? { output: 'standalone' } : {}),
   compress: true,
   images: {
     formats: ['image/avif', 'image/webp'],
