@@ -1,4 +1,4 @@
-import { safeQuery, safeMutation } from '@/lib/db';
+import { safeQuery, safeMutation, defaultPortfolioData } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -7,7 +7,9 @@ export const dynamic = 'force-dynamic';
 
 export default async function EditHobby({ params }) {
   const { id } = await params;
-  const hobby = await safeQuery(p => p.hobby.findUnique({ where: { id } }), null);
+  const dbHobby = await safeQuery(p => p.hobby.findUnique({ where: { id } }), null);
+  const defaultHobby = defaultPortfolioData.hobbies.find(h => h.id === id);
+  const hobby = dbHobby || defaultHobby;
 
   if (!hobby) {
     redirect('/admin/hobbies');
@@ -19,7 +21,7 @@ export default async function EditHobby({ params }) {
     const description = formData.get('description');
     
     const file = formData.get('image');
-    let imageUrl = hobby.imageUrl;
+    let imageUrl = hobby.imageUrl || null;
     
     if (file && typeof file.arrayBuffer === 'function' && file.size > 0) {
       try {
@@ -34,13 +36,16 @@ export default async function EditHobby({ params }) {
     if (title && title.toString().trim().length > 0) {
       const descVal = description ? description.toString().trim() : '';
       try {
-        await safeMutation(p => p.hobby.update({
+        const payload = { 
+          title: title.toString().trim(), 
+          description: descVal, 
+          imageUrl 
+        };
+
+        await safeMutation(p => p.hobby.upsert({
           where: { id },
-          data: { 
-            title: title.toString().trim(), 
-            description: descVal, 
-            imageUrl 
-          },
+          create: { id, ...payload },
+          update: payload,
         }));
       } catch (err) {
         console.error('Error updating hobby:', err);

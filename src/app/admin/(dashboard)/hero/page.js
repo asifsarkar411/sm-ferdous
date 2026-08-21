@@ -1,4 +1,4 @@
-import { safeQuery, safeMutation } from '@/lib/db';
+import { safeQuery, safeMutation, defaultPortfolioData } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
@@ -6,6 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function ManageHero() {
   const heroData = await safeQuery(p => p.hero.findFirst(), null);
+  const hero = heroData || defaultPortfolioData.heroData;
 
   async function updateHero(formData) {
     'use server';
@@ -72,8 +73,8 @@ export default async function ManageHero() {
     revalidatePath('/admin/hero');
   }
 
-  const isAvailableValue = heroData?.isAvailable !== false;
-  const showBadgeValue = heroData?.showStatusBadge !== false;
+  const isAvailableValue = hero?.isAvailable !== false;
+  const showBadgeValue = hero?.showStatusBadge !== false;
 
   return (
     <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '650px' }}>
@@ -114,7 +115,7 @@ export default async function ManageHero() {
             <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '500' }}>Custom Status Text</label>
             <input 
               name="statusText" 
-              defaultValue={heroData?.statusText || 'Available for new projects'} 
+              defaultValue={hero?.statusText || 'Available for new projects'} 
               placeholder="e.g. Available for new projects or Unavailable / Busy"
               style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
             />
@@ -127,16 +128,16 @@ export default async function ManageHero() {
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Navbar Logo Name</label>
             <input 
               name="logoName" 
-              defaultValue={heroData?.logoName || ''} 
+              defaultValue={hero?.logoName || ''} 
               style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
               placeholder="e.g. SM FERDOUS AHMMED"
             />
           </div>
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Navbar Logo Image</label>
-            {heroData?.logoImage && (
+            {hero?.logoImage && (
               <div style={{ marginBottom: '1rem' }}>
-                <img src={heroData.logoImage} alt="Current Logo" style={{ width: '50px', height: '50px', objectFit: 'contain' }} />
+                <img src={hero.logoImage} alt="Current Logo" style={{ width: '50px', height: '50px', objectFit: 'contain' }} />
               </div>
             )}
             <input 
@@ -154,7 +155,7 @@ export default async function ManageHero() {
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Title</label>
             <input 
               name="title" 
-              defaultValue={heroData?.title || ''} 
+              defaultValue={hero?.title || ''} 
               required 
               style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
             />
@@ -164,7 +165,7 @@ export default async function ManageHero() {
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Subtitle</label>
             <textarea 
               name="subtitle" 
-              defaultValue={heroData?.subtitle || ''} 
+              defaultValue={hero?.subtitle || ''} 
               required 
               rows={3}
               style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }}
@@ -175,7 +176,7 @@ export default async function ManageHero() {
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Description (Bio / Summary)</label>
             <textarea 
               name="description" 
-              defaultValue={heroData?.description || ''} 
+              defaultValue={hero?.description || ''} 
               rows={4}
               placeholder="Specializing in building high-performance web applications..."
               style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }}

@@ -1,4 +1,4 @@
-import { safeQuery, safeMutation } from '@/lib/db';
+import { safeQuery, safeMutation, defaultPortfolioData } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
@@ -6,6 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function ManageContact() {
   const contactData = await safeQuery(p => p.contact.findFirst(), null);
+  const contact = contactData || defaultPortfolioData.contactData;
 
   async function updateContact(formData) {
     'use server';
@@ -13,8 +14,6 @@ export default async function ManageContact() {
 
     const title = formData.get('title');
     const description = formData.get('description');
-    const buttonText = formData.get('buttonText');
-    const buttonLink = formData.get('buttonLink');
     const motto = formData.get('motto');
     const address = formData.get('address');
     const location = formData.get('location');
@@ -23,8 +22,6 @@ export default async function ManageContact() {
     const payload = {
       title: title ? title.toString().trim() : null,
       description: description ? description.toString().trim() : null,
-      buttonText: buttonText ? buttonText.toString().trim() : null,
-      buttonLink: buttonLink ? buttonLink.toString().trim() : null,
       motto: motto ? motto.toString().trim() : null,
       address: address ? address.toString().trim() : null,
       location: location ? location.toString().trim() : null,
@@ -58,34 +55,26 @@ export default async function ManageContact() {
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Title</label>
           <input 
             name="title" 
-            defaultValue={contactData?.title || ''} 
+            defaultValue={contact?.title || ''} 
             style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
           />
         </div>
         
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Email</label>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Description</label>
+          <textarea 
+            name="description" 
+            defaultValue={contact?.description || ''} 
+            rows={3} 
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }}
+          />
+        </div>
+
+        <div>
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Contact Email (Motto)</label>
           <input 
             name="motto" 
-            defaultValue={contactData?.motto || ''} 
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
-          />
-        </div>
-
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Address</label>
-          <input 
-            name="address" 
-            defaultValue={contactData?.address || ''} 
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
-          />
-        </div>
-
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Location</label>
-          <input 
-            name="location" 
-            defaultValue={contactData?.location || ''} 
+            defaultValue={contact?.motto || ''} 
             style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
           />
         </div>
@@ -94,21 +83,20 @@ export default async function ManageContact() {
           <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Phone Number</label>
           <input 
             name="phoneNumber" 
-            defaultValue={contactData?.phoneNumber || ''} 
+            defaultValue={contact?.phoneNumber || ''} 
             style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
           />
         </div>
 
         <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Description</label>
-          <textarea 
-            name="description" 
-            defaultValue={contactData?.description || ''} 
-            rows={2}
-            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)', resize: 'vertical' }}
+          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Location / Address</label>
+          <input 
+            name="location" 
+            defaultValue={contact?.location || contact?.address || ''} 
+            style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}
           />
         </div>
-        
+
         <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
           <button type="submit" className="btn btn-primary">Save Changes</button>
           <Link href="/admin" className="btn btn-outline" style={{ color: 'var(--color-text-secondary)', borderColor: 'var(--color-border)' }}>Dashboard</Link>

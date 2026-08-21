@@ -1,4 +1,4 @@
-import { safeQuery, safeMutation } from '@/lib/db';
+import { safeQuery, safeMutation, defaultPortfolioData } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
@@ -6,6 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function ManageHobbies() {
   const hobbies = await safeQuery(p => p.hobby.findMany({ orderBy: { title: 'asc' } }), []);
+  const hobbyList = (hobbies && hobbies.length > 0) ? hobbies : defaultPortfolioData.hobbies;
 
   async function addHobby(formData) {
     'use server';
@@ -67,8 +68,8 @@ export default async function ManageHobbies() {
         </form>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
-        {hobbies.map(hobby => (
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.25rem' }}>
+        {hobbyList.map(hobby => (
           <div key={hobby.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column' }}>
             {hobby.imageUrl && (
               <img src={hobby.imageUrl} alt={hobby.title} style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: '8px', marginBottom: '1rem' }} />

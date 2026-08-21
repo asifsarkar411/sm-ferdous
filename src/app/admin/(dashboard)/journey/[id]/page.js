@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { safeQuery, safeMutation } from '@/lib/db';
+import { safeQuery, safeMutation, defaultPortfolioData } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -8,7 +8,9 @@ export const dynamic = 'force-dynamic';
 
 export default async function EditJourney({ params }) {
   const { id } = await params;
-  const journey = await safeQuery(p => p.journey.findUnique({ where: { id } }), null);
+  const dbJourney = await safeQuery(p => p.journey.findUnique({ where: { id } }), null);
+  const defaultJourney = defaultPortfolioData.journeys.find(j => j.id === id);
+  const journey = dbJourney || defaultJourney;
 
   if (!journey) {
     redirect('/admin/journey');
@@ -31,16 +33,19 @@ export default async function EditJourney({ params }) {
 
     if (title && subtitle) {
       try {
-        await safeMutation(p => p.journey.update({
+        const payload = {
+          title: title.toString().trim(),
+          subtitle: subtitle.toString().trim(),
+          date: date ? date.toString().trim() : '',
+          location: location ? location.toString().trim() : '',
+          points,
+          order: isNaN(order) ? 0 : order,
+        };
+
+        await safeMutation(p => p.journey.upsert({
           where: { id },
-          data: {
-            title: title.toString().trim(),
-            subtitle: subtitle.toString().trim(),
-            date: date ? date.toString().trim() : '',
-            location: location ? location.toString().trim() : '',
-            points,
-            order: isNaN(order) ? 0 : order,
-          },
+          create: { id, ...payload },
+          update: payload,
         }));
       } catch (err) {
         console.error('Error updating journey:', err);

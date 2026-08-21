@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { safeQuery, safeMutation } from '@/lib/db';
+import { safeQuery, safeMutation, defaultPortfolioData } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function ManageLanguages() {
   const languages = await safeQuery(p => p.languageProficiency.findMany({ orderBy: { language: 'asc' } }), []);
+  const languageList = (languages && languages.length > 0) ? languages : defaultPortfolioData.languages;
 
   async function createLanguage(formData) {
     'use server';
@@ -93,7 +94,7 @@ export default async function ManageLanguages() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
-        {languages.map((lang) => (
+        {languageList.map((lang) => (
           <div key={lang.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '14px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)' }}>
             <h4 style={{ fontSize: '1.15rem', fontWeight: '600', color: 'var(--color-primary)', marginBottom: '0.75rem' }}>{lang.language}</h4>
             <div style={{ fontSize: '0.88rem', display: 'flex', flexDirection: 'column', gap: '0.35rem', color: 'var(--color-text-secondary)' }}>

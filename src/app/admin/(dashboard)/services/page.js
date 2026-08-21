@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { safeQuery, safeMutation } from '@/lib/db';
+import { safeQuery, safeMutation, defaultPortfolioData } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function ManageServices() {
   const services = await safeQuery(p => p.service.findMany({ orderBy: { title: 'asc' } }), []);
+  const serviceList = (services && services.length > 0) ? services : defaultPortfolioData.services;
 
   async function createService(formData) {
     'use server';
@@ -60,8 +61,8 @@ export default async function ManageServices() {
         </form>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
-        {services.map(service => (
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1.25rem' }}>
+        {serviceList.map((service) => (
           <div key={service.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '14px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <div>
               <h4 style={{ fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem', color: 'var(--color-text-primary)' }}>{service.title}</h4>

@@ -1,7 +1,9 @@
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
-import { safeQuery } from '@/lib/db';
+import { safeQuery, defaultPortfolioData } from '@/lib/db';
 import Link from 'next/link';
+
+export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
@@ -28,18 +30,18 @@ export default async function AdminDashboard() {
   const userEmail = session?.user?.email || session?.email || 'Admin';
 
   const cards = [
-    { title: 'Hero Section', desc: 'Main title, subtitle, and profile picture.', link: '/admin/hero', count: '1' },
-    { title: 'About Section', desc: 'Your bio and general information.', link: '/admin/about', count: '1' },
-    { title: 'Projects', desc: 'Manage your portfolio items.', link: '/admin/projects', count: projectCount },
-    { title: 'Services', desc: 'Manage offered services and solutions.', link: '/admin/services', count: serviceCount },
-    { title: 'Skills', desc: 'Manage your technical skills.', link: '/admin/skills', count: skillCount },
-    { title: 'Journey', desc: 'Update your experience timeline.', link: '/admin/journey', count: journeyCount },
-    { title: 'Education', desc: 'Update your education history.', link: '/admin/education', count: educationCount },
-    { title: 'Languages', desc: 'Manage language proficiencies.', link: '/admin/languages', count: languageCount },
-    { title: 'Hobbies', desc: 'Manage your hobbies and interests.', link: '/admin/hobbies', count: hobbyCount },
+    { title: 'Hero Section', desc: 'Main title, subtitle, status badge, and profile picture.', link: '/admin/hero', count: 'Active' },
+    { title: 'About Section', desc: 'Your bio, statistics, and general information.', link: '/admin/about', count: 'Active' },
+    { title: 'Projects', desc: 'Manage your portfolio items.', link: '/admin/projects', count: projectCount || defaultPortfolioData.projects.length },
+    { title: 'Services', desc: 'Manage offered services and solutions.', link: '/admin/services', count: serviceCount || defaultPortfolioData.services.length },
+    { title: 'Skills', desc: 'Manage your technical skills.', link: '/admin/skills', count: skillCount || defaultPortfolioData.skills.length },
+    { title: 'Journey', desc: 'Update your experience timeline.', link: '/admin/journey', count: journeyCount || defaultPortfolioData.journeys.length },
+    { title: 'Education', desc: 'Update your education history.', link: '/admin/education', count: educationCount || defaultPortfolioData.educationList.length },
+    { title: 'Languages', desc: 'Manage language proficiencies.', link: '/admin/languages', count: languageCount || defaultPortfolioData.languages.length },
+    { title: 'Hobbies', desc: 'Manage your hobbies and interests.', link: '/admin/hobbies', count: hobbyCount || defaultPortfolioData.hobbies.length },
     { title: 'Messages', desc: 'View contact form submissions.', link: '/admin/messages', count: messageCount },
     { title: 'CVs', desc: 'Manage downloadable CVs.', link: '/admin/cvs', count: cvCount },
-    { title: 'Contact Info', desc: 'Update your contact details.', link: '/admin/contact', count: 'Info' },
+    { title: 'Contact Info', desc: 'Update your contact details.', link: '/admin/contact', count: 'Active' },
   ];
 
   return (

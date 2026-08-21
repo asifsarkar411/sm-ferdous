@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { safeQuery, safeMutation } from '@/lib/db';
+import { safeQuery, safeMutation, defaultPortfolioData } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function ManageProjects() {
   const projects = await safeQuery(p => p.project.findMany({ orderBy: { title: 'asc' } }), []);
+  const projectList = (projects && projects.length > 0) ? projects : defaultPortfolioData.projects;
 
   async function createProject(formData) {
     'use server';
@@ -100,7 +101,7 @@ export default async function ManageProjects() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
-        {projects.map(project => (
+        {projectList.map(project => (
           <div key={project.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '14px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column' }}>
             {project.imageUrl && <img src={project.imageUrl} alt={project.title} style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: '8px', marginBottom: '1rem' }} />}
             <h4 style={{ marginBottom: '0.25rem', fontSize: '1.1rem', fontWeight: '600' }}>{project.title}</h4>

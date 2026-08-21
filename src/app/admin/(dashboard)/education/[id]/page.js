@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { safeQuery, safeMutation } from '@/lib/db';
+import { safeQuery, safeMutation, defaultPortfolioData } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -8,7 +8,9 @@ export const dynamic = 'force-dynamic';
 
 export default async function EditEducation({ params }) {
   const { id } = await params;
-  const edu = await safeQuery(p => p.education.findUnique({ where: { id } }), null);
+  const dbEdu = await safeQuery(p => p.education.findUnique({ where: { id } }), null);
+  const defaultEdu = defaultPortfolioData.educationList.find(e => e.id === id);
+  const edu = dbEdu || defaultEdu;
 
   if (!edu) {
     redirect('/admin/education');
@@ -23,14 +25,17 @@ export default async function EditEducation({ params }) {
 
     if (degree && institution) {
       try {
-        await safeMutation(p => p.education.update({
+        const payload = {
+          degree: degree.toString().trim(),
+          institution: institution.toString().trim(),
+          year: year ? year.toString().trim() : '',
+          gpa: gpa ? gpa.toString().trim() : null,
+        };
+
+        await safeMutation(p => p.education.upsert({
           where: { id },
-          data: {
-            degree: degree.toString().trim(),
-            institution: institution.toString().trim(),
-            year: year ? year.toString().trim() : '',
-            gpa: gpa ? gpa.toString().trim() : null,
-          },
+          create: { id, ...payload },
+          update: payload,
         }));
       } catch (err) {
         console.error('Error updating education:', err);

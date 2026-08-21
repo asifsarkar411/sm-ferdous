@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { safeQuery, safeMutation } from '@/lib/db';
+import { safeQuery, safeMutation, defaultPortfolioData } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -8,7 +8,9 @@ export const dynamic = 'force-dynamic';
 
 export default async function EditProject({ params }) {
   const { id } = await params;
-  const project = await safeQuery(p => p.project.findUnique({ where: { id } }), null);
+  const dbProject = await safeQuery(p => p.project.findUnique({ where: { id } }), null);
+  const defaultProject = defaultPortfolioData.projects.find(p => p.id === id);
+  const project = dbProject || defaultProject;
 
   if (!project) {
     redirect('/admin/projects');
@@ -23,7 +25,7 @@ export default async function EditProject({ params }) {
     const detailsUrl = formData.get('detailsUrl');
     
     const file = formData.get('image');
-    let imageUrl = project.imageUrl;
+    let imageUrl = project.imageUrl || '';
     
     if (file && typeof file.arrayBuffer === 'function' && file.size > 0) {
       try {
@@ -37,16 +39,19 @@ export default async function EditProject({ params }) {
 
     if (title && title.toString().trim().length > 0) {
       try {
-        await safeMutation(p => p.project.update({
+        const payload = { 
+          title: title.toString().trim(), 
+          category: category ? category.toString().trim() : 'Development', 
+          description: description ? description.toString().trim() : '', 
+          liveUrl: liveUrl ? liveUrl.toString().trim() : null, 
+          detailsUrl: detailsUrl ? detailsUrl.toString().trim() : null, 
+          imageUrl 
+        };
+
+        await safeMutation(p => p.project.upsert({
           where: { id },
-          data: { 
-            title: title.toString().trim(), 
-            category: category ? category.toString().trim() : 'Development', 
-            description: description ? description.toString().trim() : '', 
-            liveUrl: liveUrl ? liveUrl.toString().trim() : null, 
-            detailsUrl: detailsUrl ? detailsUrl.toString().trim() : null, 
-            imageUrl 
-          },
+          create: { id, ...payload },
+          update: payload,
         }));
       } catch (err) {
         console.error('Error updating project:', err);

@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { safeQuery, safeMutation } from '@/lib/db';
+import { safeQuery, safeMutation, defaultPortfolioData } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -8,7 +8,9 @@ export const dynamic = 'force-dynamic';
 
 export default async function EditLanguage({ params }) {
   const { id } = await params;
-  const lang = await safeQuery(p => p.languageProficiency.findUnique({ where: { id } }), null);
+  const dbLang = await safeQuery(p => p.languageProficiency.findUnique({ where: { id } }), null);
+  const defaultLang = defaultPortfolioData.languages.find(l => l.id === id);
+  const lang = dbLang || defaultLang;
 
   if (!lang) {
     redirect('/admin/languages');
@@ -23,14 +25,17 @@ export default async function EditLanguage({ params }) {
 
     if (language) {
       try {
-        await safeMutation(p => p.languageProficiency.update({
+        const payload = {
+          language: language.toString().trim(),
+          reading: reading ? reading.toString().trim() : 'Good',
+          writing: writing ? writing.toString().trim() : 'Good',
+          speaking: speaking ? speaking.toString().trim() : 'Good',
+        };
+
+        await safeMutation(p => p.languageProficiency.upsert({
           where: { id },
-          data: {
-            language: language.toString().trim(),
-            reading: reading ? reading.toString().trim() : 'Good',
-            writing: writing ? writing.toString().trim() : 'Good',
-            speaking: speaking ? speaking.toString().trim() : 'Good',
-          },
+          create: { id, ...payload },
+          update: payload,
         }));
       } catch (err) {
         console.error('Error updating language:', err);

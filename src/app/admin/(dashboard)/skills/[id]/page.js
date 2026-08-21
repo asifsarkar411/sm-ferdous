@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { safeQuery, safeMutation } from '@/lib/db';
+import { safeQuery, safeMutation, defaultPortfolioData } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -8,7 +8,9 @@ export const dynamic = 'force-dynamic';
 
 export default async function EditSkill({ params }) {
   const { id } = await params;
-  const skill = await safeQuery(p => p.skill.findUnique({ where: { id } }), null);
+  const dbSkill = await safeQuery(p => p.skill.findUnique({ where: { id } }), null);
+  const defaultSkill = defaultPortfolioData.skills.find(s => s.id === id);
+  const skill = dbSkill || defaultSkill;
 
   if (!skill) {
     redirect('/admin/skills');
@@ -21,9 +23,15 @@ export default async function EditSkill({ params }) {
     
     if (name && name.toString().trim().length > 0) {
       try {
-        await safeMutation(p => p.skill.update({
+        const payload = { 
+          name: name.toString().trim(), 
+          category: category ? category.toString().trim() : 'General' 
+        };
+
+        await safeMutation(p => p.skill.upsert({
           where: { id },
-          data: { name: name.toString().trim(), category: category ? category.toString().trim() : 'General' },
+          create: { id, ...payload },
+          update: payload,
         }));
       } catch (err) {
         console.error('Error updating skill:', err);

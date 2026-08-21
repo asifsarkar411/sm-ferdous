@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { safeQuery, safeMutation } from '@/lib/db';
+import { safeQuery, safeMutation, defaultPortfolioData } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function ManageEducation() {
   const educations = await safeQuery(p => p.education.findMany({ orderBy: { year: 'desc' } }), []);
+  const educationList = (educations && educations.length > 0) ? educations : defaultPortfolioData.educationList;
 
   async function createEducation(formData) {
     'use server';
@@ -82,7 +83,7 @@ export default async function ManageEducation() {
       <div>
         <h3 style={{ fontSize: '1.25rem', marginBottom: '1rem', fontWeight: '600' }}>Existing Education</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
-          {educations.map((edu) => (
+          {educationList.map((edu) => (
             <div key={edu.id} style={{ backgroundColor: 'var(--color-surface)', padding: '1.5rem', borderRadius: '14px', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-sm)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <h4 style={{ fontSize: '1.05rem', fontWeight: '600', color: 'var(--color-text-primary)' }}>{edu.degree}</h4>

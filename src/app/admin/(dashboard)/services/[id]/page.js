@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { safeQuery, safeMutation } from '@/lib/db';
+import { safeQuery, safeMutation, defaultPortfolioData } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -8,7 +8,9 @@ export const dynamic = 'force-dynamic';
 
 export default async function EditService({ params }) {
   const { id } = await params;
-  const service = await safeQuery(p => p.service.findUnique({ where: { id } }), null);
+  const dbService = await safeQuery(p => p.service.findUnique({ where: { id } }), null);
+  const defaultService = defaultPortfolioData.services.find(s => s.id === id);
+  const service = dbService || defaultService;
 
   if (!service) {
     redirect('/admin/services');
@@ -21,9 +23,15 @@ export default async function EditService({ params }) {
     
     if (title && description) {
       try {
-        await safeMutation(p => p.service.update({
+        const payload = { 
+          title: title.toString().trim(), 
+          description: description.toString().trim() 
+        };
+
+        await safeMutation(p => p.service.upsert({
           where: { id },
-          data: { title: title.toString().trim(), description: description.toString().trim() },
+          create: { id, ...payload },
+          update: payload,
         }));
       } catch (err) {
         console.error('Error updating service:', err);
