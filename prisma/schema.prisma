@@ -14,14 +14,17 @@ model User {
 }
 
 model Hero {
-  id          String  @id @default(uuid())
-  title       String
-  subtitle    String
-  description String?
-  cvUrl       String?
-  imageUrl    String?
-  logoName    String?
-  logoImage   String?
+  id              String   @id @default(uuid())
+  title           String
+  subtitle        String
+  description     String?
+  cvUrl           String?
+  imageUrl        String?
+  logoName        String?
+  logoImage       String?
+  isAvailable     Boolean? @default(true)
+  statusText      String?  @default("Available for new projects")
+  showStatusBadge Boolean? @default(true)
 }
 
 model About {

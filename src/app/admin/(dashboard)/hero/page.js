@@ -15,6 +15,9 @@ export default async function ManageHero() {
     const subtitle = formData.get('subtitle');
     const description = formData.get('description');
     const logoName = formData.get('logoName');
+    const isAvailable = formData.get('isAvailable') === 'true';
+    const statusText = formData.get('statusText');
+    const showStatusBadge = formData.get('showStatusBadge') === 'on';
     
     const file = formData.get('image');
     let imageUrl = currentHero?.imageUrl || null;
@@ -45,6 +48,9 @@ export default async function ManageHero() {
       imageUrl,
       logoName: logoName ? logoName.toString().trim() : null,
       logoImage: logoImageUrl,
+      isAvailable,
+      statusText: statusText ? statusText.toString().trim() : 'Available for new projects',
+      showStatusBadge,
     };
 
     try {
@@ -66,13 +72,57 @@ export default async function ManageHero() {
     revalidatePath('/admin/hero');
   }
 
+  const isAvailableValue = heroData?.isAvailable !== false;
+  const showBadgeValue = heroData?.showStatusBadge !== false;
+
   return (
-    <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '600px' }}>
-      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Manage Hero & Navbar Settings</h2>
+    <div style={{ backgroundColor: 'var(--color-surface)', padding: '2rem', borderRadius: '12px', boxShadow: 'var(--shadow-sm)', maxWidth: '650px' }}>
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '1.5rem' }}>Manage Hero & Status Settings</h2>
       <form action={updateHero} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         
-        <div style={{ padding: '1rem', border: '1px solid var(--color-border)', borderRadius: '8px', backgroundColor: 'var(--color-bg)' }}>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Navbar Logo Settings</h3>
+        {/* Availability & Status Badge Settings */}
+        <div style={{ padding: '1.25rem', border: '1px solid var(--color-border)', borderRadius: '10px', backgroundColor: 'var(--color-bg)' }}>
+          <h3 style={{ fontSize: '1.15rem', marginBottom: '1rem', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span>🟢</span> Availability Status Badge
+          </h3>
+          
+          <div style={{ marginBottom: '1.25rem' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer', fontWeight: '500' }}>
+              <input 
+                type="checkbox" 
+                name="showStatusBadge" 
+                defaultChecked={showBadgeValue} 
+                style={{ width: '18px', height: '18px' }}
+              />
+              <span>Show status badge in Hero section</span>
+            </label>
+          </div>
+
+          <div style={{ marginBottom: '1.25rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '500' }}>Availability State</label>
+            <select 
+              name="isAvailable" 
+              defaultValue={isAvailableValue ? 'true' : 'false'}
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
+            >
+              <option value="true">🟢 Available (Active / Green Glowing Dot)</option>
+              <option value="false">🔴 Unavailable / Busy (Red Glowing Dot)</option>
+            </select>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: '500' }}>Custom Status Text</label>
+            <input 
+              name="statusText" 
+              defaultValue={heroData?.statusText || 'Available for new projects'} 
+              placeholder="e.g. Available for new projects or Unavailable / Busy"
+              style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface)', color: 'var(--color-text)' }}
+            />
+          </div>
+        </div>
+
+        <div style={{ padding: '1.25rem', border: '1px solid var(--color-border)', borderRadius: '10px', backgroundColor: 'var(--color-bg)' }}>
+          <h3 style={{ fontSize: '1.15rem', marginBottom: '1rem' }}>Navbar Logo Settings</h3>
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Navbar Logo Name</label>
             <input 
@@ -98,8 +148,8 @@ export default async function ManageHero() {
           </div>
         </div>
 
-        <div style={{ padding: '1rem', border: '1px solid var(--color-border)', borderRadius: '8px' }}>
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Hero Section Settings</h3>
+        <div style={{ padding: '1.25rem', border: '1px solid var(--color-border)', borderRadius: '10px' }}>
+          <h3 style={{ fontSize: '1.15rem', marginBottom: '1rem' }}>Hero Section Content</h3>
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Title</label>
             <input 

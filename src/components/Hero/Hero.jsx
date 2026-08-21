@@ -44,11 +44,28 @@ export default async function Hero({ heroData: propHeroData, cvs: propCvs }) {
       }}>
         {/* Text Content */}
         <div className="hero-text-content" style={{ flex: 1, maxWidth: '620px' }}>
-          {/* Live Status Pill */}
-          <div className="status-badge">
-            <span className="status-dot"></span>
-            <span>Available for new projects</span>
-          </div>
+          {/* Live Status Pill (Controlled from Admin) */}
+          {hero.showStatusBadge !== false && (
+            <div 
+              className="status-badge"
+              style={{
+                background: hero.isAvailable === false ? 'rgba(239, 68, 68, 0.1)' : 'rgba(34, 197, 94, 0.1)',
+                color: hero.isAvailable === false ? '#ef4444' : '#22c55e',
+                border: hero.isAvailable === false ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(34, 197, 94, 0.25)',
+              }}
+            >
+              <span 
+                className="status-dot"
+                style={{
+                  backgroundColor: hero.isAvailable === false ? '#ef4444' : '#22c55e',
+                  boxShadow: hero.isAvailable === false ? '0 0 8px #ef4444' : '0 0 8px #22c55e',
+                }}
+              ></span>
+              <span>
+                {hero.statusText || (hero.isAvailable === false ? 'Unavailable / Busy with projects' : 'Available for new projects')}
+              </span>
+            </div>
+          )}
 
           <h1 style={{ 
             fontSize: 'clamp(2.1rem, 5.5vw, 4.2rem)', 

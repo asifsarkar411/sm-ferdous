@@ -78,6 +78,9 @@ export const defaultPortfolioData = {
     imageUrl: null,
     logoName: 'SM FERDOUS AHMMED',
     logoImage: null,
+    isAvailable: true,
+    statusText: 'Available for new projects',
+    showStatusBadge: true,
   },
   cvs: [],
   aboutData: {
