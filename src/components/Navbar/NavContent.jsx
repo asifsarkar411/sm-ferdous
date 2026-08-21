@@ -81,19 +81,19 @@ export default function NavContent({ logoName, logoImage }) {
           </span>
         </Link>
         
-        {/* Desktop Nav Links */}
-        <div className="hide-on-mobile" style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+        {/* Desktop Nav Links & CTAs */}
+        <div className="hide-on-mobile" style={{ display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
           {navLinks.map(link => (
             <Link 
               key={link.label} 
               href={link.href} 
               className="nav-link-item"
               style={{ 
-                fontSize: '0.9rem',
+                fontSize: '0.88rem',
                 fontWeight: '500',
                 color: 'var(--color-text-secondary)', 
                 transition: 'color 0.2s ease',
-                padding: '0.35rem 0.6rem',
+                padding: '0.35rem 0.5rem',
                 borderRadius: '6px'
               }}
             >
@@ -107,9 +107,8 @@ export default function NavContent({ logoName, logoImage }) {
               onClick={() => setTheme(currentTheme === 'dark' ? 'light' : 'dark')} 
               aria-label="Toggle Theme" 
               style={{ 
-                fontSize: '1.1rem', 
+                fontSize: '1.05rem', 
                 color: 'var(--color-text-primary)', 
-                marginLeft: '0.5rem', 
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center',
@@ -124,6 +123,21 @@ export default function NavContent({ logoName, logoImage }) {
               {currentTheme === 'dark' ? <FiSun /> : <FiMoon />}
             </button>
           )}
+
+          {/* Big Display "Get In Touch" Button */}
+          <Link
+            href="#contact"
+            className="btn btn-primary"
+            style={{
+              padding: '0.45rem 1.15rem',
+              fontSize: '0.85rem',
+              fontWeight: '600',
+              borderRadius: 'var(--border-radius-pill)',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Get In Touch
+          </Link>
         </div>
 
         {/* Mobile Nav Toggle */}
@@ -178,6 +192,25 @@ export default function NavContent({ logoName, logoImage }) {
                     {link.label}
                   </Link>
                 ))}
+
+                <div style={{ marginTop: 'auto', paddingTop: '1.5rem' }}>
+                  <Link
+                    href="#contact"
+                    onClick={() => setIsOpen(false)}
+                    className="btn btn-primary"
+                    style={{
+                      width: '100%',
+                      textAlign: 'center',
+                      justifyContent: 'center',
+                      padding: '0.75rem 1rem',
+                      fontSize: '0.92rem',
+                      fontWeight: '600',
+                      borderRadius: 'var(--border-radius-pill)',
+                    }}
+                  >
+                    Get In Touch
+                  </Link>
+                </div>
               </motion.div>
             </>
           )}

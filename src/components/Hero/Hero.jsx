@@ -83,9 +83,9 @@ export default async function Hero({ heroData: propHeroData, cvs: propCvs }) {
           </p>
 
           {/* Action CTAs */}
-          <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'center', flexWrap: 'wrap' }} className="hero-cta-wrapper">
+          <div className="hero-cta-wrapper" style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
             <DownloadCVButton cvs={serializedCvs} fallbackUrl={hero.cvUrl} />
-            <a href="#contact" className="btn btn-primary">
+            <a href="#contact" className="btn btn-primary hero-btn">
               Get In Touch &rarr;
             </a>
           </div>
@@ -141,6 +141,27 @@ export default async function Hero({ heroData: propHeroData, cvs: propCvs }) {
         </div>
       </div>
       <style dangerouslySetInnerHTML={{__html: `
+        .hero-cta-wrapper {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+        .hero-btn {
+          min-height: 48px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.75rem 1.6rem;
+          font-size: 0.95rem;
+          font-weight: 600;
+          white-space: nowrap;
+          box-sizing: border-box;
+          text-align: center;
+        }
+        .download-cv-dropdown-wrapper {
+          display: inline-flex;
+          align-items: center;
+        }
         @media (max-width: 768px) {
           .hero-section {
             padding: 3.5rem 0 2.5rem 0 !important;
@@ -158,6 +179,8 @@ export default async function Hero({ heroData: propHeroData, cvs: propCvs }) {
           }
           .hero-cta-wrapper {
             justify-content: center !important;
+            width: 100%;
+            max-width: 440px;
           }
           .hero-img-box {
             width: 250px !important;
@@ -173,13 +196,26 @@ export default async function Hero({ heroData: propHeroData, cvs: propCvs }) {
             height: 200px !important;
           }
           .hero-cta-wrapper {
-            width: 100%;
-            flex-direction: column;
-            gap: 0.75rem;
+            width: 100% !important;
+            display: flex !important;
+            flex-direction: row !important;
+            gap: 0.75rem !important;
           }
-          .hero-cta-wrapper > * {
-            width: 100%;
-            text-align: center;
+          .hero-cta-wrapper > *,
+          .hero-cta-wrapper .download-cv-dropdown-wrapper,
+          .hero-cta-wrapper .hero-btn {
+            flex: 1 1 0 !important;
+            width: 100% !important;
+            padding: 0.75rem 0.75rem !important;
+            font-size: 0.88rem !important;
+            min-height: 46px !important;
+            justify-content: center !important;
+            text-align: center !important;
+          }
+        }
+        @media (max-width: 360px) {
+          .hero-cta-wrapper {
+            flex-direction: column !important;
           }
         }
       `}} />
