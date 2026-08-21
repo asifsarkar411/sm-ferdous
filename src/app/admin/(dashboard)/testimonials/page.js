@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { safeQuery } from '@/lib/db';
+import { safeQuery, safeMutation } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
@@ -15,9 +15,13 @@ export default async function ManageTestimonials() {
     const quote = formData.get('quote');
 
     if (name && quote) {
-      await prisma.testimonial.create({
-        data: { name: name.trim(), role: role ? role.trim() : 'Client', quote: quote.trim() },
-      });
+      try {
+        await safeMutation(p => p.testimonial.create({
+          data: { name: name.toString().trim(), role: role ? role.toString().trim() : 'Client', quote: quote.toString().trim() },
+        }));
+      } catch (err) {
+        console.error('Error creating testimonial:', err);
+      }
     }
 
     revalidatePath('/');
@@ -28,7 +32,11 @@ export default async function ManageTestimonials() {
     'use server';
     const id = formData.get('id');
     if (id) {
-      await prisma.testimonial.delete({ where: { id } });
+      try {
+        await safeMutation(p => p.testimonial.delete({ where: { id: id.toString() } }));
+      } catch (err) {
+        console.error('Error deleting testimonial:', err);
+      }
       revalidatePath('/');
       revalidatePath('/admin/testimonials');
     }

@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { safeQuery } from '@/lib/db';
+import { safeQuery, safeMutation } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -20,10 +20,14 @@ export default async function EditService({ params }) {
     const description = formData.get('description');
     
     if (title && description) {
-      await prisma.service.update({
-        where: { id },
-        data: { title: title.trim(), description: description.trim() },
-      });
+      try {
+        await safeMutation(p => p.service.update({
+          where: { id },
+          data: { title: title.toString().trim(), description: description.toString().trim() },
+        }));
+      } catch (err) {
+        console.error('Error updating service:', err);
+      }
     }
 
     revalidatePath('/');

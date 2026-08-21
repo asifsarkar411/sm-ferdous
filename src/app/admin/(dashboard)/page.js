@@ -19,9 +19,11 @@ export default async function AdminDashboard() {
     safeQuery(p => p.education.count(), 0),
   ]);
 
-  const [journeyCount, languageCount] = await Promise.all([
+  const [journeyCount, languageCount, serviceCount, testimonialCount] = await Promise.all([
     safeQuery(p => p.journey.count(), 0),
     safeQuery(p => p.languageProficiency.count(), 0),
+    safeQuery(p => p.service.count(), 0),
+    safeQuery(p => p.testimonial.count(), 0),
   ]);
 
   const userEmail = session?.user?.email || session?.email || 'Admin';
@@ -30,10 +32,12 @@ export default async function AdminDashboard() {
     { title: 'Hero Section', desc: 'Main title, subtitle, and profile picture.', link: '/admin/hero', count: '1' },
     { title: 'About Section', desc: 'Your bio and general information.', link: '/admin/about', count: '1' },
     { title: 'Projects', desc: 'Manage your portfolio items.', link: '/admin/projects', count: projectCount },
+    { title: 'Services', desc: 'Manage offered services and solutions.', link: '/admin/services', count: serviceCount },
     { title: 'Skills', desc: 'Manage your technical skills.', link: '/admin/skills', count: skillCount },
     { title: 'Journey', desc: 'Update your experience timeline.', link: '/admin/journey', count: journeyCount },
     { title: 'Education', desc: 'Update your education history.', link: '/admin/education', count: educationCount },
     { title: 'Languages', desc: 'Manage language proficiencies.', link: '/admin/languages', count: languageCount },
+    { title: 'Testimonials', desc: 'Manage client reviews and feedback.', link: '/admin/testimonials', count: testimonialCount },
     { title: 'Hobbies', desc: 'Manage your hobbies and interests.', link: '/admin/hobbies', count: hobbyCount },
     { title: 'Messages', desc: 'View contact form submissions.', link: '/admin/messages', count: messageCount },
     { title: 'CVs', desc: 'Manage downloadable CVs.', link: '/admin/cvs', count: cvCount },

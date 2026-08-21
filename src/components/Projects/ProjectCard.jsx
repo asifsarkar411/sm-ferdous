@@ -42,14 +42,14 @@ export default function ProjectCard({ project }) {
           <span style={{ 
             fontSize: '0.72rem', 
             fontWeight: '600', 
-            color: 'var(--color-primary)', 
-            backgroundColor: 'var(--nav-bg)',
-            backdropFilter: 'blur(8px)',
+            color: 'var(--color-badge-text)', 
+            backgroundColor: 'var(--color-badge-bg)',
             border: '1px solid var(--color-border)',
-            padding: '0.25rem 0.6rem',
+            padding: '0.3rem 0.75rem',
             borderRadius: 'var(--border-radius-pill)',
             textTransform: 'uppercase',
-            letterSpacing: '0.05em'
+            letterSpacing: '0.05em',
+            boxShadow: 'var(--shadow-sm)'
           }}>
             {project.category || 'Development'}
           </span>

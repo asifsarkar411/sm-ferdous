@@ -36,13 +36,13 @@ export default async function Journey({ journeys: propJourneys }) {
                     {journey.title}
                   </h3>
                   <span style={{ 
-                    backgroundColor: 'rgba(0, 242, 254, 0.08)', 
-                    color: 'var(--color-primary)', 
-                    padding: '0.2rem 0.55rem', 
+                    backgroundColor: 'var(--color-badge-bg)', 
+                    color: 'var(--color-badge-text)', 
+                    padding: '0.25rem 0.65rem', 
                     borderRadius: '6px', 
                     fontSize: '0.75rem', 
                     fontWeight: '600',
-                    border: '1px solid rgba(0, 242, 254, 0.2)',
+                    border: '1px solid var(--color-border)',
                     whiteSpace: 'nowrap'
                   }}>
                     {journey.date}

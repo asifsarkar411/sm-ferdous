@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { safeQuery } from '@/lib/db';
+import { safeQuery, safeMutation } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
@@ -21,10 +21,14 @@ export default async function EditTestimonial({ params }) {
     const quote = formData.get('quote');
     
     if (name && quote) {
-      await prisma.testimonial.update({
-        where: { id },
-        data: { name: name.trim(), role: role ? role.trim() : 'Client', quote: quote.trim() },
-      });
+      try {
+        await safeMutation(p => p.testimonial.update({
+          where: { id },
+          data: { name: name.toString().trim(), role: role ? role.toString().trim() : 'Client', quote: quote.toString().trim() },
+        }));
+      } catch (err) {
+        console.error('Error updating testimonial:', err);
+      }
     }
 
     revalidatePath('/');

@@ -26,18 +26,20 @@ export default function AdminSidebar() {
   }, [isOpen]);
 
   const navLinks = [
-    { href: '/admin', label: 'Dashboard' },
-    { href: '/admin/hero', label: 'Manage Hero' },
-    { href: '/admin/about', label: 'Manage About' },
-    { href: '/admin/education', label: 'Manage Education' },
-    { href: '/admin/journey', label: 'Manage Journey' },
-    { href: '/admin/skills', label: 'Manage Skills' },
-    { href: '/admin/languages', label: 'Manage Languages' },
-    { href: '/admin/hobbies', label: 'Manage Hobbies' },
-    { href: '/admin/projects', label: 'Manage Projects' },
-    { href: '/admin/messages', label: 'Inbox (Messages)' },
-    { href: '/admin/contact', label: 'Manage Contact' },
-    { href: '/admin/cvs', label: 'Manage CVs' },
+    { href: '/admin', label: '📊 Dashboard' },
+    { href: '/admin/hero', label: '🦸 Manage Hero' },
+    { href: '/admin/about', label: '👤 Manage About' },
+    { href: '/admin/education', label: '🎓 Manage Education' },
+    { href: '/admin/journey', label: '🚀 Manage Journey' },
+    { href: '/admin/skills', label: '⚡ Manage Skills' },
+    { href: '/admin/languages', label: '🌐 Manage Languages' },
+    { href: '/admin/projects', label: '💼 Manage Projects' },
+    { href: '/admin/services', label: '🛠️ Manage Services' },
+    { href: '/admin/testimonials', label: '💬 Testimonials' },
+    { href: '/admin/hobbies', label: '🎨 Manage Hobbies' },
+    { href: '/admin/cvs', label: '📄 Manage CVs' },
+    { href: '/admin/messages', label: '✉️ Inbox (Messages)' },
+    { href: '/admin/contact', label: '📞 Manage Contact' },
     { href: '/admin/settings', label: '⚙️ Settings' },
   ];
 

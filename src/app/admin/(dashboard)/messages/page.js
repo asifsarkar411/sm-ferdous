@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { safeQuery } from '@/lib/db';
+import { safeQuery, safeMutation } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
@@ -10,10 +10,14 @@ export async function toggleReadStatus(formData) {
   const currentStatus = formData.get('isRead') === 'true';
   
   if (id) {
-    await prisma.message.update({
-      where: { id },
-      data: { isRead: !currentStatus }
-    });
+    try {
+      await safeMutation(p => p.message.update({
+        where: { id: id.toString() },
+        data: { isRead: !currentStatus }
+      }));
+    } catch (err) {
+      console.error('Error updating message status:', err);
+    }
   }
   
   revalidatePath('/');
@@ -24,7 +28,11 @@ export async function deleteMessage(formData) {
   'use server';
   const id = formData.get('id');
   if (id) {
-    await prisma.message.delete({ where: { id } });
+    try {
+      await safeMutation(p => p.message.delete({ where: { id: id.toString() } }));
+    } catch (err) {
+      console.error('Error deleting message:', err);
+    }
   }
   revalidatePath('/');
   revalidatePath('/admin/messages');

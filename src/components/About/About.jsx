@@ -136,13 +136,13 @@ export default async function About({ aboutData: propAboutData, educationList: p
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.4rem', gap: '0.5rem', flexWrap: 'wrap' }}>
                   <h4 style={{ fontSize: '1rem', fontWeight: '600', color: 'var(--color-text-primary)' }}>{edu.degree}</h4>
                   <span style={{ 
-                    backgroundColor: 'rgba(0, 242, 254, 0.08)', 
-                    color: 'var(--color-primary)', 
-                    padding: '0.15rem 0.5rem', 
+                    backgroundColor: 'var(--color-badge-bg)', 
+                    color: 'var(--color-badge-text)', 
+                    padding: '0.2rem 0.6rem', 
                     borderRadius: '6px', 
-                    fontSize: '0.72rem', 
+                    fontSize: '0.75rem', 
                     fontWeight: '600',
-                    border: '1px solid rgba(0, 242, 254, 0.2)',
+                    border: '1px solid var(--color-border)',
                     whiteSpace: 'nowrap'
                   }}>
                     {edu.year}

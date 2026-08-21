@@ -54,12 +54,10 @@ export default function NavContent({ logoName, logoImage }) {
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
-        backgroundColor: 'var(--nav-bg)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
+        backgroundColor: 'var(--color-surface)',
         borderRadius: 'var(--border-radius-pill)',
         border: '1px solid var(--color-border)',
-        boxShadow: '0 8px 32px var(--color-shadow)',
+        boxShadow: 'var(--shadow-md)',
         color: 'var(--color-text-primary)'
       }}>
         {/* Brand Logo */}

@@ -71,6 +71,8 @@ export async function getAllPortfolioData() {
     const languages = await p.languageProficiency.findMany({ orderBy: { language: 'asc' } }).catch(() => []);
     const projects = await p.project.findMany().catch(() => []);
     const hobbies = await p.hobby.findMany({ orderBy: { title: 'asc' } }).catch(() => []);
+    const services = await p.service.findMany({ orderBy: { title: 'asc' } }).catch(() => []);
+    const testimonials = await p.testimonial.findMany({ orderBy: { name: 'asc' } }).catch(() => []);
     const contactData = await p.contact.findFirst().catch(() => null);
 
     return {
@@ -83,6 +85,8 @@ export async function getAllPortfolioData() {
       languages,
       projects,
       hobbies,
+      services,
+      testimonials,
       contactData,
     };
   }, {
@@ -95,6 +99,8 @@ export async function getAllPortfolioData() {
     languages: [],
     projects: [],
     hobbies: [],
+    services: [],
+    testimonials: [],
     contactData: null,
   });
 }

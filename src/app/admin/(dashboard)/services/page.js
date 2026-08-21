@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { safeQuery } from '@/lib/db';
+import { safeQuery, safeMutation } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 
@@ -14,9 +14,13 @@ export default async function ManageServices() {
     const description = formData.get('description');
 
     if (title && description) {
-      await prisma.service.create({
-        data: { title: title.trim(), description: description.trim() },
-      });
+      try {
+        await safeMutation(p => p.service.create({
+          data: { title: title.toString().trim(), description: description.toString().trim() },
+        }));
+      } catch (err) {
+        console.error('Error creating service:', err);
+      }
     }
 
     revalidatePath('/');
@@ -27,7 +31,11 @@ export default async function ManageServices() {
     'use server';
     const id = formData.get('id');
     if (id) {
-      await prisma.service.delete({ where: { id } });
+      try {
+        await safeMutation(p => p.service.delete({ where: { id: id.toString() } }));
+      } catch (err) {
+        console.error('Error deleting service:', err);
+      }
       revalidatePath('/');
       revalidatePath('/admin/services');
     }
