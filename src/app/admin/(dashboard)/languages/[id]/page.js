@@ -70,19 +70,32 @@ export default async function EditLanguage({ params }) {
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', color: 'var(--color-text-secondary)', fontWeight: '500' }}>Reading *</label>
-              <input name="reading" defaultValue={lang.reading} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+              <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', color: 'var(--color-text-secondary)', fontWeight: '500' }}>Reading Proficiency (Dotted Rating: 1 to 5 dots) *</label>
+              <input list="edit-proficiency-options" name="reading" defaultValue={lang.reading} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', color: 'var(--color-text-secondary)', fontWeight: '500' }}>Writing *</label>
-              <input name="writing" defaultValue={lang.writing} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+              <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', color: 'var(--color-text-secondary)', fontWeight: '500' }}>Writing Proficiency (Dotted Rating: 1 to 5 dots) *</label>
+              <input list="edit-proficiency-options" name="writing" defaultValue={lang.writing} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
             </div>
 
             <div>
-              <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', color: 'var(--color-text-secondary)', fontWeight: '500' }}>Speaking *</label>
-              <input name="speaking" defaultValue={lang.speaking} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+              <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', color: 'var(--color-text-secondary)', fontWeight: '500' }}>Speaking Proficiency (Dotted Rating: 1 to 5 dots) *</label>
+              <input list="edit-proficiency-options" name="speaking" defaultValue={lang.speaking} required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
             </div>
+
+            <datalist id="edit-proficiency-options">
+              <option value="Native" />
+              <option value="Fluent" />
+              <option value="Professional" />
+              <option value="Intermediate" />
+              <option value="Basic" />
+              <option value="5/5" />
+              <option value="4/5" />
+              <option value="3/5" />
+              <option value="2/5" />
+              <option value="1/5" />
+            </datalist>
 
             <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>Save Changes</button>
           </form>

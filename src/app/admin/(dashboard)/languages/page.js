@@ -60,20 +60,33 @@ export default async function ManageLanguages() {
         <form action={createLanguage} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <div>
             <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Language *</label>
-            <input name="language" placeholder="e.g., English, Bengali, German" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+            <input name="language" placeholder="e.g., English, Bangla, German" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
           </div>
           <div>
-            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Reading Proficiency</label>
-            <input name="reading" placeholder="e.g. Native, Fluent, Professional" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Reading Proficiency (Dotted Rating: 1 to 5 dots)</label>
+            <input list="proficiency-options" name="reading" placeholder="e.g. Native (5/5), Fluent, Professional (4/5)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
           </div>
           <div>
-            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Writing Proficiency</label>
-            <input name="writing" placeholder="e.g. Native, Fluent, Professional" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Writing Proficiency (Dotted Rating: 1 to 5 dots)</label>
+            <input list="proficiency-options" name="writing" placeholder="e.g. Native (5/5), Fluent, Professional (4/5)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
           </div>
           <div>
-            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Speaking Proficiency</label>
-            <input name="speaking" placeholder="e.g. Native, Fluent, Conversational" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
+            <label style={{ display: 'block', marginBottom: '0.4rem', fontSize: '0.85rem', fontWeight: '500', color: 'var(--color-text-secondary)' }}>Speaking Proficiency (Dotted Rating: 1 to 5 dots)</label>
+            <input list="proficiency-options" name="speaking" placeholder="e.g. Native (5/5), Fluent, Conversational (3/5)" required style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }} />
           </div>
+
+          <datalist id="proficiency-options">
+            <option value="Native" />
+            <option value="Fluent" />
+            <option value="Professional" />
+            <option value="Intermediate" />
+            <option value="Basic" />
+            <option value="5/5" />
+            <option value="4/5" />
+            <option value="3/5" />
+            <option value="2/5" />
+            <option value="1/5" />
+          </datalist>
           
           <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }}>Add Language</button>
         </form>
