@@ -13,7 +13,7 @@ import Contact from '@/components/Contact/Contact';
 import FadeIn from '@/components/FadeIn';
 import FloatingSocials from '@/components/FloatingSocials/FloatingSocials';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 export default async function Home() {
   const {
