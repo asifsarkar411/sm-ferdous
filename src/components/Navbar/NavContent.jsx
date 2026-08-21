@@ -27,6 +27,7 @@ export default function NavContent({ logoName, logoImage }) {
   const navLinks = [
     { label: 'Home', href: '#home' },
     { label: 'About', href: '#about' },
+    { label: 'Services', href: '#services' },
     { label: 'Journey', href: '#journey' },
     { label: 'Skills', href: '#skills' },
     { label: 'Projects', href: '#projects' },

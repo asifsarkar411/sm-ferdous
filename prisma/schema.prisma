@@ -113,18 +113,11 @@ model LanguageProficiency {
   speaking String
 }
 
-model Testimonial {
-  id        String   @id @default(uuid())
-  name      String
-  role      String
-  quote     String
-  createdAt DateTime @default(now())
-}
-
 model Service {
   id          String   @id @default(uuid())
   title       String
   description String
   createdAt   DateTime @default(now())
 }
+
 

@@ -7,13 +7,13 @@ import Journey from '@/components/Journey/Journey';
 import Skills from '@/components/Skills/Skills';
 import Languages from '@/components/Skills/Languages';
 import Projects from '@/components/Projects/Projects';
-import Testimonials from '@/components/Testimonials/Testimonials';
 import Hobby from '@/components/Hobby/Hobby';
 import Contact from '@/components/Contact/Contact';
 import FadeIn from '@/components/FadeIn';
 import FloatingSocials from '@/components/FloatingSocials/FloatingSocials';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function Home() {
   const {
@@ -27,7 +27,6 @@ export default async function Home() {
     projects,
     hobbies,
     services,
-    testimonials,
     contactData,
   } = await getAllPortfolioData();
 
@@ -43,9 +42,6 @@ export default async function Home() {
       <FadeIn delay={0.1}><Skills skills={skills} /></FadeIn>
       <FadeIn delay={0.1}><Languages languages={languages} /></FadeIn>
       <FadeIn delay={0.1}><Projects projects={projects} /></FadeIn>
-      {testimonials && testimonials.length > 0 && (
-        <FadeIn delay={0.1}><Testimonials testimonials={testimonials} /></FadeIn>
-      )}
       <FadeIn delay={0.1}><Hobby hobbies={hobbies} /></FadeIn>
       <FadeIn delay={0.1}><Contact contactData={contactData} /></FadeIn>
       <FloatingSocials />

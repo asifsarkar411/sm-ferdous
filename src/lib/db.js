@@ -1,9 +1,9 @@
 import { prisma } from './prisma';
 
 /**
- * Safely execute a Prisma query with strict timeout and automatic retry
+ * Safely execute a Prisma query with automatic retry
  */
-export async function safeQuery(queryFn, fallback = null, maxRetries = 1, timeoutMs = 3500) {
+export async function safeQuery(queryFn, fallback = null, maxRetries = 1, timeoutMs = 10000) {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const queryPromise = queryFn(prisma);
@@ -24,7 +24,7 @@ export async function safeQuery(queryFn, fallback = null, maxRetries = 1, timeou
         error?.code === 'P1001';
 
       if (isConnectionError && attempt < maxRetries) {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 150));
         continue;
       }
       return fallback;
@@ -36,7 +36,7 @@ export async function safeQuery(queryFn, fallback = null, maxRetries = 1, timeou
 /**
  * Safely execute a Prisma mutation with automatic retry on connection congestion
  */
-export async function safeMutation(mutationFn, maxRetries = 2, timeoutMs = 5000) {
+export async function safeMutation(mutationFn, maxRetries = 2, timeoutMs = 10000) {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const mutationPromise = mutationFn(prisma);
@@ -57,7 +57,7 @@ export async function safeMutation(mutationFn, maxRetries = 2, timeoutMs = 5000)
         error?.code === 'P1001';
 
       if (isConnectionError && attempt < maxRetries) {
-        await new Promise(resolve => setTimeout(resolve, 150 * (attempt + 1)));
+        await new Promise(resolve => setTimeout(resolve, 200 * (attempt + 1)));
         continue;
       }
       throw error;
@@ -65,10 +65,6 @@ export async function safeMutation(mutationFn, maxRetries = 2, timeoutMs = 5000)
   }
 }
 
-/**
- * Unified portfolio data fetcher with parallel execution and instant timeout fallback
- * Guarantees sub-second response times and zero hanging / continuous loading
- */
 /**
  * Rich default portfolio data for SM FERDOUS AHMMED
  * Ensures the site is always fully populated, dynamic, and responsive
@@ -220,14 +216,6 @@ export const defaultPortfolioData = {
       description: 'Designing secure, high-throughput REST APIs, database schema optimization, authentication, and cloud deployment.',
     },
   ],
-  testimonials: [
-    {
-      id: 't-1',
-      name: 'Project Partner',
-      role: 'Software Architect',
-      quote: 'SM Ferdous demonstrates deep technical mastery across both modern web development and hardware embedded IoT systems.',
-    },
-  ],
   contactData: {
     title: "Let's Build Something Exceptional",
     description: 'Whether you have a question, an open position, an IoT concept, or a full-stack project in mind, my inbox is always open.',
@@ -239,7 +227,7 @@ export const defaultPortfolioData = {
 };
 
 /**
- * Unified portfolio data fetcher with instant timeout fallback and rich default merging
+ * Unified portfolio data fetcher with instant fallback and database priority
  */
 export async function getAllPortfolioData() {
   const data = await safeQuery(async (p) => {
@@ -254,7 +242,6 @@ export async function getAllPortfolioData() {
       projects,
       hobbies,
       services,
-      testimonials,
       contactData,
     ] = await Promise.all([
       p.hero.findFirst().catch(() => null),
@@ -267,7 +254,6 @@ export async function getAllPortfolioData() {
       p.project.findMany().catch(() => []),
       p.hobby.findMany({ orderBy: { title: 'asc' } }).catch(() => []),
       p.service.findMany({ orderBy: { title: 'asc' } }).catch(() => []),
-      p.testimonial.findMany({ orderBy: { name: 'asc' } }).catch(() => []),
       p.contact.findFirst().catch(() => null),
     ]);
 
@@ -282,16 +268,15 @@ export async function getAllPortfolioData() {
       projects,
       hobbies,
       services,
-      testimonials,
       contactData,
     };
-  }, null, 1, 3500);
+  }, null, 1, 10000);
 
   if (!data) {
     return defaultPortfolioData;
   }
 
-  // Merge database data with defaults if any section is empty
+  // Merge database data with defaults if any section is completely empty
   return {
     heroData: data.heroData || defaultPortfolioData.heroData,
     cvs: (data.cvs && data.cvs.length > 0) ? data.cvs : defaultPortfolioData.cvs,
@@ -303,7 +288,6 @@ export async function getAllPortfolioData() {
     projects: (data.projects && data.projects.length > 0) ? data.projects : defaultPortfolioData.projects,
     hobbies: (data.hobbies && data.hobbies.length > 0) ? data.hobbies : defaultPortfolioData.hobbies,
     services: (data.services && data.services.length > 0) ? data.services : defaultPortfolioData.services,
-    testimonials: (data.testimonials && data.testimonials.length > 0) ? data.testimonials : defaultPortfolioData.testimonials,
     contactData: data.contactData || defaultPortfolioData.contactData,
   };
 }
